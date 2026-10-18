@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<!-- Digital Sorcery icon: the Magic Circle (heptagram of seven ingredients). Colors: Mirror Path Dark Ink. -->
+<rect width="512" height="512" fill="#0E0D0B"/>
+<circle cx="256" cy="256" r="200" fill="none" stroke="#8A6A45" stroke-width="6"/>
+<circle cx="256" cy="256" r="182" fill="none" stroke="#C9A45C" stroke-width="4"/>
+<g stroke="#C9A45C" stroke-width="5" stroke-linecap="round"><line x1="256.0" y1="106.0" x2="321.1" y2="391.1"/><line x1="373.3" y1="162.5" x2="190.9" y2="391.1"/><line x1="402.2" y1="289.4" x2="109.8" y2="289.4"/><line x1="321.1" y1="391.1" x2="138.7" y2="162.5"/><line x1="190.9" y1="391.1" x2="256.0" y2="106.0"/><line x1="109.8" y1="289.4" x2="373.3" y2="162.5"/><line x1="138.7" y1="162.5" x2="402.2" y2="289.4"/></g>
+<circle cx="256" cy="256" r="44" fill="none" stroke="#C9A45C" stroke-width="4"/>
+<circle cx="256.0" cy="106.0" r="16" fill="#C9A45C"/><circle cx="373.3" cy="162.5" r="16" fill="#C9A45C"/><circle cx="402.2" cy="289.4" r="16" fill="#C9A45C"/><circle cx="321.1" cy="391.1" r="16" fill="#C9A45C"/><circle cx="190.9" cy="391.1" r="16" fill="#C9A45C"/><circle cx="109.8" cy="289.4" r="16" fill="#C9A45C"/><circle cx="138.7" cy="162.5" r="16" fill="#C9A45C"/>
+</svg>

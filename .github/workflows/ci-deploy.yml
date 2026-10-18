@@ -1,0 +1,79 @@
+# ci-deploy.yml — Test every change; publish to GitHub Pages only when main passes.
+#
+# Pull requests and pushes to any branch → run the tests.
+# Pushes to main → run the tests, THEN deploy to GitHub Pages.
+# One-time setup: repo Settings → Pages → Source: "GitHub Actions" (see docs/handoff/DEPLOY.md).
+
+name: Test & Deploy
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# SECURITY: least privilege by default; the deploy job asks for more below.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Trial by Fire (automated)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Unit tests
+        run: npm run test:unit
+      - name: Color contrast (WCAG AA)
+        run: npm run check:contrast
+      - name: Secret scan (simple)
+        # DEV NOTE: a light guard; GitHub's own secret scanning also runs on public repos.
+        run: |
+          if git grep -nIE '(sk-[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{35}|ghp_[A-Za-z0-9]{36}|-----BEGIN [A-Z ]*PRIVATE KEY-----|service_role)' -- ':!*.md' ':!.github/workflows/*'; then
+            echo "Possible secret found. Remove it before merging." && exit 1
+          fi
+      - name: Browser tests
+        run: npm run test:e2e
+        env:
+          CI: true
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect only the files the website needs
+        run: |
+          mkdir -p _site
+          cp -r index.html manifest.webmanifest sw.js src assets _site/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

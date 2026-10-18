@@ -1,0 +1,168 @@
+<!doctype html>
+<!--
+  index.html — The single page of Digital Sorcery.
+
+  What it does:  Static page structure. All interactive parts are filled in by src/app.js.
+  Depends on:    src/styles/*.css, src/app.js, manifest.webmanifest, sw.js (via app.js).
+
+  SECURITY: The Content-Security-Policy below only allows files from this same site.
+  No inline scripts, no third-party scripts, fonts or trackers. If you add an outside
+  service later, you must add it here on purpose (and note it in docs/SECURITY.md).
+  DEV NOTE: GitHub Pages cannot send custom HTTP headers, so the CSP lives in this meta tag.
+  `frame-ancestors` is ignored in a meta tag; see docs/SECURITY.md for the accepted risk.
+-->
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Digital Sorcery</title>
+  <meta name="description" content="Learn to start an app the right way: gather the ingredients, cast the spell, get a strong starter prompt for your AI builder.">
+  <meta name="theme-color" content="#0E0D0B">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
+  <link rel="stylesheet" href="./src/styles/brand.css">
+  <link rel="stylesheet" href="./src/styles/main.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#ingredients">Skip to the ingredients</a>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <p class="brand-mark">Butler Builds · Digital Sorcery</p>
+      <div class="header-actions">
+        <button type="button" id="install-btn" class="btn btn-quiet" hidden>Install</button>
+        <button type="button" id="theme-btn" class="btn btn-quiet" aria-pressed="false">Ivory</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <p class="eyebrow">The formula to a solid start</p>
+      <h1 id="hero-title">Digital Sorcery</h1>
+      <p class="lede">
+        Every app starts as a spell. Gather the right ingredients, cast them into one clear prompt,
+        then refine it round by round with your AI builder. The questions are the magic.
+      </p>
+    </section>
+
+    <!-- MAGIC CIRCLE -->
+    <section class="circle-section wrap" aria-labelledby="circle-title">
+      <h2 id="circle-title" class="section-label">The Magic Circle</h2>
+      <div class="circle-layout">
+        <!-- DEV NOTE: The SVG is drawn by app.js (renderCircle) so it stays in sync with spellbook.js. -->
+        <svg id="magic-circle" class="magic-circle" viewBox="0 0 300 300" role="img"
+             aria-labelledby="circle-desc">
+          <title id="circle-desc">Magic circle: lit runes show which ingredients you have added.</title>
+        </svg>
+        <div class="strength">
+          <label for="strength-meter" class="ui-label">Spell strength</label>
+          <meter id="strength-meter" min="0" max="100" low="40" high="75" optimum="100" value="0">0%</meter>
+          <p id="strength-text" class="strength-text" aria-live="polite">0 / 100 — add the first three ingredients to cast.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INGREDIENTS -->
+    <section id="ingredients" class="wrap" aria-labelledby="ingredients-title">
+      <h2 id="ingredients-title" class="section-label">The Ingredients</h2>
+      <p class="hint">Numerals I–III are required. The rest make the spell stronger. Your words are saved on this device only.</p>
+
+      <div class="field field-name">
+        <label for="spell-name" class="ui-label">Name your spell <span class="muted">(your app's working name)</span></label>
+        <input id="spell-name" type="text" maxlength="80" autocomplete="off" spellcheck="true"
+               placeholder="e.g. Night Shift Sleep">
+      </div>
+
+      <!-- Ingredient cards are inserted here by app.js using the template below. -->
+      <div id="ingredient-list" class="ingredient-list"></div>
+
+      <template id="ingredient-template">
+        <article class="card ingredient">
+          <header class="ingredient-head">
+            <span class="numeral" aria-hidden="true"></span>
+            <div>
+              <h3 class="rune"></h3>
+              <p class="plain"></p>
+            </div>
+            <span class="required-tag">Required</span>
+          </header>
+          <p class="why"></p>
+          <details class="teach">
+            <summary>Questions to ask</summary>
+            <ul class="questions"></ul>
+          </details>
+          <details class="teach">
+            <summary>Weak vs strong</summary>
+            <dl class="examples">
+              <dt>Weak</dt><dd class="weak"></dd>
+              <dt>Strong</dt><dd class="strong"></dd>
+            </dl>
+          </details>
+          <label class="ui-label field-label"></label>
+          <textarea rows="4" maxlength="2000" spellcheck="true"></textarea>
+          <div class="chips" hidden></div>
+          <p class="char-count muted" aria-live="off"></p>
+        </article>
+      </template>
+    </section>
+
+    <!-- COUNSEL -->
+    <section class="wrap" aria-labelledby="counsel-title">
+      <h2 id="counsel-title" class="section-label">Counsel</h2>
+      <ul id="counsel-list" class="counsel-list" aria-live="polite"></ul>
+    </section>
+
+    <!-- CAST -->
+    <section class="wrap cast-section" aria-labelledby="cast-title">
+      <h2 id="cast-title" class="section-label">Cast the Spell</h2>
+      <button type="button" id="cast-btn" class="btn btn-primary" disabled>Cast the spell</button>
+      <p id="cast-status" class="hint" aria-live="polite"></p>
+
+      <div id="spell-output" class="card spell-output" hidden>
+        <div class="output-actions">
+          <button type="button" id="copy-btn" class="btn btn-secondary">Copy prompt</button>
+          <button type="button" id="download-btn" class="btn btn-secondary">Download .md</button>
+        </div>
+        <pre id="spell-text" class="spell-text" tabindex="0" aria-label="Your generated prompt"></pre>
+        <p class="hint">Paste this into Claude, ChatGPT or any AI builder. Then use the Iteration Ritual below.</p>
+      </div>
+    </section>
+
+    <!-- ITERATION RITUAL -->
+    <section class="wrap" aria-labelledby="ritual-title">
+      <h2 id="ritual-title" class="section-label">The Iteration Ritual</h2>
+      <p class="hint">A first answer is a draft, not a finished app. After each reply, run one of these.</p>
+      <ol id="ritual-list" class="ritual-list"></ol>
+    </section>
+
+    <!-- GRIMOIRE (short glossary; the full compendium is docs/GLOSSARY.md) -->
+    <section class="wrap" aria-labelledby="grimoire-title">
+      <h2 id="grimoire-title" class="section-label">Grimoire</h2>
+      <dl class="grimoire">
+        <dt>Spell</dt><dd>The starter prompt you build from your ingredients.</dd>
+        <dt>Ingredient</dt><dd>One decision your app needs before building starts.</dd>
+        <dt>Magic Circle</dt><dd>The picture of your spell. Each lit rune is an ingredient you have added.</dd>
+        <dt>Spell Strength</dt><dd>A 0–100 nudge showing how complete and specific your answers are.</dd>
+        <dt>Counsel</dt><dd>Hints that point out vague or risky answers.</dd>
+        <dt>Iteration Ritual</dt><dd>The loop after casting: observe, question, refine, test, record.</dd>
+        <dt>PWA</dt><dd>Progressive Web App: a website you can install on your phone like an app.</dd>
+      </dl>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <p class="muted">Your words never leave this device. No accounts, no tracking.</p>
+      <button type="button" id="reset-btn" class="btn btn-quiet">Clear the circle</button>
+    </div>
+    <p class="wrap muted small">A Butler Builds creation · v1.0.0</p>
+  </footer>
+</body>
+</html>
