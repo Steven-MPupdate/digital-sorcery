@@ -1,0 +1,57 @@
+# Handoff Log
+
+Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
+
+## 2026-10-18 — Session 1b: v1.1.0 Portals
+**Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
+
+**Done:** added Portals: after casting, one tap copies the latest spell and opens Claude, ChatGPT,
+Gemini, Bolt or Lovable. Version 1.1.0, cache bumped.
+
+**Trial by Fire results (Red Team, Mobile & A11y, Grimoire Keeper)**
+| Agent | Result | Fixed |
+|---|---|---|
+| Red Team | No opener/referrer leaks, no spell in URLs, CSP intact. Low: old spell copied after edits; middle-click skipped the copy; URL tests missed `#fragments` and lookalike hosts. | Fresh cast before every copy; middle-click handled; host allowlist + no-fragment test; frozen lists. |
+| Mobile & A11y | No high findings. Medium: copy result shown off-screen and the app opened even when copy failed; focus lost when the copy fallback ran. Low: link names, no visible "new tab" hint, stale copy, missing contrast pair. | Status line next to the buttons; app opens only after a successful copy; focus restored; visible-name-first links; hint text; contrast pair added. |
+| Grimoire Keeper | One wrong header line; glossary/references/security/log gaps; D16 above D15. | All fixed. |
+
+**State:** all checks pass (contrast, hidden characters, 28 unit, 68 browser tests). PR #1 open to `main`.
+
+**Owner direction:** interested in a hosted, paid AI tier (v2+) if demand exists. Suggested first step:
+a "join the waitlist" button to measure interest. Cost estimates are in the session chat summary:
+roughly $1.50–3 per active user per month on Claude Opus 5.5, about half on Sonnet 5.5.
+
+**Open questions:** same as Session 1, plus: which AI path for v2 (OpenRouter login vs hosted paid tier)?
+
+**Next ideas:** Familiar (AI helper) via OpenRouter login or a hosted paid tier (Supabase Auth + Edge
+Function + payments + usage limits); waitlist button; Quests (guided lessons); share-a-spell link.
+
+## 2026-10-18 — Session 1: v1.0.0 built and stress-tested
+**Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
+
+**Done**
+- Built Digital Sorcery v1.0.0: seven ingredients, Magic Circle, Spell Strength, Counsel,
+  cast/copy/download, Iteration Ritual, Ink/Ivory themes, installable offline PWA.
+- Applied the Mirror Path Brand Kit v1 (self-hosted Cinzel / Cormorant Garamond / Montserrat).
+- Wrote the house rules (`CLAUDE.md`), the Grimoire docs and the five Trial by Fire agents.
+- GitHub Actions: checks + unit + browser tests on every push; deploy `main` to Pages.
+
+**Trial by Fire results (all five agents)**
+| Agent | Result | Fixed |
+|---|---|---|
+| Red Team | No XSS, pollution, traversal or secret leaks. 2 low: underline-style headings and zero-width characters slipped past prompt protection. | Answers now fenced; zero-width stripped. |
+| Chaos Tester | 0 crashes. 3 medium: tabs overwriting each other, silent save failure, Markdown structure breaks. 8 low (invisible-only answers, Unicode word match, filename dash, emoji split, stale download name, deep-path page, throws on raw input). | All fixed, each with a regression test. |
+| Mobile & A11y | 1 high: cards cut off at 200% text. Medium: focus order after Cast, light-theme hover contrast, skip link at large text, header wrap, ritual copy not announced, faint input borders, noisy live regions. Low: pre role, toggle label, 32px disclosures, circle description. | All fixed. Contrast script now covers hover and border pairs. |
+| PWA & Deploy | No blockers. Cache-first worker could mix old/new files, trap users after a domain move, and serve a broken page for unknown URLs. CI hardening items. | Worker now network-first; actions pinned to SHAs; deploy permissions/concurrency fixed; sub-path test added. |
+| Grimoire Keeper | Docs gaps: glossary, references, decisions, header fields, notes, invisible characters typed into source. | Docs filled in; `check:invisible` added to CI. |
+
+**State:** all checks pass locally (contrast, hidden characters, 25 unit, 52 browser tests). PR open to `main`.
+
+**Open questions (owner)**
+1. **License** for the public repo (see DECISIONS D15).
+2. **Repo name / URL:** keep `new-app` or rename to `digital-sorcery`?
+3. **Custom domain:** e.g. `sorcery.butlerbuilds.dev` (steps in DEPLOY.md).
+4. **One-time setup:** make the repo public; Settings → Pages → Source: GitHub Actions.
+5. **Brand kit PDF** is labelled Mirror Path; confirm it is the right kit for Butler Builds products.
+
+**Next ideas:** Familiar (AI helper via Supabase Edge Function), Quests (guided lessons), share-a-spell link.

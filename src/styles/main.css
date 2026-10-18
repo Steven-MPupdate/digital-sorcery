@@ -1,0 +1,305 @@
+/*
+ * main.css — Layout and components. Uses only tokens from brand.css.
+ *
+ * Sections:  1 Base · 2 Layout · 3 Header/Hero · 4 Magic Circle · 5 Cards & fields
+ *            6 Buttons & chips · 7 Counsel/Output/Ritual · 8 Footer · 9 Motion & a11y
+ * Depends on: brand.css tokens.   Used by: index.html.
+ * DEV NOTE: Mobile first. Base styles are for a ~360px phone; the one media query
+ * near the end widens things for tablets/desktops.
+ */
+
+/* ---------- 1. Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1.1875rem; /* 19px: Cormorant runs small, so the body size is bumped up */
+  line-height: 1.55;
+  /* DEV NOTE: no overflow-x:hidden here on purpose — it hid a layout bug once.
+     Tests check the page never scrolls sideways instead. */
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; }
+p { margin: 0 0 var(--space-3); }
+a { color: var(--gold-text); }
+a:hover { color: var(--ink); } /* ink passes contrast in both themes; gold-bright fails on ivory */
+
+.muted { color: var(--ink-muted); }
+.small { font-size: 0.875rem; }
+
+.skip-link {
+  /* Hidden above the screen until focused. transform (not a fixed top) keeps it hidden
+     even when large text makes it taller. */
+  position: absolute; left: var(--space-4); top: 0; transform: translateY(-120%);
+  background: var(--gold); color: var(--on-gold);
+  padding: var(--space-2) var(--space-3); font-family: var(--font-ui);
+  border-radius: var(--radius-sm); z-index: 10;
+}
+.skip-link:focus { transform: translateY(var(--space-2)); }
+.skip-link:hover { color: var(--on-gold); }
+
+/* Labels in the UI font (brand: "Section label", "Caption"). */
+.ui-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-2);
+}
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-text);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-4);
+}
+
+.hint { color: var(--ink-muted); font-size: 1rem; }
+.save-status { color: var(--warn); font-family: var(--font-ui); font-size: 0.875rem; margin: 0; }
+.save-status:not(:empty) { margin-bottom: var(--space-3); }
+
+/* ---------- 2. Layout ---------- */
+/* DEV NOTE: margin-inline only, so section spacing below is not overridden. */
+.wrap { width: 100%; max-width: 760px; margin-inline: auto; padding-inline: var(--space-4); }
+main > section { margin-bottom: var(--space-7); }
+
+/* ---------- 3. Header & hero ---------- */
+.site-header { border-bottom: 1px solid var(--line); }
+.header-row {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--space-3); min-height: 56px;
+}
+.brand-mark {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-text);
+}
+.header-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.hero { padding-top: var(--space-7); }
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-text);
+  margin-bottom: var(--space-2);
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 12vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.02;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+  overflow-wrap: anywhere;
+}
+.lede { font-size: 1.3rem; color: var(--ink-muted); max-width: 36em; }
+
+/* ---------- 4. Magic Circle ---------- */
+.circle-layout { display: grid; gap: var(--space-5); justify-items: center; }
+.magic-circle { width: min(100%, 300px); height: auto; overflow: visible; }
+
+/* SVG parts (classes are set in app.js renderCircle). */
+.mc-ring { fill: none; stroke: var(--line); stroke-width: 1; }
+.mc-ring-gold { fill: none; stroke: var(--bronze); stroke-width: 1; }
+.mc-spoke { stroke: var(--line); stroke-width: 1; }
+.mc-chord { stroke: var(--line); stroke-width: 1; transition: stroke 0.4s; }
+.mc-chord.on { stroke: var(--bronze); }
+.mc-ready .mc-chord.on { stroke: var(--gold); }
+.mc-node { fill: var(--surface-raised); stroke: var(--bronze); stroke-width: 1; transition: fill 0.4s, stroke 0.4s; }
+.mc-numeral {
+  fill: var(--ink-muted); font-family: var(--font-display); font-size: 13px;
+  text-anchor: middle; dominant-baseline: central; transition: fill 0.4s;
+}
+.mc-lit .mc-node { fill: var(--gold); stroke: var(--gold-bright); }
+.mc-lit .mc-numeral { fill: var(--on-gold); }
+.mc-core { fill: none; stroke: var(--line); stroke-width: 1; transition: stroke 0.6s; }
+.mc-ready .mc-core { stroke: var(--gold); }
+.mc-ready .mc-ring-gold { stroke: var(--gold); }
+
+.strength { width: 100%; max-width: 360px; }
+/* Branded meter: bronze while weak, gold once strong (both browsers' engines). */
+meter {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 6px; border: 0;
+  background: var(--line); border-radius: var(--radius-full);
+}
+meter::-webkit-meter-bar { background: var(--line); border: 0; border-radius: var(--radius-full); height: 6px; }
+meter::-webkit-meter-optimum-value { background: var(--gold-text); border-radius: var(--radius-full); }
+meter::-webkit-meter-suboptimum-value,
+meter::-webkit-meter-even-less-good-value { background: var(--bronze); border-radius: var(--radius-full); }
+meter::-moz-meter-bar { background: var(--gold-text); border-radius: var(--radius-full); }
+.strength-text { font-family: var(--font-ui); font-size: 0.8125rem; color: var(--ink-muted); margin-top: var(--space-2); }
+
+/* ---------- 5. Cards & fields ---------- */
+.card {
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+.ingredient-list {
+  display: grid; gap: var(--space-5);
+  /* DEV NOTE: minmax(0,1fr) lets cards shrink to the screen; without it, large text made
+     cards wider than a phone and cut off their right side (found by the Trial by Fire). */
+  grid-template-columns: minmax(0, 1fr);
+}
+.ingredient-head { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-3); }
+.ingredient-head > div { flex: 1; min-width: 0; }
+.numeral {
+  flex: none; display: grid; place-items: center;
+  min-width: 40px; height: 40px; padding: 0 var(--space-1);
+  border: 1px solid var(--bronze); border-radius: var(--radius-full);
+  font-family: var(--font-display); font-size: 0.9rem; color: var(--gold-text);
+}
+.ingredient.is-filled .numeral { background: var(--gold); color: var(--on-gold); border-color: var(--gold); }
+.rune { font-size: 1.15rem; letter-spacing: 0.06em; overflow-wrap: anywhere; }
+.plain { font-family: var(--font-ui); font-size: 0.8125rem; color: var(--ink-muted); margin: 0; }
+.required-tag {
+  flex: none; font-family: var(--font-ui); font-size: 0.6875rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold-text); background: var(--gold-soft);
+  padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm);
+}
+.ingredient:not(.is-required) .required-tag { display: none; }
+.why { color: var(--ink); }
+
+details.teach { border-top: 1px solid var(--line); padding: var(--space-2) 0; }
+details.teach:last-of-type { border-bottom: 1px solid var(--line); margin-bottom: var(--space-3); }
+details.teach summary {
+  cursor: pointer; font-family: var(--font-ui); font-size: 0.8125rem; font-weight: 500;
+  color: var(--gold-text); min-height: 44px; display: flex; align-items: center;
+}
+.questions { margin: var(--space-2) 0; padding-left: 1.2em; }
+.examples { margin: var(--space-2) 0; }
+.examples dt { font-family: var(--font-ui); font-size: 0.75rem; font-weight: 600; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.examples dd { margin: 0 0 var(--space-3); white-space: pre-line; }
+
+.field-label { margin-top: var(--space-3); }
+input[type='text'], textarea {
+  width: 100%;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--bronze); /* bronze, not line: inputs need a visible 3:1 edge */
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  font-family: var(--font-text);
+  font-size: 1.125rem; /* ≥16px stops phones from zooming in on focus */
+  line-height: 1.45;
+}
+textarea { resize: vertical; min-height: 7rem; }
+input::placeholder, textarea::placeholder { color: var(--ink-muted); opacity: 0.8; }
+.field-name { margin-bottom: var(--space-5); }
+.char-count { font-family: var(--font-ui); font-size: 0.75rem; text-align: right; margin: var(--space-1) 0 0; }
+
+/* ---------- 6. Buttons & chips ---------- */
+.btn {
+  font-family: var(--font-ui); font-weight: 600; font-size: 0.875rem; letter-spacing: 0.04em;
+  border-radius: var(--radius-sm); border: 1px solid transparent;
+  padding: var(--space-3) var(--space-4); min-height: 44px; /* 44px = comfortable tap target */
+  cursor: pointer;
+}
+.btn-primary { background: var(--gold); color: var(--on-gold); border-color: var(--gold); width: 100%; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.12em; }
+.btn-primary:hover:not(:disabled) { background: var(--gold-bright); border-color: var(--gold-bright); }
+.btn-primary:disabled { background: transparent; color: var(--ink-muted); border-color: var(--line); cursor: not-allowed; }
+.btn-secondary { background: transparent; color: var(--gold-text); border-color: var(--bronze); }
+.btn-secondary:hover { border-color: var(--gold); color: var(--ink); }
+.btn-quiet { background: transparent; color: var(--ink-muted); border-color: var(--line); padding: var(--space-2) var(--space-3); }
+.btn-quiet:hover { color: var(--ink); border-color: var(--bronze); }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.chip {
+  font-family: var(--font-ui); font-size: 0.75rem; font-weight: 500;
+  background: var(--gold-soft); color: var(--gold-text);
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3); min-height: 36px; cursor: pointer;
+}
+.chip:hover { border-color: var(--gold); }
+
+/* ---------- 7. Counsel, output, ritual ---------- */
+.counsel-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.counsel-list li {
+  background: var(--gold-soft); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: var(--space-3); font-size: 1rem;
+}
+.counsel-list li.counsel-warn { color: var(--warn); }
+.counsel-list li.counsel-ok { color: var(--ink-muted); background: transparent; }
+
+.cast-section .btn-primary { margin-bottom: var(--space-3); }
+.spell-output { margin-top: var(--space-3); }
+.output-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-3); }
+.spell-text {
+  margin: 0 0 var(--space-3);
+  max-height: 60vh; overflow: auto;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  font-family: var(--font-mono); font-size: 0.8125rem; line-height: 1.5;
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: var(--space-3);
+}
+
+.action-status { font-family: var(--font-ui); font-size: 0.875rem; color: var(--ink); margin: 0; }
+.action-status:not(:empty) { margin-bottom: var(--space-3); }
+.portals { border-top: 1px solid var(--line); padding-top: var(--space-4); margin-top: var(--space-2); }
+.portals-title { font-size: 1.05rem; letter-spacing: 0.08em; margin-bottom: var(--space-2); }
+.portal-group { margin-top: var(--space-4); }
+.portal-group-title { font-family: var(--font-ui); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.04em; margin: 0 0 var(--space-1); }
+.portal-group .hint { font-size: 0.95rem; margin-bottom: var(--space-2); }
+.portal-list { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-3); }
+.btn-portal {
+  display: inline-flex; align-items: center; text-decoration: none;
+  background: var(--gold-soft); color: var(--gold-text); border-color: var(--bronze);
+}
+.btn-portal:hover { color: var(--ink); border-color: var(--gold); }
+
+.ritual-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); counter-reset: ritual; }
+.ritual-list li { counter-increment: ritual; border-top: 1px solid var(--line); padding-top: var(--space-3); }
+.ritual-step { font-family: var(--font-display); letter-spacing: 0.1em; color: var(--gold-text); margin-bottom: var(--space-1); }
+.ritual-step::before { content: counter(ritual, upper-roman) ' · '; }
+.ritual-prompt { margin-bottom: var(--space-2); }
+
+.grimoire { margin: 0; }
+.grimoire dt { font-family: var(--font-ui); font-size: 0.8125rem; font-weight: 600; color: var(--gold-text); margin-top: var(--space-3); }
+.grimoire dd { margin: var(--space-1) 0 0; }
+
+/* ---------- 8. Footer ---------- */
+.site-footer { border-top: 1px solid var(--line); padding: var(--space-5) 0 var(--space-7); }
+.footer-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.footer-row p { margin: 0; font-size: 1rem; }
+
+/* ---------- 9. Wider screens, motion & accessibility ---------- */
+@media (min-width: 720px) {
+  .circle-layout { grid-template-columns: 300px 1fr; align-items: center; justify-items: start; }
+  .card { padding: var(--space-5); }
+  .btn-primary { width: auto; }
+}
+
+/* Visible keyboard focus everywhere. */
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* The slow turn of the outer ring. Off for people who ask for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  /* DEV NOTE: 150px 150px must match CIRCLE_CENTER in app.js. */
+  .mc-orbit { transform-origin: 150px 150px; animation: mc-turn 120s linear infinite; }
+  @keyframes mc-turn { to { transform: rotate(360deg); } }
+}
+
+/* Visually hidden but still read by screen readers. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

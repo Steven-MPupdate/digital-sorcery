@@ -1,0 +1,115 @@
+/*
+ * brand.css — Brand tokens: the ONLY place colors, fonts, spacing and radii are defined.
+ *
+ * Source:     Mirror Path Brand Kit v1 (2026-09-26), supplied by Steven Cruz / Butler Builds.
+ *             Dark Ink (default) and Light Ivory palettes, Cinzel / Cormorant Garamond /
+ *             Montserrat type, spacing scale and radius scale are copied from that kit.
+ * Used by:    src/styles/main.css (via var(--token)).
+ *
+ * Brand rules from the kit (keep these true when editing):
+ *   - No glows on text. No gradients on type. No emoji as markers.
+ *   - No purple, no teal, no candy accents. No rounded-lg cards, no accent bars.
+ *   - Radius: 0 is the default; 2px for buttons/chips/inputs; 6px for cards.
+ *
+ * DEV NOTE: Fonts are self-hosted from assets/fonts (SIL Open Font License, see the
+ * LICENSE files there) so the page makes no requests to Google and the CSP stays strict.
+ */
+
+/* ---------- Fonts ---------- */
+@font-face {
+  font-family: 'Cinzel';
+  src: url('../../assets/fonts/cinzel-latin-400-normal.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Cinzel';
+  src: url('../../assets/fonts/cinzel-latin-600-normal.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../../assets/fonts/cormorant-garamond-latin-400-normal.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../../assets/fonts/cormorant-garamond-latin-400-italic.woff2') format('woff2');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../../assets/fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../../assets/fonts/montserrat-latin-500-normal.woff2') format('woff2');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../../assets/fonts/montserrat-latin-600-normal.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+
+/* ---------- Tokens: Dark Ink (default) ---------- */
+:root,
+:root[data-theme='dark'] {
+  --surface: #0E0D0B;        /* Page background */
+  --surface-raised: #171512; /* Cards, panels */
+  --line: #2A251D;           /* Hairlines, dividers, input borders */
+  --ink: #F4ECDC;            /* Primary text */
+  --ink-muted: #A89C85;      /* Secondary text, captions, help */
+  --gold: #C9A45C;           /* Primary accent: links, active state, brand mark */
+  --gold-bright: #E8CF8E;    /* Hover on gold */
+  --gold-soft: #2A2115;      /* Tinted ground behind gold text: callouts, chips */
+  --on-gold: #0E0D0B;        /* Text on a solid gold fill (primary button label) */
+  --bronze: #8A6A45;         /* Secondary accent: rules, icons, quiet ornament */
+  --warn: #D9A26A;           /* Non-blocking warnings */
+  /* DEV NOTE: not in the kit — the gold used for TEXT. In dark mode it is the kit's gold. */
+  --gold-text: #C9A45C;
+  color-scheme: dark;
+}
+
+/* ---------- Tokens: Light Ivory ---------- */
+:root[data-theme='light'] {
+  --surface: #F6F1E7;
+  --surface-raised: #FBF7ED;
+  --line: #E2D8C3;
+  --ink: #0E0D0B;
+  --ink-muted: #5A4632;
+  --gold: #A17B2F;
+  --gold-bright: #C9A45C;
+  --gold-soft: #F3E5C2;
+  --on-gold: #0E0D0B;
+  --bronze: #5A4632;
+  --warn: #8A5A1E;
+  /* DEV NOTE: the kit's light gold (#A17B2F) is ~3.5:1 on ivory — below WCAG AA for small
+     text. Small gold text uses this darker shade of the same hue instead (AA ≥ 4.5:1). */
+  --gold-text: #7D5E1F;
+  color-scheme: light;
+}
+
+/* ---------- Type, spacing, radius ---------- */
+:root {
+  --font-display: 'Cinzel', 'Times New Roman', serif;
+  --font-text: 'Cormorant Garamond', Georgia, serif;
+  --font-ui: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --space-1: 4px;   /* Icon-to-label gap, chip padding */
+  --space-2: 8px;   /* Compact interior padding */
+  --space-3: 12px;  /* Between related controls */
+  --space-4: 16px;  /* Default gutter, card padding */
+  --space-5: 24px;  /* Between paragraphs and stacked cards */
+  --space-6: 32px;  /* Section-inner padding on desktop */
+  --space-7: 48px;  /* Between page sections */
+  --space-8: 72px;  /* Hero spacing */
+  --space-9: 112px; /* Cover airspace */
+
+  --radius-none: 0;      /* Editorial slabs (default) */
+  --radius-sm: 2px;      /* Buttons, chips, inputs */
+  --radius-md: 6px;      /* Cards, modals */
+  --radius-lg: 12px;     /* Feature panels */
+  --radius-full: 9999px; /* Pills and dots only */
+}
