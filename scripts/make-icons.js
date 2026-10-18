@@ -3,11 +3,13 @@
  *
  * Usage:   npm run icons   (re-run after editing icon.svg)
  * Output:  icon-192.png, icon-512.png, icon-maskable-512.png (with safe-zone padding).
+ * DEV NOTE: The #0E0D0B background must match --surface (Dark Ink) in brand.css.
  * DEV NOTE: Uses the Playwright Chromium already installed for tests, so no image library.
  */
 
 import { chromium } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 
 const dir = new URL('../assets/icons/', import.meta.url);
 const svg = await readFile(new URL('icon.svg', dir), 'utf8');
@@ -23,7 +25,7 @@ async function render(size, fileName, padding = 0) {
     `<body style="margin:0;background:#0E0D0B;display:grid;place-items:center;width:${size}px;height:${size}px">` +
     `<img src="${dataUrl}" width="${inner}" height="${inner}"></body>`,
   );
-  await page.screenshot({ path: new URL(fileName, dir).pathname });
+  await page.screenshot({ path: fileURLToPath(new URL(fileName, dir)) });
 }
 
 await render(192, 'icon-192.png');

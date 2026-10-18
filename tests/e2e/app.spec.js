@@ -4,18 +4,18 @@
  * Covers: the main learn → cast → copy flow, saved drafts, hostile input (XSS),
  * corrupted/blocked storage, offline mode, layout on small phones and privacy
  * (no requests to other sites).
+ * Depends on: playwright.config.js (servers), src/storage.js (DRAFT_KEY).
  * DEV NOTE: Each "attack" test here exists because the Trial by Fire agents look for it.
  */
 
 import { test, expect } from '@playwright/test';
+import { DRAFT_KEY } from '../../src/storage.js';
 
 const REQUIRED = {
   intent: 'A habit tracker that helps night-shift nurses keep a sleep routine',
   summoned: 'Night-shift nurses on their phones during short breaks',
   powers: '1. Log sleep in two taps\n2. Weekly chart\n3. One reminder',
 };
-
-const DRAFT_KEY = 'digital-sorcery:draft:v1';
 
 /** Fill the three required ingredients. */
 async function fillRequired(page) {
@@ -178,7 +178,6 @@ test('chips add a phrase once and respect the length cap', async ({ page }) => {
 test('textareas cannot exceed 2000 characters', async ({ page }) => {
   await page.goto('/');
   await page.fill('#field-intent', 'z'.repeat(5000)); // fill() bypasses maxlength like a paste attack
-  await page.click('#field-summoned');
   await page.fill('#field-summoned', REQUIRED.summoned);
   await page.fill('#field-powers', REQUIRED.powers);
   await page.click('#cast-btn');
@@ -200,7 +199,6 @@ test('clear the circle wipes everything after confirming', async ({ page }) => {
 test('layout: no sideways scrolling on a phone, even with long unbroken text', async ({ page }) => {
   await page.goto('/');
   await page.fill('#spell-name', 'W'.repeat(80));
-  await page.fill('#field-intent', 'A'.repeat(400));
   await fillRequired(page);
   await page.fill('#field-intent', 'B'.repeat(400));
   await page.click('#cast-btn');
@@ -213,7 +211,7 @@ test('accessibility basics: skip link, labels, focusable output', async ({ page 
   await page.keyboard.press('Tab');
   await expect(page.locator('.skip-link')).toBeFocused();
   for (const id of ['intent', 'summoned', 'powers', 'wards', 'tools', 'laws', 'proof']) {
-    await expect(page.getByLabel(new RegExp(`your answer`)).and(page.locator(`#field-${id}`))).toHaveCount(1);
+    await expect(page.getByLabel(/your answer/).and(page.locator(`#field-${id}`))).toHaveCount(1);
   }
   await fillRequired(page);
   await page.click('#cast-btn');
@@ -240,4 +238,109 @@ test('PWA manifest is valid and icons load', async ({ page, request }) => {
     const res = await request.get(new URL(icon.src, 'http://localhost/').pathname);
     expect(res.ok(), icon.src).toBeTruthy();
   }
+});
+
+/* ------------------------------------------------------------------ */
+/* Regression tests for Trial by Fire findings (v1.0.0)                */
+/* ------------------------------------------------------------------ */
+
+test('layout: cards fit the screen at 200% text size', async ({ page }) => {
+  await page.goto('/');
+  // DEV NOTE: set through the DOM; addStyleTag is (correctly) blocked by our CSP.
+  await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
+  await page.locator('#install-btn').evaluate((el) => { el.hidden = false; }); // worst case header
+  const overflow = await page.evaluate(() => {
+    const width = document.documentElement.clientWidth;
+    const pageScroll = document.documentElement.scrollWidth - width;
+    const sticking = [...document.querySelectorAll('.ingredient, .ingredient *, .site-header *')]
+      .filter((el) => el.getBoundingClientRect().right > width + 1).length;
+    return { pageScroll, sticking };
+  });
+  expect(overflow).toEqual({ pageScroll: 0, sticking: 0 });
+  // The skip link stays hidden until it is focused, even with big text.
+  const skipBottom = await page.locator('.skip-link').evaluate((el) => el.getBoundingClientRect().bottom);
+  expect(skipBottom).toBeLessThanOrEqual(0);
+});
+
+test('keyboard: after casting, Tab goes straight to Copy then Download', async ({ page }) => {
+  await page.goto('/');
+  await fillRequired(page);
+  await page.click('#cast-btn');
+  await expect(page.locator('#spell-text')).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#copy-btn')).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#download-btn')).toBeFocused();
+});
+
+test('screen readers: ritual copy result is announced', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Copy the Observe prompt' }).click();
+  await expect(page.locator('#ritual-status')).toHaveText('Observe prompt copied.');
+});
+
+test('save failure is shown, not hidden', async ({ page }) => {
+  await page.addInitScript(() => {
+    Storage.prototype.setItem = () => { throw new DOMException('full', 'QuotaExceededError'); };
+  });
+  await page.goto('/');
+  await page.fill('#field-intent', REQUIRED.intent);
+  await expect(page.locator('#save-status')).toContainText('could not save');
+});
+
+test('two tabs: edits in one tab show up in the other instead of being overwritten', async ({ context }) => {
+  const tabA = await context.newPage();
+  const tabB = await context.newPage();
+  await tabA.goto('/');
+  await tabB.goto('/');
+  await tabA.fill('#field-intent', 'Written in tab A');
+  await expect(tabB.locator('#field-intent')).toHaveValue('Written in tab A');
+  await tabB.fill('#field-powers', 'Written in tab B');
+  await tabB.waitForTimeout(500);
+  const tabC = await context.newPage();
+  await tabC.goto('/');
+  await expect(tabC.locator('#field-intent')).toHaveValue('Written in tab A');
+  await expect(tabC.locator('#field-powers')).toHaveValue('Written in tab B');
+});
+
+test('download name always matches the cast spell, even after renaming', async ({ page }) => {
+  await page.goto('/');
+  await page.fill('#spell-name', 'Night Shift Sleep');
+  await fillRequired(page);
+  await page.click('#cast-btn');
+  await page.fill('#spell-name', 'Totally Different');
+  await expect(page.locator('#cast-status')).toContainText('Cast again');
+  const [download] = await Promise.all([page.waitForEvent('download'), page.click('#download-btn')]);
+  expect(download.suggestedFilename()).toBe('spell-night-shift-sleep.md');
+  await page.fill('#spell-name', 'Night Shift Sleep'); // back to the cast version
+  await expect(page.locator('#cast-status')).toContainText('The spell is cast');
+});
+
+test('invisible-only answers cannot unlock casting', async ({ page }) => {
+  await page.goto('/');
+  const zeroWidth = String.fromCodePoint(0x200b);
+  for (const id of ['intent', 'summoned', 'powers']) await page.fill(`#field-${id}`, zeroWidth);
+  await expect(page.locator('#cast-btn')).toBeDisabled();
+});
+
+test('offline worker: unknown pages are not replaced by a broken copy of the app', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.reload();
+  const response = await page.goto('/some/deep/path');
+  expect(response.status()).toBe(404);
+});
+
+test('GitHub Pages sub-folder: everything loads under /new-app/', async ({ page }) => {
+  const failed = [];
+  page.on('response', (res) => { if (res.status() >= 400) failed.push(`${res.status()} ${res.url()}`); });
+  const errors = watchErrors(page);
+  await page.goto('http://localhost:4174/new-app/');
+  await expect(page.locator('.ingredient')).toHaveCount(7);
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  const fontsLoaded = await page.evaluate(async () => { await document.fonts.ready; return document.fonts.check('16px Cinzel'); });
+  expect(fontsLoaded).toBe(true);
+  expect(failed).toEqual([]);
+  expect(errors).toEqual([]);
 });

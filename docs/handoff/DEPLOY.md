@@ -16,6 +16,9 @@ Recommended: a subdomain such as **`sorcery.butlerbuilds.dev`**, so your main si
 3. Repo Settings → Pages → Custom domain → `sorcery.butlerbuilds.dev` → Save.
 4. When the DNS check passes, tick **Enforce HTTPS**. (`.dev` domains require HTTPS; GitHub
    provides the certificate for free. It can take up to an hour.)
+5. Existing visitors follow GitHub's redirect to the new address automatically (the service worker
+   is network-first, so it doesn't trap them on the old one). Their saved drafts stay on the old
+   address, though: browsers keep storage per website. Mention this if people already use the app.
 
 ## Every release
 - Bump `CACHE_VERSION` in `sw.js` and the version in `package.json` + footer in `index.html`.

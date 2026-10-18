@@ -3,6 +3,7 @@
  *
  * Usage:     npm start            → http://localhost:4173
  *            PORT=5000 npm start  → custom port
+ *            BASE_PATH=/new-app/ npm start → serve under a sub-folder, like GitHub Pages
  * Used by:   playwright.config.js (starts it automatically before browser tests).
  *
  * SECURITY: Only serves files inside the project folder. Requests that try to climb out
@@ -17,6 +18,8 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const PORT = Number(process.env.PORT) || 4173;
+// Optional sub-folder, e.g. "/new-app/". Requests outside it get a 404, like GitHub Pages.
+const BASE_PATH = process.env.BASE_PATH || '/';
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -45,7 +48,9 @@ function safePath(urlPath) {
 }
 
 const server = createServer(async (req, res) => {
-  let file = safePath(req.url || '/');
+  const url = req.url || '/';
+  if (!url.startsWith(BASE_PATH)) { res.writeHead(404).end('Not found'); return; }
+  let file = safePath(`/${url.slice(BASE_PATH.length)}`);
   if (!file) { res.writeHead(404).end('Not found'); return; }
   try {
     if ((await stat(file)).isDirectory()) file = join(file, 'index.html');
@@ -61,4 +66,4 @@ const server = createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => console.log(`Digital Sorcery running at http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Digital Sorcery running at http://localhost:${PORT}${BASE_PATH}`));

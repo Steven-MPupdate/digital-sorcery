@@ -3,6 +3,9 @@
 # Pull requests and pushes to any branch → run the tests.
 # Pushes to main → run the tests, THEN deploy to GitHub Pages.
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions" (see docs/handoff/DEPLOY.md).
+#
+# SECURITY: every action is pinned to an exact commit (the version is in the comment), so a
+# moved tag can't change what runs. Dependabot opens PRs to update these pins.
 
 name: Test & Deploy
 
@@ -15,38 +18,41 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   test:
     name: Trial by Fire (automated)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    concurrency:
+      group: test-${{ github.ref }}
+      cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Color contrast (WCAG AA) and hidden-character checks
+        run: npm run check
       - name: Unit tests
         run: npm run test:unit
-      - name: Color contrast (WCAG AA)
-        run: npm run check:contrast
       - name: Secret scan (simple)
-        # DEV NOTE: a light guard; GitHub's own secret scanning also runs on public repos.
+        # DEV NOTE: a light guard on top of GitHub's own secret scanning. Docs are scanned
+        # too (CLAUDE.md bans secrets everywhere); only this workflow file is skipped,
+        # because it contains the patterns themselves.
         run: |
-          if git grep -nIE '(sk-[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{35}|ghp_[A-Za-z0-9]{36}|-----BEGIN [A-Z ]*PRIVATE KEY-----|service_role)' -- ':!*.md' ':!.github/workflows/*'; then
+          if git grep -nIE '(sk-[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{35}|ghp_[A-Za-z0-9]{36}|-----BEGIN [A-Z ]*PRIVATE KEY-----|service_role)' -- ':!.github/workflows/*'; then
             echo "Possible secret found. Remove it before merging." && exit 1
           fi
       - name: Browser tests
         run: npm run test:e2e
         env:
           CI: true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: playwright-traces
@@ -58,22 +64,30 @@ jobs:
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    # DEV NOTE: never cancel a deploy halfway; a second push waits for the first to finish.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - name: Collect only the files the website needs
+        # DEV NOTE: .nojekyll tells GitHub Pages to serve files as-is (no Jekyll processing).
         run: |
           mkdir -p _site
           cp -r index.html manifest.webmanifest sw.js src assets _site/
           touch _site/.nojekyll
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: _site
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

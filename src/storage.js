@@ -5,7 +5,7 @@
  *                (private mode, full disk, strict browser settings), and validates
  *                everything it reads back.
  * Depends on:    src/incantation.js (normalizeDraft) for validation.
- * Used by:       src/app.js.
+ * Used by:       src/app.js (and tests/e2e, which import DRAFT_KEY).
  *
  * DEV NOTE: Nothing here talks to a server. If a cloud save is added later (e.g. Supabase),
  * create a separate module and keep this one as the offline fallback.
@@ -13,9 +13,12 @@
 
 import { normalizeDraft, emptyDraft } from './incantation.js';
 
-/** Storage keys. Version suffix lets us change the format later without breaking old drafts. */
+/**
+ * Storage keys. The version suffix lets us change the format later: a v2 app reads the
+ * v1 key once, converts it, and saves under v2 (see DECISIONS D14).
+ */
 export const DRAFT_KEY = 'digital-sorcery:draft:v1';
-export const THEME_KEY = 'digital-sorcery:theme:v1';
+const THEME_KEY = 'digital-sorcery:theme:v1';
 
 /** Read the saved draft. Always returns a valid, cleaned draft. */
 export function loadDraft() {

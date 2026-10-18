@@ -20,4 +20,19 @@ Official sources this project relies on, and what we used each for.
 | [Playwright docs](https://playwright.dev/docs/intro) | Browser tests. |
 | [Fontsource](https://fontsource.org/) | Source of the self-hosted Cinzel, Cormorant Garamond and Montserrat files (SIL OFL 1.1). |
 | [Termux on F-Droid](https://f-droid.org/packages/com.termux/) | Optional: running code on an Android phone. |
-| Mirror Path Brand Kit v1 (2026-09-26, private PDF) | Colors, type, spacing, radius and the "doesn't do" rules. |
+| [MDN: Web app manifest](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest) | `id`, `scope`, `start_url`, icon `purpose` fields. |
+| [MDN: Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) | `copyText()` (with an `execCommand` fallback for older browsers). |
+| [MDN: beforeinstallprompt](https://developer.mozilla.org/en-US/docs/Web/API/BeforeInstallPromptEvent) | The Install button (non-standard, Chromium only). |
+| [MDN: prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) | Turning off the ring animation. |
+| [MDN: storage event](https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event) | Keeping several tabs in sync. |
+| [WCAG 2.2: Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) and [Non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) | Cards fitting at 200% text; 3:1 input borders. |
+| [CommonMark spec](https://spec.commonmark.org/) | How fenced code blocks work (answer fences in `castSpell()`). |
+| [Node.js test runner](https://nodejs.org/api/test.html) | `npm run test:unit`. |
+| [GitHub: Security hardening for Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions) | Pinning actions to commit SHAs; least-privilege permissions. |
+| [GitHub Actions used](https://github.com/actions) | `checkout`, `setup-node`, `upload-artifact`, `configure-pages`, `upload-pages-artifact`, `deploy-pages`. |
+| [Dependabot configuration](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference) | `.github/dependabot.yml`. |
+| [GitHub secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning) | Backup to our CI secret scan. |
+| [GitHub Pages and Jekyll](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll) | Why `_site/.nojekyll` is added. |
+| [Supabase Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) and [Edge Function secrets](https://supabase.com/docs/guides/functions/secrets) | The v2 guidance in `docs/SECURITY.md`. |
+| [SIL Open Font License 1.1](https://openfontlicense.org/) | License of the three self-hosted fonts (copies in `assets/fonts/`). |
+| Mirror Path Brand Kit v1 (2026-09-26, private PDF) | Colors, type, spacing, radius and the "doesn't do" rules. Kept privately by the owner; ask Steven for a copy. |

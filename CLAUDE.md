@@ -17,13 +17,18 @@ Brand owner: Steven Cruz / Butler Builds.
 - **All paths are relative** (`./src/app.js`, not `/src/app.js`) because GitHub Pages serves
   the site from a sub-folder (`/new-app/`) unless a custom domain is used.
 - **Brand values live in one place:** `src/styles/brand.css`. Never hard-code colors or fonts elsewhere.
+  Exceptions (they cannot read CSS): the `theme-color` meta tag in `index.html`, `manifest.webmanifest`,
+  `assets/icons/icon.svg` and `scripts/make-icons.js`. Each has a note saying which token it must match.
 
 ## 3. Code-writing rules
 - **Human-readable first.** Clear names over clever code. Short functions.
 - **Every file starts with a header comment**: what it does, what it depends on, who calls it.
+  JSON files (`package.json`, `manifest.webmanifest`) can't hold comments; `docs/INDEX.md` describes them.
 - **Dev notes** use the `// DEV NOTE:` prefix for "why" explanations, gotchas and future ideas.
   Use `// SECURITY:` for anything that protects users. Use `// TODO(vX):` for planned work.
 - **Never put user text into `innerHTML`.** Use `textContent` or `createElement`. (See docs/SECURITY.md.)
+- **Never type invisible characters into source code.** Use escapes or `String.fromCodePoint(...)`.
+  `npm run check:invisible` enforces this.
 - Every user input has a max length, and every saved value is validated when loaded back.
 
 ## 4. Documentation rules (the "Grimoire")
@@ -39,7 +44,8 @@ Every change must keep these up to date:
 
 ## 5. Testing & stress-test rules (the "Trial by Fire")
 Nothing reaches `main` (and therefore production) until it passes:
-1. `npm test` — unit tests (logic) + browser tests (real Chromium, phone-sized screen).
+1. `npm test` — contrast + hidden-character checks, unit tests (logic) and browser tests
+   (real Chromium, phone-sized screens, also served under `/new-app/` like GitHub Pages).
 2. **The Trial by Fire** — the stress-test agents in `.claude/agents/` try to break the build.
    Run as many as the change needs (see `docs/handoff/STRESS-TESTING.md` for which ones when).
    Every confirmed finding is fixed, or written into `docs/SECURITY.md` as an accepted risk with a reason.
@@ -47,7 +53,7 @@ Nothing reaches `main` (and therefore production) until it passes:
 
 ## 6. Git & deploy rules
 - Work on a feature branch; merge to `main` through a pull request.
-- `main` auto-deploys to GitHub Pages via `.github/workflows/deploy.yml` **only if tests pass**.
+- `main` auto-deploys to GitHub Pages via `.github/workflows/ci-deploy.yml` **only if tests pass**.
 - Bump the cache version in `sw.js` whenever app-shell files change, or users get stale files.
 - Commit messages: short imperative summary line, then why.
 

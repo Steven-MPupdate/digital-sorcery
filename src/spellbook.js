@@ -178,7 +178,7 @@ export const INGREDIENTS = [
 
 /**
  * The Iteration Ritual — follow-up prompts to use AFTER the first answer comes back.
- * Shown in the UI after casting; also listed in docs/GLOSSARY.md.
+ * Always shown on the page (below Cast); also listed in docs/GLOSSARY.md.
  */
 export const ITERATION_RITUAL = [
   { step: 'Observe', prompt: 'Before changing anything: summarize what you built and list anything you assumed that I did not tell you.' },

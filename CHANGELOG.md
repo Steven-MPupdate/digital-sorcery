@@ -11,4 +11,8 @@ First version.
 - Installable PWA, works offline; drafts saved on the device only.
 - Security: strict CSP, no innerHTML for user text, validated storage, input caps.
 - Trial by Fire: unit + browser tests (incl. attack inputs) and five stress-test agents.
-- GitHub Actions: test on every push; deploy `main` to GitHub Pages.
+- GitHub Actions: checks and tests on every push; deploy `main` to GitHub Pages (actions pinned to SHAs).
+- Hardened after the first Trial by Fire (see docs/handoff/HANDOFF-LOG.md): answers fenced in the
+  prompt, zero-width/invisible input handled, network-first offline worker, tabs kept in sync,
+  visible save-failure warning, large-text layout, focus order, contrast of hover states and borders,
+  hidden-character check for source code.

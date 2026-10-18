@@ -2,7 +2,8 @@
  * playwright.config.js — Browser test settings.
  *
  * Runs tests/e2e in real Chromium sized like a Galaxy Note 20 (412×915, touch),
- * plus a narrow 360px phone. Starts the local server (scripts/serve.js) automatically.
+ * plus a narrow 360px phone. Starts two local servers (scripts/serve.js) automatically:
+ * one at the root and one under /new-app/ like GitHub Pages.
  * Run with: npm run test:e2e
  */
 
@@ -30,10 +31,19 @@ export default defineConfig({
       use: { browserName: 'chromium', viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true },
     },
   ],
-  webServer: {
-    command: `node scripts/serve.js`,
-    env: { PORT: String(PORT) },
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: 'node scripts/serve.js',
+      env: { PORT: String(PORT) },
+      url: `http://localhost:${PORT}`,
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      // Same site served under /new-app/, exactly like GitHub Pages (see the sub-path test).
+      command: 'node scripts/serve.js',
+      env: { PORT: String(PORT + 1), BASE_PATH: '/new-app/' },
+      url: `http://localhost:${PORT + 1}/new-app/`,
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 });

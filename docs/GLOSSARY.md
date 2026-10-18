@@ -12,23 +12,33 @@ Format: **Term** — plain-English meaning. *Where:* file(s) where it lives.
 - **Casting / Cast the spell** — Turning the ingredients into the spell. Only allowed when the required ingredients are present. *Where:* `cast()` in `src/app.js`.
 - **Ingredient** — One decision the app needs before building starts. There are seven. *Where:* `INGREDIENTS` in `src/spellbook.js`.
 - **Rune** — The mystical name of an ingredient (e.g. "The Intent"). Always shown next to its plain name. *Where:* `rune` field in `src/spellbook.js`.
-- **The Intent (I)** — What the app does and why it should exist. Required.
-- **The Summoned (II)** — Who the app is for. Required.
-- **The Powers (III)** — The 3–5 core features of version 1. Required.
-- **The Wards (IV)** — What will NOT be built in version 1 (scope protection).
-- **The Tools (V)** — Platform, stack and hosting.
-- **The Laws (VI)** — Rules the AI builder must follow (code style, security, testing).
-- **The Proof (VII)** — Definition of done: how we know v1 works.
+- **The Intent (I)** — What the app does and why it should exist. Required. *Where:* `INGREDIENTS` id `intent`, `src/spellbook.js`.
+- **The Summoned (II)** — Who the app is for. Required. *Where:* id `summoned`.
+- **The Powers (III)** — The 3–5 core features of version 1. Required. *Where:* id `powers`.
+- **The Wards (IV)** — What will NOT be built in version 1 (scope protection). *Where:* id `wards`.
+- **The Tools (V)** — Platform, stack and hosting. *Where:* id `tools`.
+- **The Laws (VI)** — Rules the AI builder must follow (code style, security, testing). *Where:* id `laws`.
+- **The Proof (VII)** — Definition of done: how we know v1 works. *Where:* id `proof`.
 - **Magic Circle** — The SVG diagram of seven runes joined in a seven-point star. A rune lights up when its ingredient has content; the circle turns gold when the spell can be cast. *Where:* `renderCircle()` in `src/app.js`, `.mc-*` classes in `src/styles/main.css`.
-- **Heptagram** — The seven-pointed star (pattern {7/3}) drawn inside the Magic Circle and the app icon.
+- **Heptagram** — The seven-pointed star (pattern {7/3}) drawn inside the Magic Circle and the app icon. *Where:* `drawChords()` in `src/app.js`, `assets/icons/icon.svg`.
 - **Spell Strength** — A 0–100 score: each ingredient's weight × how complete its answer is. A nudge, not a grade. *Where:* `scoreSpell()` in `src/incantation.js`.
 - **Counsel** — Teaching hints about vague words, too many features, or missing Wards. *Where:* `getCounsel()` in `src/incantation.js`.
 - **Iteration Ritual** — The five follow-up prompts to use after the first AI answer: Observe, Question, Refine, Test, Record. *Where:* `ITERATION_RITUAL` in `src/spellbook.js`.
 - **Working Agreement** — The "How we will work together" rules added to the end of every spell (ask questions first, small steps, no secrets…). *Where:* `WORKING_AGREEMENT` in `src/incantation.js`.
 - **Quick-pick chips** — Buttons that add a common phrase to an ingredient. *Where:* `chips` in `src/spellbook.js`, `addChip()` in `src/app.js`.
 - **Clear the circle** — Erase every ingredient from the device. *Where:* `reset()` in `src/app.js`.
-- **Grimoire** — (1) The short glossary section inside the app. (2) The project's documentation set as a whole (this folder).
+- **Grimoire** — (1) The short glossary section inside the app (*Where:* `#grimoire-title` section of `index.html`). (2) The project's documentation set as a whole (this folder).
 - **Ink / Ivory** — The dark and light themes from the brand kit. *Where:* `src/styles/brand.css`.
+- **Draft** — The learner's saved answers: `{ name, fields }`. *Where:* `normalizeDraft()` in `src/incantation.js`, `DRAFT_KEY` in `src/storage.js`.
+- **Spellbook** — The content module listing the ingredients and ritual. *Where:* `src/spellbook.js`.
+- **Incantation** — The pure logic module (clean, score, counsel, cast). *Where:* `src/incantation.js`.
+- **"Not decided yet"** — What a spell says for an empty optional ingredient: it asks the AI to suggest options. *Where:* `NOT_DECIDED` in `src/incantation.js`.
+- **Answer fence** — Each learner answer is wrapped in a ```` ```text ```` block in the spell, so it can't change the prompt's structure. *Where:* `fenceAnswer()` in `src/incantation.js`.
+- **Taglines** — "Every app starts as a spell." and "The formula to a solid start." *Where:* `index.html` hero, `README.md`.
+- **Butler Builds** — The brand and business behind the app (Steven Cruz). *Where:* `.brand-mark` and footer in `index.html`, `README.md`.
+- **Mirror Path Brand Kit v1** — The design system the app uses: colors, fonts, spacing, radius and "doesn't do" rules. *Where:* `src/styles/brand.css` header, `docs/DECISIONS.md` D4. The PDF is kept privately by the owner (ask Steven).
+- **Familiar** *(planned)* — An optional AI helper that reviews a spell and asks follow-up questions. *Where:* `docs/handoff/ARCHITECTURE.md`.
+- **Quests** *(planned)* — Guided lessons that teach one ingredient at a time. *Where:* `docs/handoff/ARCHITECTURE.md`.
 - **Trial by Fire** — The stress-testing stage before deploy: automated tests plus the stress-test agents. *Where:* `.claude/agents/`, `docs/handoff/STRESS-TESTING.md`.
 
 ## Stress-test agents (the Trial by Fire team)
@@ -44,7 +54,8 @@ Format: **Term** — plain-English meaning. *Where:* file(s) where it lives.
 - **PWA (Progressive Web App)** — A website that can be installed on a phone's home screen and work offline.
 - **Service worker** — A background script that caches the app's files so it works offline. *Where:* `sw.js`.
 - **App shell** — The list of files the service worker saves for offline use. *Where:* `APP_SHELL` in `sw.js`.
-- **Cache version** — A label in `sw.js`; changing it makes phones download fresh files.
+- **Cache version** — The `CACHE_VERSION` label in `sw.js`; changing it clears old offline copies on phones.
+- **Network-first** — The offline strategy: always try the internet first, use the saved copy only when offline. *Where:* `sw.js`, DECISIONS D9.
 - **Manifest** — A small JSON file that tells the phone the app's name, icon and colors. *Where:* `manifest.webmanifest`.
 - **localStorage** — Storage inside the browser on the user's device. Drafts live here; nothing is sent anywhere.
 - **CSP (Content Security Policy)** — A rule list telling the browser which files the page may load. Blocks injected scripts. *Where:* meta tag in `index.html`.
@@ -55,4 +66,10 @@ Format: **Term** — plain-English meaning. *Where:* file(s) where it lives.
 - **GitHub Actions** — GitHub's automation. Runs our tests and deploys. *Where:* `.github/workflows/ci-deploy.yml`.
 - **Playwright** — The tool that drives a real browser in our tests. *Where:* `tests/e2e/`, `playwright.config.js`.
 - **Debounce** — Waiting until typing pauses before saving, to avoid saving on every key press. *Where:* `debounce()` in `src/app.js`.
+- **Maskable icon** — An app icon with padding so phones can crop it into circles or squircles. *Where:* `icon-maskable-512.png`, `scripts/make-icons.js`.
+- **Clickjacking** — Tricking someone into clicking a hidden framed page. An accepted risk for v1. *Where:* `docs/SECURITY.md`.
+- **Hidden characters / Trojan Source** — Invisible characters that make code or text look different from what it is. *Where:* `cleanText()`, `scripts/check-invisible.js`.
+- **Dependabot** — GitHub's bot that opens PRs to update dependencies and pinned actions. *Where:* `.github/dependabot.yml`.
+- **PR (pull request)** — A request to merge a branch's changes into `main`, where they are reviewed and tested first.
+- **Supabase** — A hosted database + login + server-function service (planned for v2). **Row Level Security** = per-row access rules in its database. **Edge Function** = a small server function that can hold secret keys. *Where:* `docs/SECURITY.md`, a Tools chip in `src/spellbook.js`.
 - **WCAG AA** — The common accessibility standard; text needs a contrast ratio of at least 4.5:1. *Where:* `scripts/check-contrast.js`.

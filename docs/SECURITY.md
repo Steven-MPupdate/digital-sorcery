@@ -13,14 +13,16 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
 | Injected scripts/styles | Strict CSP: only same-site files; no inline scripts/styles; `object-src 'none'`; `base-uri 'none'`; `form-action 'none'`. | `index.html` |
 | Tampered saved draft | Parsed in try/catch, rebuilt from known keys only, every value type-checked, cleaned and length-capped. | `normalizeDraft()`, `src/storage.js` |
 | Prototype pollution | `Object.hasOwn` checks; unknown keys (incl. `__proto__`) dropped. | `src/incantation.js` |
-| Hidden-text tricks in prompts | Control and bidi-override characters stripped. Lines starting with `#` escaped so text can't fake prompt sections. | `cleanText()`, `protectMarkdown()` |
+| Hidden-text tricks | Control, bidi-override and zero-width characters stripped from input; invisible-only answers don't count as content; CI fails if hidden characters appear in source code. | `cleanText()`, `hasContent()`, `scripts/check-invisible.js` |
+| Prompt structure injection | Each answer is wrapped in a code fence longer than any backticks inside it, so no answer can fake headings, open code blocks or hide text. Unit-tested with 11 attack payloads. | `fenceAnswer()`, `castSpell()` |
 | Huge input (memory abuse) | 2000-char cap per ingredient, 80 for the name, enforced in HTML **and** in logic. | `spellbook.js`, `index.html` |
 | Unsafe download names | File name reduced to `a–z 0–9 -`, max 40 chars. | `spellFileName()` |
-| Cache poisoning / stale code | Service worker only handles same-origin GETs; caches only good `basic` responses for known files; versioned cache with old versions deleted. | `sw.js` |
+| Cache poisoning / stale code | Service worker only handles same-origin GETs; network-first so online visitors always get matching fresh files; caches only good `basic` responses for known shell files; unknown pages are never answered with the app; old cache versions deleted. | `sw.js` |
+| Lost or overwritten drafts | Saves flush when the page hides; save failures are shown on screen; open tabs sync via the `storage` event. | `src/app.js` |
 | Third-party tracking / data leaks | No third-party requests at all (fonts self-hosted). `referrer` policy `no-referrer`. Tested. | `index.html`, `tests/e2e` |
 | Leaked secrets | Rule: no secrets in repo. CI runs a simple secret scan; GitHub secret scanning also applies to public repos. | `CLAUDE.md`, `ci-deploy.yml` |
-| Supply chain | One dev-only dependency (Playwright), version pinned; lockfile committed; Dependabot updates; CI actions pinned to major versions. | `package.json`, `.github/` |
-| CI token abuse | Workflow defaults to `contents: read`; only the deploy job gets `pages: write` + `id-token: write`, and only on `main`. | `ci-deploy.yml` |
+| Supply chain | One dev-only dependency (Playwright), version pinned; lockfile committed; Dependabot updates; CI actions pinned to exact commit SHAs. | `package.json`, `.github/` |
+| CI token abuse | Workflow defaults to `contents: read`; only the deploy job gets `pages: write` + `id-token: write`, and only on `main`; checkout doesn't keep credentials; deploys are never cancelled halfway. | `ci-deploy.yml` |
 | Local server path traversal | Dev server blocks `..`, dot-files, `node_modules`, null bytes. | `scripts/serve.js` |
 
 ## Accepted risks (with reasons)
@@ -30,8 +32,8 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
    host behind Cloudflare (free) or Netlify/Vercel, which can send the header.
 2. **Drafts are readable by anyone with access to the unlocked phone/browser.** They are
    plain localStorage. Acceptable for brainstorming notes; we tell users not to paste secrets.
-3. **GitHub Actions pinned by major version tag (e.g. `@v4`), not commit SHA.** These are
-   official GitHub-owned actions; Dependabot watches them. *Revisit* if third-party actions are added.
+3. **Several tabs: newest save wins.** If two tabs are edited at the same moment, the last save
+   is kept and shown in both tabs (with a notice). Real merging isn't worth the complexity for notes.
 
 ## Before adding AI calls, logins or a database (v2+)
 - **Never** put an API key in front-end code. Call AI models from a server function

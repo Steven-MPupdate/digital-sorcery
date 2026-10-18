@@ -6,10 +6,12 @@
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.js",
-    "test": "npm run test:unit && npm run test:e2e",
+    "test": "npm run check && npm run test:unit && npm run test:e2e",
+    "check": "npm run check:contrast && npm run check:invisible",
     "test:unit": "node --test \"tests/unit/**/*.test.js\"",
     "test:e2e": "playwright test",
     "check:contrast": "node scripts/check-contrast.js",
+    "check:invisible": "node scripts/check-invisible.js",
     "icons": "node scripts/make-icons.js"
   },
   "devDependencies": {

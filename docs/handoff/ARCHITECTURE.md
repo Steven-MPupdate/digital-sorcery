@@ -8,14 +8,15 @@ index.html ──loads──> src/styles/brand.css (tokens) + main.css (layout)
                     ├── src/spellbook.js   (DATA: ingredients, ritual — no logic)
                     ├── src/incantation.js (LOGIC: clean, score, counsel, cast — pure, no DOM)
                     ├── src/storage.js     (DEVICE STORAGE: safe localStorage wrapper)
-                    └── registers sw.js    (OFFLINE: caches the app shell)
+                    └── registers sw.js    (OFFLINE: network-first, cached copy when offline)
 ```
 
 ## Data flow
 1. On load, `storage.loadDraft()` reads localStorage → `normalizeDraft()` validates it.
 2. `app.js` renders a card per ingredient from `spellbook.js` and draws the Magic Circle.
 3. Each keystroke → `update()`: read fields → `scoreSpell()` + `getCounsel()` → update
-   meter, circle, cards, counsel, Cast button → save (debounced 300 ms; flushed when the page hides).
+   meter, circle, cards, counsel, Cast button → save (debounced 300 ms; flushed when the page hides;
+   a visible warning if the browser refuses). Other tabs receive the save through the `storage` event.
 4. Cast → `castSpell()` builds Markdown → shown with `textContent` → Copy / Download.
 
 ## Design principles

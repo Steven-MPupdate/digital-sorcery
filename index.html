@@ -4,12 +4,15 @@
 
   What it does:  Static page structure. All interactive parts are filled in by src/app.js.
   Depends on:    src/styles/*.css, src/app.js, manifest.webmanifest, sw.js (via app.js).
+  Used by:       the browser (entry page); sw.js caches it for offline use.
 
   SECURITY: The Content-Security-Policy below only allows files from this same site.
   No inline scripts, no third-party scripts, fonts or trackers. If you add an outside
   service later, you must add it here on purpose (and note it in docs/SECURITY.md).
   DEV NOTE: GitHub Pages cannot send custom HTTP headers, so the CSP lives in this meta tag.
   `frame-ancestors` is ignored in a meta tag; see docs/SECURITY.md for the accepted risk.
+  DEV NOTE: theme-color below must match --surface in brand.css (meta tags can't read CSS
+  variables). app.js updates it from the CSS token when the theme changes.
 -->
 <html lang="en" data-theme="dark">
 <head>
@@ -36,7 +39,7 @@
       <p class="brand-mark">Butler Builds · Digital Sorcery</p>
       <div class="header-actions">
         <button type="button" id="install-btn" class="btn btn-quiet" hidden>Install</button>
-        <button type="button" id="theme-btn" class="btn btn-quiet" aria-pressed="false">Ivory</button>
+        <button type="button" id="theme-btn" class="btn btn-quiet">Ivory</button>
       </div>
     </div>
   </header>
@@ -59,7 +62,7 @@
         <!-- DEV NOTE: The SVG is drawn by app.js (renderCircle) so it stays in sync with spellbook.js. -->
         <svg id="magic-circle" class="magic-circle" viewBox="0 0 300 300" role="img"
              aria-labelledby="circle-desc">
-          <title id="circle-desc">Magic circle: lit runes show which ingredients you have added.</title>
+          <title id="circle-desc">Magic circle: no runes lit yet. Each rune lights up when you add its ingredient.</title>
         </svg>
         <div class="strength">
           <label for="strength-meter" class="ui-label">Spell strength</label>
@@ -73,9 +76,12 @@
     <section id="ingredients" class="wrap" aria-labelledby="ingredients-title">
       <h2 id="ingredients-title" class="section-label">The Ingredients</h2>
       <p class="hint">Numerals I–III are required. The rest make the spell stronger. Your words are saved on this device only.</p>
+      <p id="save-status" class="save-status" role="status"></p>
 
       <div class="field field-name">
         <label for="spell-name" class="ui-label">Name your spell <span class="muted">(your app's working name)</span></label>
+        <!-- DEV NOTE: maxlength 80 / 2000 mirror MAX_NAME_LENGTH / MAX_FIELD_LENGTH in spellbook.js;
+             app.js re-applies both from there, and incantation.js enforces them again. -->
         <input id="spell-name" type="text" maxlength="80" autocomplete="off" spellcheck="true"
                placeholder="e.g. Night Shift Sleep">
       </div>
@@ -126,11 +132,11 @@
       <p id="cast-status" class="hint" aria-live="polite"></p>
 
       <div id="spell-output" class="card spell-output" hidden>
+        <pre id="spell-text" class="spell-text" tabindex="0" role="region" aria-label="Your generated prompt"></pre>
         <div class="output-actions">
           <button type="button" id="copy-btn" class="btn btn-secondary">Copy prompt</button>
           <button type="button" id="download-btn" class="btn btn-secondary">Download .md</button>
         </div>
-        <pre id="spell-text" class="spell-text" tabindex="0" aria-label="Your generated prompt"></pre>
         <p class="hint">Paste this into Claude, ChatGPT or any AI builder. Then use the Iteration Ritual below.</p>
       </div>
     </section>
@@ -140,6 +146,7 @@
       <h2 id="ritual-title" class="section-label">The Iteration Ritual</h2>
       <p class="hint">A first answer is a draft, not a finished app. After each reply, run one of these.</p>
       <ol id="ritual-list" class="ritual-list"></ol>
+      <p id="ritual-status" class="sr-only" role="status"></p>
     </section>
 
     <!-- GRIMOIRE (short glossary; the full compendium is docs/GLOSSARY.md) -->

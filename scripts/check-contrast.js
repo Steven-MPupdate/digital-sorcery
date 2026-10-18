@@ -3,7 +3,8 @@
  *
  * Usage:   npm run check:contrast
  * Reads:   src/styles/brand.css (both themes).
- * Rule:    Normal text needs a contrast ratio of at least 4.5:1 against its background.
+ * Rules:   Text needs at least 4.5:1 against its background (WCAG 1.4.3).
+ *          Input borders and other UI edges need at least 3:1 (WCAG 1.4.11).
  * Exits with an error code if any pair fails, so CI blocks the deploy.
  */
 
@@ -24,29 +25,34 @@ function luminance(hex) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-export function contrast(a, b) {
+function contrast(a, b) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
 }
 
-// [text token, background token] pairs actually used for text in main.css.
+// [foreground token, background token, minimum ratio] for every text color used in
+// main.css, including hover states. Keep this list in step with main.css.
 const PAIRS = [
-  ['ink', 'surface'], ['ink', 'surface-raised'],
-  ['ink-muted', 'surface'], ['ink-muted', 'surface-raised'],
-  ['gold-text', 'surface'], ['gold-text', 'surface-raised'], ['gold-text', 'gold-soft'],
-  ['on-gold', 'gold'], ['warn', 'gold-soft'],
+  ['ink', 'surface', 4.5], ['ink', 'surface-raised', 4.5],          // body text, hover text
+  ['ink-muted', 'surface', 4.5], ['ink-muted', 'surface-raised', 4.5], ['ink-muted', 'gold-soft', 4.5],
+  ['gold-text', 'surface', 4.5], ['gold-text', 'surface-raised', 4.5], ['gold-text', 'gold-soft', 4.5],
+  ['on-gold', 'gold', 4.5],                                         // primary button, skip link
+  ['on-gold', 'gold-bright', 4.5],                                  // primary button hover
+  ['warn', 'gold-soft', 4.5], ['warn', 'surface', 4.5],             // counsel, save warning
+  ['bronze', 'surface', 3], ['bronze', 'surface-raised', 3],        // input borders (non-text)
+  ['gold', 'surface', 3],                                           // focus ring (non-text)
 ];
 
 let failed = 0;
 for (const [name, selector] of [['Dark Ink', ":root[data-theme='dark']"], ['Light Ivory', ":root[data-theme='light']"]]) {
-  const t = tokens(selector);
+  const themeTokens = tokens(selector);
   console.log(`\n${name}`);
-  for (const [fg, bg] of PAIRS) {
-    const ratio = contrast(t[fg], t[bg]);
-    const ok = ratio >= 4.5;
+  for (const [fg, bg, minimum] of PAIRS) {
+    const ratio = contrast(themeTokens[fg], themeTokens[bg]);
+    const ok = ratio >= minimum;
     if (!ok) failed++;
-    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${fg} on ${bg}: ${ratio.toFixed(2)}:1`);
+    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${fg} on ${bg}: ${ratio.toFixed(2)}:1 (needs ${minimum}:1)`);
   }
 }
-if (failed) { console.error(`\n${failed} pair(s) below 4.5:1`); process.exit(1); }
-console.log('\nAll text pairs meet WCAG AA.');
+if (failed) { console.error(`\n${failed} pair(s) below their minimum`); process.exit(1); }
+console.log('\nAll pairs meet WCAG AA.');

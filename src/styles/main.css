@@ -3,6 +3,7 @@
  *
  * Sections:  1 Base · 2 Layout · 3 Header/Hero · 4 Magic Circle · 5 Cards & fields
  *            6 Buttons & chips · 7 Counsel/Output/Ritual · 8 Footer · 9 Motion & a11y
+ * Depends on: brand.css tokens.   Used by: index.html.
  * DEV NOTE: Mobile first. Base styles are for a ~360px phone; the one media query
  * near the end widens things for tablets/desktops.
  */
@@ -19,24 +20,28 @@ body {
   font-family: var(--font-text);
   font-size: 1.1875rem; /* 19px: Cormorant runs small, so the body size is bumped up */
   line-height: 1.55;
-  overflow-x: hidden;
+  /* DEV NOTE: no overflow-x:hidden here on purpose — it hid a layout bug once.
+     Tests check the page never scrolls sideways instead. */
 }
 
 h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; }
 p { margin: 0 0 var(--space-3); }
 a { color: var(--gold-text); }
-a:hover { color: var(--gold-bright); }
+a:hover { color: var(--ink); } /* ink passes contrast in both themes; gold-bright fails on ivory */
 
 .muted { color: var(--ink-muted); }
 .small { font-size: 0.875rem; }
 
 .skip-link {
-  position: absolute; left: var(--space-4); top: -100px;
+  /* Hidden above the screen until focused. transform (not a fixed top) keeps it hidden
+     even when large text makes it taller. */
+  position: absolute; left: var(--space-4); top: 0; transform: translateY(-120%);
   background: var(--gold); color: var(--on-gold);
   padding: var(--space-2) var(--space-3); font-family: var(--font-ui);
   border-radius: var(--radius-sm); z-index: 10;
 }
-.skip-link:focus { top: var(--space-2); }
+.skip-link:focus { transform: translateY(var(--space-2)); }
+.skip-link:hover { color: var(--on-gold); }
 
 /* Labels in the UI font (brand: "Section label", "Caption"). */
 .ui-label {
@@ -60,6 +65,8 @@ a:hover { color: var(--gold-bright); }
 }
 
 .hint { color: var(--ink-muted); font-size: 1rem; }
+.save-status { color: var(--warn); font-family: var(--font-ui); font-size: 0.875rem; margin: 0; }
+.save-status:not(:empty) { margin-bottom: var(--space-3); }
 
 /* ---------- 2. Layout ---------- */
 /* DEV NOTE: margin-inline only, so section spacing below is not overridden. */
@@ -69,7 +76,7 @@ main > section { margin-bottom: var(--space-7); }
 /* ---------- 3. Header & hero ---------- */
 .site-header { border-bottom: 1px solid var(--line); }
 .header-row {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: var(--space-3); min-height: 56px;
 }
 .brand-mark {
@@ -80,7 +87,7 @@ main > section { margin-bottom: var(--space-7); }
   text-transform: uppercase;
   color: var(--gold-text);
 }
-.header-actions { display: flex; gap: var(--space-2); }
+.header-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 
 .hero { padding-top: var(--space-7); }
 .eyebrow {
@@ -132,10 +139,10 @@ meter {
   background: var(--line); border-radius: var(--radius-full);
 }
 meter::-webkit-meter-bar { background: var(--line); border: 0; border-radius: var(--radius-full); height: 6px; }
-meter::-webkit-meter-optimum-value { background: var(--gold); border-radius: var(--radius-full); }
+meter::-webkit-meter-optimum-value { background: var(--gold-text); border-radius: var(--radius-full); }
 meter::-webkit-meter-suboptimum-value,
 meter::-webkit-meter-even-less-good-value { background: var(--bronze); border-radius: var(--radius-full); }
-meter::-moz-meter-bar { background: var(--gold); border-radius: var(--radius-full); }
+meter::-moz-meter-bar { background: var(--gold-text); border-radius: var(--radius-full); }
 .strength-text { font-family: var(--font-ui); font-size: 0.8125rem; color: var(--ink-muted); margin-top: var(--space-2); }
 
 /* ---------- 5. Cards & fields ---------- */
@@ -145,17 +152,22 @@ meter::-moz-meter-bar { background: var(--gold); border-radius: var(--radius-ful
   border-radius: var(--radius-md);
   padding: var(--space-4);
 }
-.ingredient-list { display: grid; gap: var(--space-5); }
-.ingredient-head { display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-3); }
+.ingredient-list {
+  display: grid; gap: var(--space-5);
+  /* DEV NOTE: minmax(0,1fr) lets cards shrink to the screen; without it, large text made
+     cards wider than a phone and cut off their right side (found by the Trial by Fire). */
+  grid-template-columns: minmax(0, 1fr);
+}
+.ingredient-head { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-3); }
 .ingredient-head > div { flex: 1; min-width: 0; }
 .numeral {
   flex: none; display: grid; place-items: center;
-  width: 40px; height: 40px;
+  min-width: 40px; height: 40px; padding: 0 var(--space-1);
   border: 1px solid var(--bronze); border-radius: var(--radius-full);
   font-family: var(--font-display); font-size: 0.9rem; color: var(--gold-text);
 }
 .ingredient.is-filled .numeral { background: var(--gold); color: var(--on-gold); border-color: var(--gold); }
-.rune { font-size: 1.15rem; letter-spacing: 0.06em; }
+.rune { font-size: 1.15rem; letter-spacing: 0.06em; overflow-wrap: anywhere; }
 .plain { font-family: var(--font-ui); font-size: 0.8125rem; color: var(--ink-muted); margin: 0; }
 .required-tag {
   flex: none; font-family: var(--font-ui); font-size: 0.6875rem; font-weight: 600;
@@ -170,7 +182,7 @@ details.teach { border-top: 1px solid var(--line); padding: var(--space-2) 0; }
 details.teach:last-of-type { border-bottom: 1px solid var(--line); margin-bottom: var(--space-3); }
 details.teach summary {
   cursor: pointer; font-family: var(--font-ui); font-size: 0.8125rem; font-weight: 500;
-  color: var(--gold-text); min-height: 32px; display: flex; align-items: center;
+  color: var(--gold-text); min-height: 44px; display: flex; align-items: center;
 }
 .questions { margin: var(--space-2) 0; padding-left: 1.2em; }
 .examples { margin: var(--space-2) 0; }
@@ -182,7 +194,7 @@ input[type='text'], textarea {
   width: 100%;
   background: var(--surface);
   color: var(--ink);
-  border: 1px solid var(--line);
+  border: 1px solid var(--bronze); /* bronze, not line: inputs need a visible 3:1 edge */
   border-radius: var(--radius-sm);
   padding: var(--space-3);
   font-family: var(--font-text);
@@ -205,7 +217,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-muted); opacity: 0.
 .btn-primary:hover:not(:disabled) { background: var(--gold-bright); border-color: var(--gold-bright); }
 .btn-primary:disabled { background: transparent; color: var(--ink-muted); border-color: var(--line); cursor: not-allowed; }
 .btn-secondary { background: transparent; color: var(--gold-text); border-color: var(--bronze); }
-.btn-secondary:hover { border-color: var(--gold); color: var(--gold-bright); }
+.btn-secondary:hover { border-color: var(--gold); color: var(--ink); }
 .btn-quiet { background: transparent; color: var(--ink-muted); border-color: var(--line); padding: var(--space-2) var(--space-3); }
 .btn-quiet:hover { color: var(--ink); border-color: var(--bronze); }
 
@@ -267,6 +279,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-muted); opacity: 0.
 
 /* The slow turn of the outer ring. Off for people who ask for less motion. */
 @media (prefers-reduced-motion: no-preference) {
+  /* DEV NOTE: 150px 150px must match CIRCLE_CENTER in app.js. */
   .mc-orbit { transform-origin: 150px 150px; animation: mc-turn 120s linear infinite; }
   @keyframes mc-turn { to { transform: rotate(360deg); } }
 }
