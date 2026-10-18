@@ -10,6 +10,7 @@
 
 import { test, expect } from '@playwright/test';
 import { DRAFT_KEY } from '../../src/storage.js';
+import { PORTALS } from '../../src/portals.js';
 
 const REQUIRED = {
   intent: 'A habit tracker that helps night-shift nurses keep a sleep routine',
@@ -75,7 +76,7 @@ test('main flow: name → fill → cast → copy', async ({ page, context }) => 
   await expect(output).toContainText('# Spell: Night Shift Sleep');
   await expect(output).toContainText(REQUIRED.intent);
   await page.click('#copy-btn');
-  await expect(page.locator('#cast-status')).toContainText('Copied');
+  await expect(page.locator('#copy-status')).toContainText('Copied');
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   expect(clip).toContain('# Spell: Night Shift Sleep');
 });
@@ -304,7 +305,7 @@ test('two tabs: edits in one tab show up in the other instead of being overwritt
   await expect(tabC.locator('#field-powers')).toHaveValue('Written in tab B');
 });
 
-test('download name always matches the cast spell, even after renaming', async ({ page }) => {
+test('download always matches the latest answers: name and content agree', async ({ page }) => {
   await page.goto('/');
   await page.fill('#spell-name', 'Night Shift Sleep');
   await fillRequired(page);
@@ -312,8 +313,9 @@ test('download name always matches the cast spell, even after renaming', async (
   await page.fill('#spell-name', 'Totally Different');
   await expect(page.locator('#cast-status')).toContainText('Cast again');
   const [download] = await Promise.all([page.waitForEvent('download'), page.click('#download-btn')]);
-  expect(download.suggestedFilename()).toBe('spell-night-shift-sleep.md');
-  await page.fill('#spell-name', 'Night Shift Sleep'); // back to the cast version
+  expect(download.suggestedFilename()).toBe('spell-totally-different.md');
+  const content = await (await download.createReadStream()).toArray();
+  expect(Buffer.concat(content).toString()).toContain('# Spell: Totally Different');
   await expect(page.locator('#cast-status')).toContainText('The spell is cast');
 });
 
@@ -359,7 +361,7 @@ test('portals: one tap copies the spell and opens the AI app safely', async ({ p
   await page.click('#cast-btn');
 
   const portals = page.locator('#portal-groups a.btn-portal');
-  await expect(portals).toHaveCount(5);
+  await expect(portals).toHaveCount(PORTALS.length);
   for (const link of await portals.all()) {
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     await expect(link).toHaveAttribute('target', '_blank');
@@ -368,12 +370,12 @@ test('portals: one tap copies the spell and opens the AI app safely', async ({ p
 
   const [popup] = await Promise.all([
     context.waitForEvent('page'),
-    page.getByRole('link', { name: 'Copy the spell and open Claude (new tab)' }).click(),
+    page.getByRole('link', { name: /^Claude/ }).click(),
   ]);
   expect(popup.url()).toContain('claude.ai/new');
   // SECURITY: the new tab cannot reach back into this page.
   expect(await popup.evaluate(() => window.opener)).toBeNull();
-  await expect(page.locator('#cast-status')).toHaveText('Spell copied. Paste it into Claude.');
+  await expect(page.locator('#portal-status')).toHaveText('Spell copied. Paste it into Claude.');
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   expect(clip).toContain('# Spell: Portal Test');
 });
@@ -386,4 +388,89 @@ test('portals: keyboard order after casting is Copy → Download → portals', a
   await page.keyboard.press('Tab'); // Download
   await page.keyboard.press('Tab');
   await expect(page.locator('#portal-groups a').first()).toBeFocused();
+});
+
+/* ------------------------------------------------------------------ */
+/* v1.1 — Trial by Fire regressions (Portals round)                    */
+/* ------------------------------------------------------------------ */
+
+/** Cast, then stub outside sites so portal tabs open a stand-in page. */
+async function castWithStubs(page, context) {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await context.route(/^https?:\/\/(?!localhost)/, (route) => route.fulfill({ contentType: 'text/html', body: '<p>stand-in</p>' }));
+  await page.goto('/');
+  await fillRequired(page);
+  await page.click('#cast-btn');
+}
+
+test('portals and Copy always use the latest answers, never the old spell', async ({ page, context }) => {
+  await castWithStubs(page, context);
+  await page.fill('#field-intent', 'CHANGED INTENT after casting');
+  const [popup] = await Promise.all([context.waitForEvent('page'), page.getByRole('link', { name: /^ChatGPT/ }).click()]);
+  await popup.close();
+  let clip = await page.evaluate(() => navigator.clipboard.readText());
+  expect(clip).toContain('CHANGED INTENT after casting');
+  expect(clip).not.toContain(REQUIRED.intent);
+  await expect(page.locator('#spell-text')).toContainText('CHANGED INTENT after casting');
+
+  await page.fill('#field-intent', 'Second change');
+  await page.click('#copy-btn');
+  clip = await page.evaluate(() => navigator.clipboard.readText());
+  expect(clip).toContain('Second change');
+});
+
+test('portals refuse to copy or open when the required answers are gone', async ({ page, context }) => {
+  await castWithStubs(page, context);
+  await page.evaluate(() => navigator.clipboard.writeText('SENTINEL'));
+  await page.fill('#field-intent', '');
+  let opened = false;
+  context.on('page', () => { opened = true; });
+  await page.getByRole('link', { name: /^Gemini/ }).click();
+  await expect(page.locator('#portal-status')).toContainText('cast the spell first');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('SENTINEL');
+  expect(opened).toBe(false);
+});
+
+test('portals do not open the AI app if copying fails', async ({ page, context }) => {
+  await castWithStubs(page, context);
+  await page.evaluate(() => {
+    navigator.clipboard.writeText = () => Promise.reject(new Error('denied'));
+    document.execCommand = () => false;
+  });
+  let opened = false;
+  context.on('page', () => { opened = true; });
+  await page.getByRole('link', { name: /^Bolt/ }).click();
+  await expect(page.locator('#portal-status')).toContainText('was not opened');
+  expect(opened).toBe(false);
+});
+
+test('copy fallback keeps keyboard focus where it was', async ({ page, context }) => {
+  await castWithStubs(page, context);
+  await page.evaluate(() => { navigator.clipboard.writeText = () => Promise.reject(new Error('denied')); });
+  await page.focus('#copy-btn');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#copy-status')).not.toBeEmpty();
+  await expect(page.locator('#copy-btn')).toBeFocused();
+});
+
+test('middle-click on a portal still copies the spell first', async ({ page, context }) => {
+  await castWithStubs(page, context);
+  await page.evaluate(() => navigator.clipboard.writeText('SENTINEL'));
+  const [popup] = await Promise.all([context.waitForEvent('page'), page.getByRole('link', { name: /^Lovable/ }).click({ button: 'middle' })]);
+  await popup.close();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('# Spell:');
+});
+
+test('clearing in another tab removes the old spell from this tab', async ({ context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const tabA = await context.newPage();
+  await tabA.goto('/');
+  await fillRequired(tabA);
+  await tabA.click('#cast-btn');
+  await tabA.waitForTimeout(400); // let the draft save
+  const tabB = await context.newPage();
+  await tabB.goto('/');
+  tabB.once('dialog', (dialog) => dialog.accept());
+  await tabB.click('#reset-btn');
+  await expect(tabA.locator('#spell-output')).toBeHidden();
 });

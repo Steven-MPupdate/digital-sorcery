@@ -25,6 +25,12 @@ Format: **Term** — plain-English meaning. *Where:* file(s) where it lives.
 - **Counsel** — Teaching hints about vague words, too many features, or missing Wards. *Where:* `getCounsel()` in `src/incantation.js`.
 - **Portals** — The buttons shown after casting that copy the spell and open an AI app. *Where:* `src/portals.js`, `renderPortals()` in `src/app.js`.
 - **Talk it through / Build it for me** — The two kinds of portal: chat AIs (Claude, ChatGPT, Gemini) that plan and code with you, and app builders (Bolt, Lovable) that build and host the app. *Where:* `PORTAL_GROUPS` in `src/portals.js`.
+- **The portal apps** — *Where:* `PORTALS` in `src/portals.js`.
+  - **Claude** (Anthropic), **ChatGPT** (OpenAI), **Gemini** (Google) — chat AIs ("Talk it through").
+  - **Bolt**, **Lovable** — app builders that turn a prompt into a hosted app ("Build it for me").
+- **App builder** — An AI service that writes, runs and hosts an app from a prompt, rather than chatting about it.
+- **"Open it in your AI"** — The heading of the Portals section shown after casting. *Where:* `index.html`.
+- **Fresh cast** — Copy, Download and the portals always re-cast from your latest answers first, so they never send an old spell. *Where:* `ensureFreshCast()` in `src/app.js`.
 - **Iteration Ritual** — The five follow-up prompts to use after the first AI answer: Observe, Question, Refine, Test, Record. *Where:* `ITERATION_RITUAL` in `src/spellbook.js`.
 - **Working Agreement** — The "How we will work together" rules added to the end of every spell (ask questions first, small steps, no secrets…). *Where:* `WORKING_AGREEMENT` in `src/incantation.js`.
 - **Quick-pick chips** — Buttons that add a common phrase to an ingredient. *Where:* `chips` in `src/spellbook.js`, `addChip()` in `src/app.js`.
@@ -74,4 +80,6 @@ Format: **Term** — plain-English meaning. *Where:* file(s) where it lives.
 - **Dependabot** — GitHub's bot that opens PRs to update dependencies and pinned actions. *Where:* `.github/dependabot.yml`.
 - **PR (pull request)** — A request to merge a branch's changes into `main`, where they are reviewed and tested first.
 - **Supabase** — A hosted database + login + server-function service (planned for v2). **Row Level Security** = per-row access rules in its database. **Edge Function** = a small server function that can hold secret keys. *Where:* `docs/SECURITY.md`, a Tools chip in `src/spellbook.js`.
+- **OpenRouter** *(idea)* — A service where people log in and pay for their own AI use across many models; a possible v2 way to put AI inside the app. *Where:* DECISIONS D16, HANDOFF-LOG.
+- **noopener / noreferrer** — Link settings that stop an opened site from controlling this page or seeing where the visitor came from. *Where:* `buildPortalLink()` in `src/app.js`.
 - **WCAG AA** — The common accessibility standard; text needs a contrast ratio of at least 4.5:1. *Where:* `scripts/check-contrast.js`.

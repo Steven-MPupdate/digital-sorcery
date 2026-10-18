@@ -34,5 +34,9 @@ Official sources this project relies on, and what we used each for.
 | [GitHub secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning) | Backup to our CI secret scan. |
 | [GitHub Pages and Jekyll](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll) | Why `_site/.nojekyll` is added. |
 | [Supabase Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) and [Edge Function secrets](https://supabase.com/docs/guides/functions/secrets) | The v2 guidance in `docs/SECURITY.md`. |
+| Portal destinations: [claude.ai](https://claude.ai/new), [chatgpt.com](https://chatgpt.com/), [gemini.google.com](https://gemini.google.com/app), [bolt.new](https://bolt.new/), [lovable.dev](https://lovable.dev/) | The five AI apps in `src/portals.js` (allowlisted in `tests/unit/portals.test.js`). |
+| [MDN: rel=noopener](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/noopener) and [rel=noreferrer](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/noreferrer) | Outbound link safety in `buildPortalLink()`. |
+| [MDN: Window.open()](https://developer.mozilla.org/en-US/docs/Web/API/Window/open) | Opening a portal only after the copy succeeds. |
+| [Report: claude.ai `?q=` prefill stopped working](https://github.com/anthropics/claude-code/issues/8827) and [community prefill bookmarklets](https://www.vincentschmalbach.com/claude-chatgpt-bookmarklets/) | Why prefilled links are not relied on (DECISIONS D16). |
 | [SIL Open Font License 1.1](https://openfontlicense.org/) | License of the three self-hosted fonts (copies in `assets/fonts/`). |
 | Mirror Path Brand Kit v1 (2026-09-26, private PDF) | Colors, type, spacing, radius and the "doesn't do" rules. Kept privately by the owner; ask Steven for a copy. |

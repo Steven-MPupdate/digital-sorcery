@@ -262,28 +262,46 @@ function renderPortals() {
 }
 
 /**
- * A real link (so phones can open the app, and nothing blocks it as a pop-up) that also
- * copies the spell when tapped.
- * SECURITY: rel="noopener noreferrer" so the other site can't control this page or see
- * where the visitor came from. The URL is fixed in portals.js, never built from input.
+ * A portal link: copies the up-to-date spell first, and only opens the AI app if the copy
+ * worked (so nobody lands in an AI app with the wrong text on their clipboard).
+ * SECURITY: rel="noopener noreferrer" on the link, and opener cleared on the new window,
+ * so the other site can't control this page. The page's no-referrer policy hides where
+ * visitors came from. The URL is fixed in portals.js, never built from input.
+ * DEV NOTE: it stays a real <a href> so it still works as a plain link if scripts fail,
+ * and so screen readers announce it as a link.
  */
 function buildPortalLink(portal) {
   const link = htmlEl('a', 'btn btn-portal', portal.name);
+  // Visible name first (voice control: "tap Claude"), extra detail for screen readers only.
+  link.append(htmlEl('span', 'sr-only', ' — copies your spell, opens in a new tab'));
   link.href = portal.url;
   link.target = '_blank';
   link.rel = 'noopener noreferrer';
   link.dataset.portal = portal.id;
-  link.setAttribute('aria-label', `Copy the spell and open ${portal.name} (new tab)`);
-  link.addEventListener('click', () => {
-    if (!lastCast) return;
-    // DEV NOTE: copy is started inside the tap itself, before the new tab takes focus —
-    // browsers only allow clipboard writes while this page is focused.
-    copyText(lastCast.text).then((ok) => {
-      $('#cast-status').textContent = ok
-        ? `Spell copied. Paste it into ${portal.name}.`
-        : `Could not copy. Use "Copy prompt", then paste it into ${portal.name}.`;
-    });
-  });
+
+  const openPortal = async (event) => {
+    event.preventDefault();
+    const status = $('#portal-status');
+    const spell = ensureFreshCast();
+    if (!spell) {
+      status.textContent = 'Add the required ingredients (I–III) and cast the spell first.';
+      return;
+    }
+    const ok = await copyText(spell.text);
+    if (!ok) {
+      status.textContent = `Could not copy, so ${portal.name} was not opened. Select the spell above, copy it, then try again.`;
+      return;
+    }
+    // DEV NOTE: opened right after the quick copy, still within the tap's "user gesture" window.
+    const opened = window.open(portal.url, '_blank');
+    if (opened) opened.opener = null; // SECURITY: the new tab can't reach back into this page
+    status.textContent = opened
+      ? `Spell copied. Paste it into ${portal.name}.`
+      : `Spell copied. Your browser blocked the new tab. Tap ${portal.name} again to open it.`;
+  };
+  link.addEventListener('click', openPortal);
+  // Middle-click opens tabs without a "click" event; handle it the same way.
+  link.addEventListener('auxclick', (event) => { if (event.button === 1) openPortal(event); });
   return link;
 }
 
@@ -365,12 +383,31 @@ function renderCounsel(hints, result) {
   $('#counsel-list').replaceChildren(...items.map((item) => htmlEl('li', item.cls, item.text)));
 }
 
+/**
+ * Make sure the spell about to be copied matches the current answers.
+ * Re-casts automatically if answers changed; returns null if the spell can't be cast now
+ * (e.g. required answers were removed, or another tab cleared the circle).
+ * DEV NOTE: found by the Trial by Fire — copying used to send the OLD spell after edits.
+ */
+function ensureFreshCast() {
+  if (!lastCast) return null;
+  const draft = readDraft();
+  if (!scoreSpell(draft).canCast) return null;
+  const text = castSpell(draft);
+  if (text !== lastCast.text) {
+    lastCast = { text, fileName: spellFileName(draft.name) };
+    $('#spell-text').textContent = text;
+    $('#cast-status').textContent = 'The spell is cast. Copy it into your AI builder.';
+  }
+  return lastCast;
+}
+
 /** Warn when the shown spell no longer matches the answers; clear the warning if it does again. */
 function renderCastFreshness(draft) {
   if (!lastCast) return;
   const stale = castSpell(draft) !== lastCast.text;
   setText($('#cast-status'), stale
-    ? 'Your ingredients changed. Cast again to update the prompt.'
+    ? 'Your ingredients changed. Cast again to see the updated prompt. (Copy, Download and the AI buttons always use your latest answers.)'
     : 'The spell is cast. Copy it into your AI builder.');
 }
 
@@ -396,6 +433,9 @@ async function copyText(text) {
     await navigator.clipboard.writeText(text);
     return true;
   } catch {
+    // DEV NOTE: the fallback moves focus to a hidden box; remember where focus was and put
+    // it back afterwards, so keyboard users don't lose their place.
+    const previousFocus = document.activeElement;
     const helper = document.createElement('textarea');
     helper.value = text;
     helper.setAttribute('readonly', '');
@@ -405,17 +445,22 @@ async function copyText(text) {
     let ok = false;
     try { ok = document.execCommand('copy'); } catch { ok = false; }
     helper.remove();
+    if (previousFocus instanceof HTMLElement) previousFocus.focus();
     return ok;
   }
 }
 
 function download() {
-  if (!lastCast) return;
-  const blob = new Blob([lastCast.text], { type: 'text/markdown;charset=utf-8' });
+  const spell = ensureFreshCast();
+  if (!spell) {
+    $('#copy-status').textContent = 'Add the required ingredients (I–III) and cast the spell first.';
+    return;
+  }
+  const blob = new Blob([spell.text], { type: 'text/markdown;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = lastCast.fileName;
+  link.download = spell.fileName;
   document.body.append(link);
   link.click();
   link.remove();
@@ -429,11 +474,18 @@ function reset() {
   persist.cancel(); // otherwise a save still waiting from typing would restore the old draft
   clearDraft();
   writeDraft(normalizeDraft({}));
+  hideSpell();
+  $('#cast-status').textContent = 'The circle is clear.';
+  update({ save: false });
+}
+
+/** Hide the cast spell and forget it (used by Clear, and when another tab clears). */
+function hideSpell() {
   lastCast = null;
   $('#spell-output').hidden = true;
   $('#spell-text').textContent = '';
-  $('#cast-status').textContent = 'The circle is clear.';
-  update({ save: false });
+  $('#copy-status').textContent = '';
+  $('#portal-status').textContent = '';
 }
 
 /* ------------------------------------------------------------------ */
@@ -448,7 +500,13 @@ function reset() {
  */
 function syncFromStorage(message) {
   persist.cancel();
-  writeDraft(loadDraft());
+  const draft = loadDraft();
+  writeDraft(draft);
+  // If the circle was cleared elsewhere, don't keep showing (or copying) the old spell here.
+  if (lastCast && !scoreSpell(draft).canCast) {
+    hideSpell();
+    $('#cast-status').textContent = '';
+  }
   update({ save: false });
   if (message) $('#save-status').textContent = message;
 }
@@ -503,8 +561,11 @@ function bindEvents() {
   });
   $('#cast-btn').addEventListener('click', cast);
   $('#copy-btn').addEventListener('click', async () => {
-    const ok = await copyText(lastCast?.text || '');
-    $('#cast-status').textContent = ok ? 'Copied. Paste it into your AI builder.' : 'Copy failed. Select the text and copy it by hand.';
+    const status = $('#copy-status');
+    const spell = ensureFreshCast();
+    if (!spell) { status.textContent = 'Add the required ingredients (I–III) and cast the spell first.'; return; }
+    const ok = await copyText(spell.text);
+    status.textContent = ok ? 'Copied. Paste it into your AI builder.' : 'Copy failed. Select the text and copy it by hand.';
   });
   $('#download-btn').addEventListener('click', download);
   $('#reset-btn').addEventListener('click', reset);

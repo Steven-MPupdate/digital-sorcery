@@ -28,8 +28,10 @@ index.html ──loads──> src/styles/brand.css (tokens) + main.css (layout)
 - **Relative paths everywhere** so the site works at `/new-app/` and at a custom domain root.
 
 ## Future seams (v2 ideas)
-- **AI helper ("Familiar"):** a Supabase Edge Function that reviews a spell and asks follow-up
-  questions. Key stays server-side. Add its origin to the CSP `connect-src`.
+- **AI helper ("Familiar"):** reviews a spell and asks follow-up questions. Two paths (DECISIONS D16):
+  "Log in with OpenRouter" (users pay for their own AI, no server needed) or a hosted paid tier
+  (a Supabase Edge Function holds our key; needs logins, usage limits, payments). Either way, add the
+  API origin to the CSP `connect-src` and run the full Trial by Fire.
 - **Accounts & saved spells:** Supabase Auth + a `spells` table with Row Level Security.
   Keep `storage.js` as the offline fallback.
 - **Lessons:** guided "quests" that teach one ingredient at a time.

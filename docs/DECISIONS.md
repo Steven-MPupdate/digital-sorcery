@@ -14,7 +14,8 @@ One entry per meaningful decision. Newest at the bottom.
 ### D3 — No AI calls, accounts or database in v1 (2026-10-18)
 **Why:** keeps it free, private and secure; the learner does the thinking (the point of the app).
 **Alternatives:** call an AI API from the page (rejected: the key would be public), or require logins from day one (more friction, more risk).
-**Next step:** an optional AI helper through a Supabase Edge Function (Supabase is already connected).
+**Next step:** an optional AI helper — either "Log in with OpenRouter" (users pay for their own AI) or a
+hosted paid tier through a Supabase Edge Function (Supabase is already connected). See D16.
 
 ### D4 — Use the Mirror Path Brand Kit v1 (2026-10-18)
 **Why:** supplied by the owner as the brand for this project. Dark Ink is the default; Light Ivory is a toggle.
@@ -74,14 +75,16 @@ Each carries a note naming the token it must match; `app.js` sets `theme-color` 
 and saves under v2, so old drafts are never lost or misread. Several open tabs sync through the
 `storage` event; the newest save wins and every tab shows it.
 
-### D16 — Portals: copy, then open (no prompt in the link) (2026-10-18)
-**Why:** the easiest way to "build the app" with the AI tools people already pay for, at no cost to us.
-The spell is copied to the clipboard and a fixed https link opens the app (on phones, often the app itself).
-We do NOT put the spell in the link (`?q=`): those formats are unofficial and have broken before, and
-anything in a URL can end up in browser history and server logs. Links use `rel="noopener noreferrer"`.
-**Alternatives:** prefilled links (fragile, privacy leak); in-app AI via "Log in with OpenRouter" or
-our own hosted AI (planned v2 / paid tier — see HANDOFF-LOG next ideas).
-
 ### D15 — Project license (open)
 **Status:** not chosen yet. Without a license, a public repo is "all rights reserved" (people can view
 but not reuse the code). Options: MIT (anyone can reuse), CC BY-NC (no commercial reuse), or keep all rights. Owner to decide.
+
+### D16 — Portals: copy, then open (no prompt in the link) (2026-10-18)
+**Why:** the easiest way to "build the app" with the AI tools people already pay for, at no cost to us.
+The latest spell is copied to the clipboard (re-cast automatically if answers changed), and only if the
+copy worked does a fixed https link open the app (on phones, often the app itself).
+We do NOT put the spell in the link (`?q=` or `#…`): those formats are not officially documented and have
+been reported to stop working (see REFERENCES), and
+anything in a URL can end up in browser history and server logs. Links use `rel="noopener noreferrer"`.
+**Alternatives:** prefilled links (fragile, privacy leak); in-app AI via "Log in with OpenRouter" or
+our own hosted AI (planned v2 / paid tier — see HANDOFF-LOG next ideas).

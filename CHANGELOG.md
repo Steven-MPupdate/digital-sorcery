@@ -4,6 +4,8 @@
 - **Portals:** after casting, one tap copies the spell and opens Claude, ChatGPT or Gemini
   ("Talk it through"), or the app builders Bolt and Lovable ("Build it for me").
 - The spell is never put in the link (privacy, reliability); links can't control this page.
+- Copy, Download and the portals always use your latest answers (auto re-cast), and an AI app only
+  opens after the copy worked. Result messages appear next to the buttons; keyboard focus is kept.
 
 ## 1.0.0 — 2026-10-18
 First version.

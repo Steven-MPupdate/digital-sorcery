@@ -252,6 +252,8 @@ input::placeholder, textarea::placeholder { color: var(--ink-muted); opacity: 0.
   padding: var(--space-3);
 }
 
+.action-status { font-family: var(--font-ui); font-size: 0.875rem; color: var(--ink); margin: 0; }
+.action-status:not(:empty) { margin-bottom: var(--space-3); }
 .portals { border-top: 1px solid var(--line); padding-top: var(--space-4); margin-top: var(--space-2); }
 .portals-title { font-size: 1.05rem; letter-spacing: 0.08em; margin-bottom: var(--space-2); }
 .portal-group { margin-top: var(--space-4); }

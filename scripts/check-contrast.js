@@ -35,6 +35,7 @@ function contrast(a, b) {
 const PAIRS = [
   ['ink', 'surface', 4.5], ['ink', 'surface-raised', 4.5],          // body text, hover text
   ['ink-muted', 'surface', 4.5], ['ink-muted', 'surface-raised', 4.5], ['ink-muted', 'gold-soft', 4.5],
+  ['ink', 'gold-soft', 4.5],                                        // portal button hover
   ['gold-text', 'surface', 4.5], ['gold-text', 'surface-raised', 4.5], ['gold-text', 'gold-soft', 4.5],
   ['on-gold', 'gold', 4.5],                                         // primary button, skip link
   ['on-gold', 'gold-bright', 4.5],                                  // primary button hover

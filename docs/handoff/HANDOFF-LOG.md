@@ -3,11 +3,28 @@
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
 ## 2026-10-18 — Session 1b: v1.1.0 Portals
-**Done:** added Portals (copy the spell + open Claude / ChatGPT / Gemini / Bolt / Lovable). Version 1.1.0,
-cache bumped. Tests: portal list safety (unit), copy + open + no `window.opener` + keyboard order (browser).
-**Trial by Fire:** see the PR thread for this round's agent results.
-**Owner direction:** likes a hosted, paid AI option (v2+). Needs: logins, usage limits, payments, server
-function holding the AI key. See "Next ideas".
+**Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
+
+**Done:** added Portals: after casting, one tap copies the latest spell and opens Claude, ChatGPT,
+Gemini, Bolt or Lovable. Version 1.1.0, cache bumped.
+
+**Trial by Fire results (Red Team, Mobile & A11y, Grimoire Keeper)**
+| Agent | Result | Fixed |
+|---|---|---|
+| Red Team | No opener/referrer leaks, no spell in URLs, CSP intact. Low: old spell copied after edits; middle-click skipped the copy; URL tests missed `#fragments` and lookalike hosts. | Fresh cast before every copy; middle-click handled; host allowlist + no-fragment test; frozen lists. |
+| Mobile & A11y | No high findings. Medium: copy result shown off-screen and the app opened even when copy failed; focus lost when the copy fallback ran. Low: link names, no visible "new tab" hint, stale copy, missing contrast pair. | Status line next to the buttons; app opens only after a successful copy; focus restored; visible-name-first links; hint text; contrast pair added. |
+| Grimoire Keeper | One wrong header line; glossary/references/security/log gaps; D16 above D15. | All fixed. |
+
+**State:** all checks pass (contrast, hidden characters, 28 unit, 68 browser tests). PR #1 open to `main`.
+
+**Owner direction:** interested in a hosted, paid AI tier (v2+) if demand exists. Suggested first step:
+a "join the waitlist" button to measure interest. Cost estimates are in the session chat summary:
+roughly $1.50–3 per active user per month on Claude Opus 5.5, about half on Sonnet 5.5.
+
+**Open questions:** same as Session 1, plus: which AI path for v2 (OpenRouter login vs hosted paid tier)?
+
+**Next ideas:** Familiar (AI helper) via OpenRouter login or a hosted paid tier (Supabase Auth + Edge
+Function + payments + usage limits); waitlist button; Quests (guided lessons); share-a-spell link.
 
 ## 2026-10-18 — Session 1: v1.0.0 built and stress-tested
 **Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
@@ -37,4 +54,4 @@ function holding the AI key. See "Next ideas".
 4. **One-time setup:** make the repo public; Settings → Pages → Source: GitHub Actions.
 5. **Brand kit PDF** is labelled Mirror Path; confirm it is the right kit for Butler Builds products.
 
-**Next ideas:** Familiar (AI helper), either "Log in with OpenRouter" (users pay their own AI) or a hosted paid tier (Supabase Auth + Edge Function + payments + usage limits); Quests (guided lessons); share-a-spell link.
+**Next ideas:** Familiar (AI helper via Supabase Edge Function), Quests (guided lessons), share-a-spell link.

@@ -19,7 +19,7 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
 | Unsafe download names | File name reduced to `a–z 0–9 -`, max 40 chars. | `spellFileName()` |
 | Cache poisoning / stale code | Service worker only handles same-origin GETs; network-first so online visitors always get matching fresh files; caches only good `basic` responses for known shell files; unknown pages are never answered with the app; old cache versions deleted. | `sw.js` |
 | Lost or overwritten drafts | Saves flush when the page hides; save failures are shown on screen; open tabs sync via the `storage` event. | `src/app.js` |
-| Outbound links (Portals) | Fixed https URLs only (unit-tested: no query strings, never built from input); `rel="noopener noreferrer"` so the other site can't control this page or see where visitors came from; the spell travels by clipboard, never in the URL. | `src/portals.js` |
+| Outbound links (Portals) | Fixed https URLs on an allowlist of five hosts (unit-tested: no query or fragment, never built from input, lists frozen); `rel="noopener noreferrer"` plus opener cleared on the new window; the spell travels by clipboard, never in the URL; the app opens only after the copy succeeded, and only the latest spell is copied. | `src/portals.js`, `buildPortalLink()` / `ensureFreshCast()` in `src/app.js`, `tests/unit/portals.test.js` |
 | Third-party tracking / data leaks | No third-party requests at all (fonts self-hosted). `referrer` policy `no-referrer`. Tested. | `index.html`, `tests/e2e` |
 | Leaked secrets | Rule: no secrets in repo. CI runs a simple secret scan; GitHub secret scanning also applies to public repos. | `CLAUDE.md`, `ci-deploy.yml` |
 | Supply chain | One dev-only dependency (Playwright), version pinned; lockfile committed; Dependabot updates; CI actions pinned to exact commit SHAs. | `package.json`, `.github/` |
@@ -35,6 +35,11 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
    plain localStorage. Acceptable for brainstorming notes; we tell users not to paste secrets.
 3. **Several tabs: newest save wins.** If two tabs are edited at the same moment, the last save
    is kept and shown in both tabs (with a notice). Real merging isn't worth the complexity for notes.
+4. **The clipboard is shared with the phone.** Copy and the portals put the spell on the system
+   clipboard, which other apps, clipboard history or cloud-synced keyboards may read. This is how
+   copy/paste works everywhere; the app reminds users not to put secrets in spells.
+5. **Long-press "Open in new tab" on a portal skips the copy.** Phones don't tell the page about that
+   menu, so the AI app opens without the spell being copied. A normal tap, Ctrl-click or middle-click copies first.
 
 ## Before adding AI calls, logins or a database (v2+)
 - **Never** put an API key in front-end code. Call AI models from a server function
