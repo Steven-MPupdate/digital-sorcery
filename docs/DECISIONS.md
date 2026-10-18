@@ -50,7 +50,7 @@ Only the app's own page falls back to the cached copy; other URLs get their real
 
 ### D10 — Playwright as the only dev dependency (2026-10-18)
 **Why:** one tool for browser tests, icon rendering and stress scripts; exact version pinned (1.56.1),
-Node ≥ 20. Test screens: Galaxy Note 20 (412×915) and a 360px phone, plus the `/new-app/` sub-path.
+Node ≥ 20. Test screens: Galaxy Note 20 (412×915) and a 360px phone, plus the `/digital-sorcery/` sub-path.
 **Alternatives:** Jest/Vitest + Puppeteer (more dependencies), Cypress (heavier, weaker on mobile emulation).
 
 ### D11 — Spell Strength formula and Counsel thresholds (2026-10-18)
@@ -88,3 +88,8 @@ been reported to stop working (see REFERENCES), and
 anything in a URL can end up in browser history and server logs. Links use `rel="noopener noreferrer"`.
 **Alternatives:** prefilled links (fragile, privacy leak); in-app AI via "Log in with OpenRouter" or
 our own hosted AI (planned v2 / paid tier — see HANDOFF-LOG next ideas).
+
+### D17 — Repo renamed to digital-sorcery (2026-10-18)
+**Why:** the public name and web address should match the product: `steven-mpupdate.github.io/digital-sorcery/`.
+Renamed before the site went live, so no visitor or offline cache ever used the old address.
+**Alternatives:** keep `new-app` (meaningless to visitors); a custom domain later works with either name.

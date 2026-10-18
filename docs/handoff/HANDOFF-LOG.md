@@ -2,6 +2,17 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-18 — Session 1c: repo renamed, first deploy
+**Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
+
+**Done:** PR #1 (v1.1.0) merged to `main`; repo made public; repo renamed `new-app` → `digital-sorcery`.
+Every reference updated (docs, sub-path test server, sw.js comment). Version 1.1.1.
+
+**State:** all checks pass locally. Live address: https://steven-mpupdate.github.io/digital-sorcery/
+(needs Settings → Pages → Source: GitHub Actions). GitHub redirects the old repo address.
+
+**Open questions:** license (D15); custom domain; v2 AI path. Dependabot has opened update PRs to review.
+
 ## 2026-10-18 — Session 1b: v1.1.0 Portals
 **Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
 
@@ -49,7 +60,7 @@ Function + payments + usage limits); waitlist button; Quests (guided lessons); s
 
 **Open questions (owner)**
 1. **License** for the public repo (see DECISIONS D15).
-2. **Repo name / URL:** keep `new-app` or rename to `digital-sorcery`?
+2. ~~**Repo name / URL**~~ — resolved: renamed to `digital-sorcery` (Session 1c).
 3. **Custom domain:** e.g. `sorcery.butlerbuilds.dev` (steps in DEPLOY.md).
 4. **One-time setup:** make the repo public; Settings → Pages → Source: GitHub Actions.
 5. **Brand kit PDF** is labelled Mirror Path; confirm it is the right kit for Butler Builds products.

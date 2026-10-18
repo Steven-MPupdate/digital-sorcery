@@ -334,11 +334,11 @@ test('offline worker: unknown pages are not replaced by a broken copy of the app
   expect(response.status()).toBe(404);
 });
 
-test('GitHub Pages sub-folder: everything loads under /new-app/', async ({ page }) => {
+test('GitHub Pages sub-folder: everything loads under /digital-sorcery/', async ({ page }) => {
   const failed = [];
   page.on('response', (res) => { if (res.status() >= 400) failed.push(`${res.status()} ${res.url()}`); });
   const errors = watchErrors(page);
-  await page.goto('http://localhost:4174/new-app/');
+  await page.goto('http://localhost:4174/digital-sorcery/');
   await expect(page.locator('.ingredient')).toHaveCount(7);
   await page.evaluate(() => navigator.serviceWorker.ready);
   const fontsLoaded = await page.evaluate(async () => { await document.fonts.ready; return document.fonts.check('16px Cinzel'); });

@@ -5,7 +5,7 @@
    Change visibility → Public. (Free Pages hosting needs a public repo on the free plan.)
 2. **Turn on Pages via Actions:** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 3. **Merge to `main`.** The `Test & Deploy` workflow runs tests, then publishes.
-4. Site URL: **https://steven-mpupdate.github.io/new-app/**
+4. Site URL: **https://steven-mpupdate.github.io/digital-sorcery/**
    (If you rename the repo, e.g. to `digital-sorcery`, the URL changes to match. Everything uses relative paths, so nothing breaks.)
 
 ## Custom domain (free on GitHub; you only pay your domain registrar)
