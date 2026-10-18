@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 — 2026-10-18
+- **Portals:** after casting, one tap copies the spell and opens Claude, ChatGPT or Gemini
+  ("Talk it through"), or the app builders Bolt and Lovable ("Build it for me").
+- The spell is never put in the link (privacy, reliability); links can't control this page.
+
 ## 1.0.0 — 2026-10-18
 First version.
 - Seven ingredients with teaching notes, guiding questions, weak-vs-strong examples and quick-pick chips.

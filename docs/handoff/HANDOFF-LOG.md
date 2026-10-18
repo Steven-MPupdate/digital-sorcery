@@ -2,6 +2,13 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-18 — Session 1b: v1.1.0 Portals
+**Done:** added Portals (copy the spell + open Claude / ChatGPT / Gemini / Bolt / Lovable). Version 1.1.0,
+cache bumped. Tests: portal list safety (unit), copy + open + no `window.opener` + keyboard order (browser).
+**Trial by Fire:** see the PR thread for this round's agent results.
+**Owner direction:** likes a hosted, paid AI option (v2+). Needs: logins, usage limits, payments, server
+function holding the AI key. See "Next ideas".
+
 ## 2026-10-18 — Session 1: v1.0.0 built and stress-tested
 **Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
 
@@ -30,4 +37,4 @@ Newest session at the top. Each entry: what was done, the state it was left in, 
 4. **One-time setup:** make the repo public; Settings → Pages → Source: GitHub Actions.
 5. **Brand kit PDF** is labelled Mirror Path; confirm it is the right kit for Butler Builds products.
 
-**Next ideas:** Familiar (AI helper via Supabase Edge Function), Quests (guided lessons), share-a-spell link.
+**Next ideas:** Familiar (AI helper), either "Log in with OpenRouter" (users pay their own AI) or a hosted paid tier (Supabase Auth + Edge Function + payments + usage limits); Quests (guided lessons); share-a-spell link.

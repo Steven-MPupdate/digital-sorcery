@@ -23,6 +23,8 @@ Format: **Term** — plain-English meaning. *Where:* file(s) where it lives.
 - **Heptagram** — The seven-pointed star (pattern {7/3}) drawn inside the Magic Circle and the app icon. *Where:* `drawChords()` in `src/app.js`, `assets/icons/icon.svg`.
 - **Spell Strength** — A 0–100 score: each ingredient's weight × how complete its answer is. A nudge, not a grade. *Where:* `scoreSpell()` in `src/incantation.js`.
 - **Counsel** — Teaching hints about vague words, too many features, or missing Wards. *Where:* `getCounsel()` in `src/incantation.js`.
+- **Portals** — The buttons shown after casting that copy the spell and open an AI app. *Where:* `src/portals.js`, `renderPortals()` in `src/app.js`.
+- **Talk it through / Build it for me** — The two kinds of portal: chat AIs (Claude, ChatGPT, Gemini) that plan and code with you, and app builders (Bolt, Lovable) that build and host the app. *Where:* `PORTAL_GROUPS` in `src/portals.js`.
 - **Iteration Ritual** — The five follow-up prompts to use after the first AI answer: Observe, Question, Refine, Test, Record. *Where:* `ITERATION_RITUAL` in `src/spellbook.js`.
 - **Working Agreement** — The "How we will work together" rules added to the end of every spell (ask questions first, small steps, no secrets…). *Where:* `WORKING_AGREEMENT` in `src/incantation.js`.
 - **Quick-pick chips** — Buttons that add a common phrase to an ingredient. *Where:* `chips` in `src/spellbook.js`, `addChip()` in `src/app.js`.

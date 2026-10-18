@@ -19,7 +19,7 @@
  * when online (usually a cheap "not modified" reply).
  */
 
-const CACHE_VERSION = 'digital-sorcery-v1.0.0';
+const CACHE_VERSION = 'digital-sorcery-v1.1.0';
 
 // DEV NOTE: Paths are relative to this file, so they work under /new-app/ on GitHub Pages
 // and at the root of a custom domain.
@@ -31,6 +31,7 @@ const APP_SHELL = [
   './src/spellbook.js',
   './src/incantation.js',
   './src/storage.js',
+  './src/portals.js',
   './src/styles/brand.css',
   './src/styles/main.css',
   './assets/icons/icon.svg',

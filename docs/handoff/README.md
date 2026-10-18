@@ -29,6 +29,7 @@ the above in a cloud sandbox.
 |---|---|
 | Change wording, questions or examples | `src/spellbook.js` |
 | Add an ingredient | `src/spellbook.js` (weights must still sum to 100), then `docs/GLOSSARY.md` |
+| Add or remove an AI app button (Portal) | `src/portals.js`, then `docs/GLOSSARY.md` |
 | Change the generated prompt | `castSpell()` / `WORKING_AGREEMENT` in `src/incantation.js` |
 | Change colors/fonts | `src/styles/brand.css` only, then `npm run check:contrast` |
 | Ship a change | Branch → PR → tests green → merge. Bump `CACHE_VERSION` in `sw.js` if app files changed. |

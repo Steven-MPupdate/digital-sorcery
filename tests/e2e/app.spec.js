@@ -344,3 +344,46 @@ test('GitHub Pages sub-folder: everything loads under /new-app/', async ({ page 
   expect(failed).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+/* ------------------------------------------------------------------ */
+/* v1.1 — Portals                                                      */
+/* ------------------------------------------------------------------ */
+
+test('portals: one tap copies the spell and opens the AI app safely', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  // DEV NOTE: tests never really visit outside sites; any request leaving localhost gets a stand-in page.
+  await context.route(/^https?:\/\/(?!localhost)/, (route) => route.fulfill({ contentType: 'text/html', body: '<p>stand-in</p>' }));
+  await page.goto('/');
+  await page.fill('#spell-name', 'Portal Test');
+  await fillRequired(page);
+  await page.click('#cast-btn');
+
+  const portals = page.locator('#portal-groups a.btn-portal');
+  await expect(portals).toHaveCount(5);
+  for (const link of await portals.all()) {
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    await expect(link).toHaveAttribute('target', '_blank');
+    expect(await link.getAttribute('href')).toMatch(/^https:\/\/[^?]+$/);
+  }
+
+  const [popup] = await Promise.all([
+    context.waitForEvent('page'),
+    page.getByRole('link', { name: 'Copy the spell and open Claude (new tab)' }).click(),
+  ]);
+  expect(popup.url()).toContain('claude.ai/new');
+  // SECURITY: the new tab cannot reach back into this page.
+  expect(await popup.evaluate(() => window.opener)).toBeNull();
+  await expect(page.locator('#cast-status')).toHaveText('Spell copied. Paste it into Claude.');
+  const clip = await page.evaluate(() => navigator.clipboard.readText());
+  expect(clip).toContain('# Spell: Portal Test');
+});
+
+test('portals: keyboard order after casting is Copy → Download → portals', async ({ page }) => {
+  await page.goto('/');
+  await fillRequired(page);
+  await page.click('#cast-btn');
+  await page.keyboard.press('Tab'); // Copy
+  await page.keyboard.press('Tab'); // Download
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#portal-groups a').first()).toBeFocused();
+});

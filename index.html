@@ -137,7 +137,14 @@
           <button type="button" id="copy-btn" class="btn btn-secondary">Copy prompt</button>
           <button type="button" id="download-btn" class="btn btn-secondary">Download .md</button>
         </div>
-        <p class="hint">Paste this into Claude, ChatGPT or any AI builder. Then use the Iteration Ritual below.</p>
+
+        <!-- PORTALS: filled by app.js (renderPortals) from src/portals.js. -->
+        <section class="portals" aria-labelledby="portals-title">
+          <h3 id="portals-title" class="portals-title">Open it in your AI</h3>
+          <p class="hint">One tap copies your spell and opens the app. Then paste it in (long-press → Paste).</p>
+          <div id="portal-groups"></div>
+        </section>
+        <p class="hint">Then use the Iteration Ritual below to improve the answer round by round.</p>
       </div>
     </section>
 
@@ -169,7 +176,7 @@
       <p class="muted">Your words never leave this device. No accounts, no tracking.</p>
       <button type="button" id="reset-btn" class="btn btn-quiet">Clear the circle</button>
     </div>
-    <p class="wrap muted small">A Butler Builds creation · v1.0.0</p>
+    <p class="wrap muted small">A Butler Builds creation · v1.1.0</p>
   </footer>
 </body>
 </html>

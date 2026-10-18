@@ -4,7 +4,7 @@
  * What it does:  Renders ingredient cards and the Magic Circle, reacts to typing,
  *                saves drafts, casts the spell, copies/downloads it, toggles the theme,
  *                keeps several open tabs in sync, and registers the service worker.
- * Depends on:    spellbook.js (data), incantation.js (logic), storage.js (device storage).
+ * Depends on:    spellbook.js + portals.js (data), incantation.js (logic), storage.js (device storage).
  * Used by:       index.html (<script type="module" src="./src/app.js">).
  *
  * SECURITY: All learner text is written with textContent or .value — never innerHTML —
@@ -14,6 +14,7 @@
 import { INGREDIENTS, ITERATION_RITUAL, MAX_FIELD_LENGTH, MAX_NAME_LENGTH } from './spellbook.js';
 import { normalizeDraft, scoreSpell, getCounsel, castSpell, spellFileName } from './incantation.js';
 import { DRAFT_KEY, loadDraft, saveDraft, clearDraft, loadTheme, saveTheme } from './storage.js';
+import { PORTALS, PORTAL_GROUPS } from './portals.js';
 
 /* ------------------------------------------------------------------ */
 /* Small helpers                                                       */
@@ -243,6 +244,47 @@ function renderRitual() {
     li.append(htmlEl('p', 'ritual-step', step), htmlEl('p', 'ritual-prompt', prompt), button);
     list.append(li);
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* Rendering: the Portals (open the spell in an AI app)                */
+/* ------------------------------------------------------------------ */
+
+function renderPortals() {
+  const container = $('#portal-groups');
+  for (const [kind, group] of Object.entries(PORTAL_GROUPS)) {
+    const wrapper = htmlEl('div', 'portal-group');
+    const list = htmlEl('div', 'portal-list');
+    for (const portal of PORTALS.filter((p) => p.kind === kind)) list.append(buildPortalLink(portal));
+    wrapper.append(htmlEl('h4', 'portal-group-title', group.title), htmlEl('p', 'hint', group.note), list);
+    container.append(wrapper);
+  }
+}
+
+/**
+ * A real link (so phones can open the app, and nothing blocks it as a pop-up) that also
+ * copies the spell when tapped.
+ * SECURITY: rel="noopener noreferrer" so the other site can't control this page or see
+ * where the visitor came from. The URL is fixed in portals.js, never built from input.
+ */
+function buildPortalLink(portal) {
+  const link = htmlEl('a', 'btn btn-portal', portal.name);
+  link.href = portal.url;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.dataset.portal = portal.id;
+  link.setAttribute('aria-label', `Copy the spell and open ${portal.name} (new tab)`);
+  link.addEventListener('click', () => {
+    if (!lastCast) return;
+    // DEV NOTE: copy is started inside the tap itself, before the new tab takes focus —
+    // browsers only allow clipboard writes while this page is focused.
+    copyText(lastCast.text).then((ok) => {
+      $('#cast-status').textContent = ok
+        ? `Spell copied. Paste it into ${portal.name}.`
+        : `Could not copy. Use "Copy prompt", then paste it into ${portal.name}.`;
+    });
+  });
+  return link;
 }
 
 /* ------------------------------------------------------------------ */
@@ -495,6 +537,7 @@ function init() {
   writeDraft(loadDraft());
   renderCircle();
   renderRitual();
+  renderPortals();
   bindEvents();
   setupInstall();
   registerServiceWorker();

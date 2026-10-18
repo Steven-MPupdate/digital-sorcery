@@ -19,6 +19,7 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
 | Unsafe download names | File name reduced to `a–z 0–9 -`, max 40 chars. | `spellFileName()` |
 | Cache poisoning / stale code | Service worker only handles same-origin GETs; network-first so online visitors always get matching fresh files; caches only good `basic` responses for known shell files; unknown pages are never answered with the app; old cache versions deleted. | `sw.js` |
 | Lost or overwritten drafts | Saves flush when the page hides; save failures are shown on screen; open tabs sync via the `storage` event. | `src/app.js` |
+| Outbound links (Portals) | Fixed https URLs only (unit-tested: no query strings, never built from input); `rel="noopener noreferrer"` so the other site can't control this page or see where visitors came from; the spell travels by clipboard, never in the URL. | `src/portals.js` |
 | Third-party tracking / data leaks | No third-party requests at all (fonts self-hosted). `referrer` policy `no-referrer`. Tested. | `index.html`, `tests/e2e` |
 | Leaked secrets | Rule: no secrets in repo. CI runs a simple secret scan; GitHub secret scanning also applies to public repos. | `CLAUDE.md`, `ci-deploy.yml` |
 | Supply chain | One dev-only dependency (Playwright), version pinned; lockfile committed; Dependabot updates; CI actions pinned to exact commit SHAs. | `package.json`, `.github/` |

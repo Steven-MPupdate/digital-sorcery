@@ -74,6 +74,14 @@ Each carries a note naming the token it must match; `app.js` sets `theme-color` 
 and saves under v2, so old drafts are never lost or misread. Several open tabs sync through the
 `storage` event; the newest save wins and every tab shows it.
 
+### D16 — Portals: copy, then open (no prompt in the link) (2026-10-18)
+**Why:** the easiest way to "build the app" with the AI tools people already pay for, at no cost to us.
+The spell is copied to the clipboard and a fixed https link opens the app (on phones, often the app itself).
+We do NOT put the spell in the link (`?q=`): those formats are unofficial and have broken before, and
+anything in a URL can end up in browser history and server logs. Links use `rel="noopener noreferrer"`.
+**Alternatives:** prefilled links (fragile, privacy leak); in-app AI via "Log in with OpenRouter" or
+our own hosted AI (planned v2 / paid tier — see HANDOFF-LOG next ideas).
+
 ### D15 — Project license (open)
 **Status:** not chosen yet. Without a license, a public repo is "all rights reserved" (people can view
 but not reuse the code). Options: MIT (anyone can reuse), CC BY-NC (no commercial reuse), or keep all rights. Owner to decide.
