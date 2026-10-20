@@ -25,7 +25,7 @@ index.html ──loads──> src/styles/brand.css (tokens) + main.css (layout)
 - **The form is the state.** No second copy of the data to fall out of sync.
 - **Logic is pure.** `incantation.js` has no DOM, so it is unit-tested in Node and could move to a server later.
 - **Content is data.** Teaching content lives in `spellbook.js` so non-coders can edit it.
-- **Relative paths everywhere** so the site works at `/new-app/` and at a custom domain root.
+- **Relative paths everywhere** so the site works at `/digital-sorcery/` and at a custom domain root.
 
 ## Future seams (v2 ideas)
 - **AI helper ("Familiar"):** reviews a spell and asks follow-up questions. Two paths (DECISIONS D16):

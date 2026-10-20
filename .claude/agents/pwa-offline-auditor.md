@@ -10,9 +10,9 @@ You do not fix code; you report problems with proof.
 ## Checklist
 - Every file in `sw.js` APP_SHELL exists; every file the page loads is in APP_SHELL.
 - If any shell file changed vs `main` (`git diff --name-only origin/main`), CACHE_VERSION changed too.
-- All URLs in index.html, manifest, CSS and JS are RELATIVE (work under `/new-app/`).
-  Test it: serve the repo from a sub-path (e.g. copy the site into `tmp/site/new-app/` and
-  serve `tmp/site`) and load `/new-app/` in Playwright — everything must load, no 404s.
+- All URLs in index.html, manifest, CSS and JS are RELATIVE (work under `/digital-sorcery/`).
+  Test it: serve the repo from a sub-path (e.g. copy the site into `tmp/site/digital-sorcery/` and
+  serve `tmp/site`) and load `/digital-sorcery/` in Playwright — everything must load, no 404s.
 - Offline: first visit, then go offline and reload — app works; a second offline navigation works.
 - Update path: change CACHE_VERSION in a temp copy and confirm old caches are deleted.
 - Manifest: name, short_name, start_url, scope, display, icons 192/512 + maskable; icons load.

@@ -3,7 +3,7 @@
  *
  * Runs tests/e2e in real Chromium sized like a Galaxy Note 20 (412×915, touch),
  * plus a narrow 360px phone. Starts two local servers (scripts/serve.js) automatically:
- * one at the root and one under /new-app/ like GitHub Pages.
+ * one at the root and one under /digital-sorcery/ like GitHub Pages.
  * Run with: npm run test:e2e
  */
 
@@ -39,10 +39,10 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      // Same site served under /new-app/, exactly like GitHub Pages (see the sub-path test).
+      // Same site served under /digital-sorcery/, exactly like GitHub Pages (see the sub-path test).
       command: 'node scripts/serve.js',
-      env: { PORT: String(PORT + 1), BASE_PATH: '/new-app/' },
-      url: `http://localhost:${PORT + 1}/new-app/`,
+      env: { PORT: String(PORT + 1), BASE_PATH: '/digital-sorcery/' },
+      url: `http://localhost:${PORT + 1}/digital-sorcery/`,
       reuseExistingServer: !process.env.CI,
     },
   ],
