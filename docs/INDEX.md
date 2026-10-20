@@ -15,7 +15,7 @@ Start here if you are new. Read in this order: `CLAUDE.md` → `docs/handoff/REA
 | `docs/DECISIONS.md` | Log of meaningful decisions and why. |
 | `docs/handoff/README.md` | How to pick up the project cold. |
 | `docs/handoff/ARCHITECTURE.md` | How the pieces fit together. |
-| `docs/handoff/DEPLOY.md` | Publishing to GitHub Pages and adding a custom domain. |
+| `docs/handoff/DEPLOY.md` | Publishing to Firebase Hosting and GitHub Pages, and adding a custom domain. |
 | `docs/handoff/STRESS-TESTING.md` | The Trial by Fire: which agents to run and when. |
 | `docs/handoff/HANDOFF-LOG.md` | Session-by-session log of work and open questions. |
 
@@ -45,9 +45,12 @@ Start here if you are new. Read in this order: `CLAUDE.md` → `docs/handoff/REA
 | `tests/unit/` | Node unit tests for the logic and the Portals list. |
 | `tests/e2e/` | Real-browser tests, including attack inputs. |
 | `scripts/serve.js` | Local preview server. |
+| `scripts/build-site.js` | Copies only the shipping files into `_site/` (the folder both hosts publish). |
 | `scripts/check-contrast.js` | WCAG contrast check of brand colors (text, hover, borders). |
 | `scripts/check-invisible.js` | Fails if any tracked file contains hidden characters. |
 | `scripts/make-icons.js` | Renders PNG icons from the SVG. |
 | `.claude/agents/` | The five Trial by Fire stress-test agents. |
-| `.github/workflows/ci-deploy.yml` | Test on every push; deploy main to GitHub Pages. |
+| `.github/workflows/ci-deploy.yml` | Test on every push; publish main to Firebase Hosting and GitHub Pages. |
+| `firebase.json` | Firebase Hosting settings: which folder to publish, cache and security headers. JSON: no comments possible. |
+| `.firebaserc` | Which Firebase project to publish to. JSON: no comments possible. |
 | `.github/dependabot.yml` | Automatic dependency update PRs. |

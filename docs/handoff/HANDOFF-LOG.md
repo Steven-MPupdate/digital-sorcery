@@ -66,3 +66,32 @@ Function + payments + usage limits); waitlist button; Quests (guided lessons); s
 5. **Brand kit PDF** is labelled Mirror Path; confirm it is the right kit for Butler Builds products.
 
 **Next ideas:** Familiar (AI helper via Supabase Edge Function), Quests (guided lessons), share-a-spell link.
+
+## 2026-10-21 — Session 3: Firebase Hosting added next to GitHub Pages
+**Who:** Steven (owner) with Claude Code (desktop app, branch `add-firebase-hosting`).
+
+**Why:** the studio's other sites live on Firebase; GitHub Pages goes away once Firebase is proven
+(DECISIONS D18). Steven chose "publish to both for now".
+
+**Done**
+- `scripts/build-site.js` + `npm run build:site`: builds `_site/` from an allow-list of shipping
+  files. Both publish jobs use it, so the two hosts cannot drift (D19).
+- `firebase.json` (cache + security headers, publishes `_site/`) and `.firebaserc`.
+- `npm run deploy:firebase` for publishing by hand; it always names the exact site and project.
+- New `deploy-firebase` job in `ci-deploy.yml`, parallel to the Pages job, same tested commit.
+  It writes the service-account key outside the repo, uses it once, deletes it, and skips itself
+  (build still green) while the ids say `CHANGE-ME` or the secret is missing.
+- Docs: DEPLOY.md rewritten for both hosts, INDEX, GLOSSARY (hosting terms), REFERENCES,
+  DECISIONS D18/D19, CHANGELOG (Unreleased).
+
+**Not done / waiting on the owner**
+1. Create the Firebase project and Hosting site, then fill the ids into `.firebaserc`,
+   `firebase.json` and the `deploy:firebase` script (steps in DEPLOY.md).
+2. Add the `FIREBASE_SERVICE_ACCOUNT` repo secret.
+3. Nothing has been published: no deploy was run (studio rule: deploys wait for "deploy").
+4. **7 open PRs on GitHub were never merged**, including #8 (renames the leftover `new-app`
+   references to `digital-sorcery`) and six Dependabot pin bumps. The `/new-app/` URLs in these
+   docs are left for PR #8 to fix, to avoid a conflict.
+
+**Next:** once Firebase serves `sorcery.butlerbuilds.dev`, delete the Pages job and the Pages
+section of DEPLOY.md.

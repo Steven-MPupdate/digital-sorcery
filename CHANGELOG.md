@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+- **Hosting:** the site now also publishes to Firebase Hosting on every passing push to `main`,
+  next to GitHub Pages. Nothing in the app itself changed.
+- `npm run build:site` (`scripts/build-site.js`) builds `_site/` with only the files the website
+  needs; both hosts publish that same folder, so they cannot drift.
+- `firebase.json` adds cache headers (service worker, page and `src/` never cached; fonts cached for
+  a year) and `nosniff` / `no-referrer` / same-origin-opener headers.
+- The Firebase job skips itself until the project ids are filled in and the
+  `FIREBASE_SERVICE_ACCOUNT` secret is added (see `docs/handoff/DEPLOY.md`).
+
 ## 1.1.1 — 2026-10-18
 - Repository renamed to `digital-sorcery`; the site lives at `/digital-sorcery/` on GitHub Pages.
   Docs and the sub-folder browser test updated to match.

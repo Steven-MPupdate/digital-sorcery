@@ -40,3 +40,8 @@ Official sources this project relies on, and what we used each for.
 | [Report: claude.ai `?q=` prefill stopped working](https://github.com/anthropics/claude-code/issues/8827) and [community prefill bookmarklets](https://www.vincentschmalbach.com/claude-chatgpt-bookmarklets/) | Why prefilled links are not relied on (DECISIONS D16). |
 | [SIL Open Font License 1.1](https://openfontlicense.org/) | License of the three self-hosted fonts (copies in `assets/fonts/`). |
 | Mirror Path Brand Kit v1 (2026-09-26, private PDF) | Colors, type, spacing, radius and the "doesn't do" rules. Kept privately by the owner; ask Steven for a copy. |
+| [Firebase Hosting: get started](https://firebase.google.com/docs/hosting/quickstart) and [full config reference](https://firebase.google.com/docs/hosting/full-config) | `firebase.json`: `public`, `ignore`, `headers`, `trailingSlashBehavior`, `appAssociation`. |
+| [Firebase Hosting: GitHub integration](https://firebase.google.com/docs/hosting/github-integration) and [CLI reference](https://firebase.google.com/docs/cli) | The `deploy-firebase` job: service-account key, `--only hosting:<site>`, `--non-interactive`. |
+| [Firebase Hosting: custom domain](https://firebase.google.com/docs/hosting/custom-domain) | The DNS steps in DEPLOY.md for `sorcery.butlerbuilds.dev`. |
+| [Firebase pricing (Spark plan)](https://firebase.google.com/pricing) | Why Hosting stays free at this size. |
+| [GitHub: using secrets in Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) | Storing `FIREBASE_SERVICE_ACCOUNT`; never printing it. |
