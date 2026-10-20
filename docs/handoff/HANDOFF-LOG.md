@@ -2,6 +2,17 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-18 — Session 1c: repo renamed, first deploy
+**Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
+
+**Done:** PR #1 (v1.1.0) merged to `main`; repo made public; repo renamed `new-app` → `digital-sorcery`.
+Every reference updated (docs, sub-path test server, sw.js comment). Version 1.1.1.
+
+**State:** all checks pass locally. Live address: https://steven-mpupdate.github.io/digital-sorcery/
+(needs Settings → Pages → Source: GitHub Actions). GitHub redirects the old repo address.
+
+**Open questions:** license (D15); custom domain; v2 AI path. Dependabot has opened update PRs to review.
+
 ## 2026-10-18 — Session 1b: v1.1.0 Portals
 **Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
 
@@ -49,7 +60,7 @@ Function + payments + usage limits); waitlist button; Quests (guided lessons); s
 
 **Open questions (owner)**
 1. **License** for the public repo (see DECISIONS D15).
-2. **Repo name / URL:** keep `new-app` or rename to `digital-sorcery`?
+2. ~~**Repo name / URL**~~ — resolved: renamed to `digital-sorcery` (Session 1c).
 3. **Custom domain:** e.g. `sorcery.butlerbuilds.dev` (steps in DEPLOY.md).
 4. **One-time setup:** make the repo public; Settings → Pages → Source: GitHub Actions.
 5. **Brand kit PDF** is labelled Mirror Path; confirm it is the right kit for Butler Builds products.
@@ -60,18 +71,18 @@ Function + payments + usage limits); waitlist button; Quests (guided lessons); s
 **Who:** Steven (owner) with Claude Code (desktop app, branch `add-firebase-hosting`).
 
 **Why:** the studio's other sites live on Firebase; GitHub Pages goes away once Firebase is proven
-(DECISIONS D17). Steven chose "publish to both for now".
+(DECISIONS D18). Steven chose "publish to both for now".
 
 **Done**
 - `scripts/build-site.js` + `npm run build:site`: builds `_site/` from an allow-list of shipping
-  files. Both publish jobs use it, so the two hosts cannot drift (D18).
+  files. Both publish jobs use it, so the two hosts cannot drift (D19).
 - `firebase.json` (cache + security headers, publishes `_site/`) and `.firebaserc`.
 - `npm run deploy:firebase` for publishing by hand; it always names the exact site and project.
 - New `deploy-firebase` job in `ci-deploy.yml`, parallel to the Pages job, same tested commit.
   It writes the service-account key outside the repo, uses it once, deletes it, and skips itself
   (build still green) while the ids say `CHANGE-ME` or the secret is missing.
 - Docs: DEPLOY.md rewritten for both hosts, INDEX, GLOSSARY (hosting terms), REFERENCES,
-  DECISIONS D17/D18, CHANGELOG (Unreleased).
+  DECISIONS D18/D19, CHANGELOG (Unreleased).
 
 **Not done / waiting on the owner**
 1. Create the Firebase project and Hosting site, then fill the ids into `.firebaserc`,

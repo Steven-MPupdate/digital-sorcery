@@ -3,7 +3,7 @@
  *
  * Usage:     npm start            → http://localhost:4173
  *            PORT=5000 npm start  → custom port
- *            BASE_PATH=/new-app/ npm start → serve under a sub-folder, like GitHub Pages
+ *            BASE_PATH=/digital-sorcery/ npm start → serve under a sub-folder, like GitHub Pages
  * Used by:   playwright.config.js (starts it automatically before browser tests).
  *
  * SECURITY: Only serves files inside the project folder. Requests that try to climb out
@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const PORT = Number(process.env.PORT) || 4173;
-// Optional sub-folder, e.g. "/new-app/". Requests outside it get a 404, like GitHub Pages.
+// Optional sub-folder, e.g. "/digital-sorcery/". Requests outside it get a 404, like GitHub Pages.
 const BASE_PATH = process.env.BASE_PATH || '/';
 
 const TYPES = {

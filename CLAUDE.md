@@ -15,7 +15,7 @@ Brand owner: Steven Cruz / Butler Builds.
   The site is public and static: anything shipped to the browser is visible to everyone.
 - **No user data leaves the device in v1.** Drafts live in the browser's localStorage only.
 - **All paths are relative** (`./src/app.js`, not `/src/app.js`) because GitHub Pages serves
-  the site from a sub-folder (`/new-app/`) unless a custom domain is used.
+  the site from a sub-folder (`/digital-sorcery/`) unless a custom domain is used.
 - **Brand values live in one place:** `src/styles/brand.css`. Never hard-code colors or fonts elsewhere.
   Exceptions (they cannot read CSS): the `theme-color` meta tag in `index.html`, `manifest.webmanifest`,
   `assets/icons/icon.svg` and `scripts/make-icons.js`. Each has a note saying which token it must match.
@@ -45,7 +45,7 @@ Every change must keep these up to date:
 ## 5. Testing & stress-test rules (the "Trial by Fire")
 Nothing reaches `main` (and therefore production) until it passes:
 1. `npm test` — contrast + hidden-character checks, unit tests (logic) and browser tests
-   (real Chromium, phone-sized screens, also served under `/new-app/` like GitHub Pages).
+   (real Chromium, phone-sized screens, also served under `/digital-sorcery/` like GitHub Pages).
 2. **The Trial by Fire** — the stress-test agents in `.claude/agents/` try to break the build.
    Run as many as the change needs (see `docs/handoff/STRESS-TESTING.md` for which ones when).
    Every confirmed finding is fixed, or written into `docs/SECURITY.md` as an accepted risk with a reason.

@@ -10,6 +10,10 @@
 - The Firebase job skips itself until the project ids are filled in and the
   `FIREBASE_SERVICE_ACCOUNT` secret is added (see `docs/handoff/DEPLOY.md`).
 
+## 1.1.1 — 2026-10-18
+- Repository renamed to `digital-sorcery`; the site lives at `/digital-sorcery/` on GitHub Pages.
+  Docs and the sub-folder browser test updated to match.
+
 ## 1.1.0 — 2026-10-18
 - **Portals:** after casting, one tap copies the spell and opens Claude, ChatGPT or Gemini
   ("Talk it through"), or the app builders Bolt and Lovable ("Build it for me").

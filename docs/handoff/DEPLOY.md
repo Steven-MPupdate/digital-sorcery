@@ -3,7 +3,7 @@
 The site has two hosts right now: **Firebase Hosting** (where it is moving to) and
 **GitHub Pages** (where it has lived since v1.0). Every passing push to `main` publishes to both,
 from the same folder `_site/`, built by `npm run build:site`. Once Firebase serves the custom
-domain, the Pages job gets deleted (see DECISIONS D17).
+domain, the Pages job gets deleted (see DECISIONS D18).
 
 ## Firebase Hosting — one-time setup (owner, ~10 minutes)
 
@@ -59,7 +59,7 @@ Recommended: **`sorcery.butlerbuilds.dev`**.
    Change visibility → Public. (Free Pages hosting needs a public repo on the free plan.)
 2. **Turn on Pages via Actions:** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 3. **Merge to `main`.** The `Test & Deploy` workflow runs tests, then publishes.
-4. Site URL: **https://steven-mpupdate.github.io/new-app/**
+4. Site URL: **https://steven-mpupdate.github.io/digital-sorcery/**
    (If you rename the repo, e.g. to `digital-sorcery`, the URL changes to match. Everything uses relative paths, so nothing breaks.)
 
 ### Custom domain on GitHub Pages (only if Firebase is not used)

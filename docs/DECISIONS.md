@@ -50,7 +50,7 @@ Only the app's own page falls back to the cached copy; other URLs get their real
 
 ### D10 — Playwright as the only dev dependency (2026-10-18)
 **Why:** one tool for browser tests, icon rendering and stress scripts; exact version pinned (1.56.1),
-Node ≥ 20. Test screens: Galaxy Note 20 (412×915) and a 360px phone, plus the `/new-app/` sub-path.
+Node ≥ 20. Test screens: Galaxy Note 20 (412×915) and a 360px phone, plus the `/digital-sorcery/` sub-path.
 **Alternatives:** Jest/Vitest + Puppeteer (more dependencies), Cypress (heavier, weaker on mobile emulation).
 
 ### D11 — Spell Strength formula and Counsel thresholds (2026-10-18)
@@ -89,7 +89,12 @@ anything in a URL can end up in browser history and server logs. Links use `rel=
 **Alternatives:** prefilled links (fragile, privacy leak); in-app AI via "Log in with OpenRouter" or
 our own hosted AI (planned v2 / paid tier — see HANDOFF-LOG next ideas).
 
-### D17 — Firebase Hosting becomes the home; Pages runs alongside first (2026-10-21)
+### D17 — Repo renamed to digital-sorcery (2026-10-18)
+**Why:** the public name and web address should match the product: `steven-mpupdate.github.io/digital-sorcery/`.
+Renamed before the site went live, so no visitor or offline cache ever used the old address.
+**Alternatives:** keep `new-app` (meaningless to visitors); a custom domain later works with either name.
+
+### D18 — Firebase Hosting becomes the home; Pages runs alongside first (2026-10-21)
 **Why:** the studio's other sites already live on Firebase, so one place to look, one CLI, and room to
 grow later (Cloud Functions for the planned "Familiar" AI helper, instead of a second provider).
 Hosting is free at this size on the Spark plan, and Firebase can serve a custom domain with its own
@@ -104,7 +109,7 @@ GitHub Pages job is deleted (one line in CHANGELOG, the Pages URL left redirecti
 Cloudflare Pages or Netlify (another account to run); move to Firebase in one step (no safety net if
 the first release there goes wrong).
 
-### D18 — The published folder is built by a script, not copied inline (2026-10-21)
+### D19 — The published folder is built by a script, not copied inline (2026-10-21)
 **Why:** two hosts copying their own file lists would drift, and an ignore-list can leak `docs/`,
 `tests/` or `.claude/` onto a public site. `scripts/build-site.js` is an allow-list: a new shipping
 file has to be named in it, and both publish jobs run `npm run build:site`.
