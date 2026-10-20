@@ -88,3 +88,25 @@ been reported to stop working (see REFERENCES), and
 anything in a URL can end up in browser history and server logs. Links use `rel="noopener noreferrer"`.
 **Alternatives:** prefilled links (fragile, privacy leak); in-app AI via "Log in with OpenRouter" or
 our own hosted AI (planned v2 / paid tier — see HANDOFF-LOG next ideas).
+
+### D17 — Firebase Hosting becomes the home; Pages runs alongside first (2026-10-21)
+**Why:** the studio's other sites already live on Firebase, so one place to look, one CLI, and room to
+grow later (Cloud Functions for the planned "Familiar" AI helper, instead of a second provider).
+Hosting is free at this size on the Spark plan, and Firebase can serve a custom domain with its own
+free certificate.
+**How:** both hosts publish the same folder, `_site/`, built by `scripts/build-site.js` from the same
+tested commit, so the two sites cannot drift. The `deploy-firebase` job skips itself (and main stays
+green) until the ids in `.firebaserc` / `firebase.json` stop saying `CHANGE-ME` and the
+`FIREBASE_SERVICE_ACCOUNT` secret exists.
+**Then:** once Firebase serves the custom domain and has been watched for a release or two, the
+GitHub Pages job is deleted (one line in CHANGELOG, the Pages URL left redirecting).
+**Alternatives:** stay on Pages (free, but a second place to look and no room for server code);
+Cloudflare Pages or Netlify (another account to run); move to Firebase in one step (no safety net if
+the first release there goes wrong).
+
+### D18 — The published folder is built by a script, not copied inline (2026-10-21)
+**Why:** two hosts copying their own file lists would drift, and an ignore-list can leak `docs/`,
+`tests/` or `.claude/` onto a public site. `scripts/build-site.js` is an allow-list: a new shipping
+file has to be named in it, and both publish jobs run `npm run build:site`.
+**Alternatives:** `firebase.json` `ignore` globs (easy to miss a new folder); publishing the repo root
+(ships the docs and tests).

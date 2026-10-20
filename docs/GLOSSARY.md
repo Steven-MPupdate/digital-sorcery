@@ -83,3 +83,11 @@ Format: **Term** — plain-English meaning. *Where:* file(s) where it lives.
 - **OpenRouter** *(idea)* — A service where people log in and pay for their own AI use across many models; a possible v2 way to put AI inside the app. *Where:* DECISIONS D16, HANDOFF-LOG.
 - **noopener / noreferrer** — Link settings that stop an opened site from controlling this page or seeing where the visitor came from. *Where:* `buildPortalLink()` in `src/app.js`.
 - **WCAG AA** — The common accessibility standard; text needs a contrast ratio of at least 4.5:1. *Where:* `scripts/check-contrast.js`.
+
+## Hosting terms
+
+- **Firebase Hosting** — Google's static web host. From v1.2 it serves the site; a Firebase *project* holds one or more *sites*, each with its own id. *Where:* `firebase.json`, `.firebaserc`, the `deploy-firebase` job in `.github/workflows/ci-deploy.yml`.
+- **GitHub Pages** — The host used since v1.0, free with a public repo. Kept running next to Firebase until Firebase is proven, then switched off. *Where:* the `deploy` job in `.github/workflows/ci-deploy.yml`.
+- **`_site/`** — The built folder that gets published: only `index.html`, `manifest.webmanifest`, `sw.js`, `src/`, `assets/` and `.nojekyll`. Never committed (it is in `.gitignore`). *Where:* `scripts/build-site.js`, `npm run build:site`.
+- **Site id / project id** — The two names Firebase needs. Both live in the repo (`firebase.json` → `hosting.site`, `.firebaserc` → `projects.default`) and start as `CHANGE-ME-…` until the project exists. *Where:* read by the `deploy-firebase` job and `npm run deploy:firebase`.
+- **Service account** — A robot Google account whose key lets GitHub Actions publish Hosting, and nothing else. The key is a repo secret named `FIREBASE_SERVICE_ACCOUNT`; it is never in the repo. *Where:* `docs/handoff/DEPLOY.md`.

@@ -1,7 +1,9 @@
-# ci-deploy.yml — Test every change; publish to GitHub Pages only when main passes.
+# ci-deploy.yml — Test every change; publish the site only when main passes.
 #
 # Pull requests and pushes to any branch → run the tests.
-# Pushes to main → run the tests, THEN deploy to GitHub Pages.
+# Pushes to main → run the tests, THEN publish to GitHub Pages AND Firebase Hosting.
+# DEV NOTE(v1.2): both hosts publish the same tested commit while Firebase is proven out.
+# GitHub Pages goes away once Firebase serves the custom domain (see docs/DECISIONS.md).
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions" (see docs/handoff/DEPLOY.md).
 #
 # SECURITY: every action is pinned to an exact commit (the version is in the comment), so a
@@ -79,15 +81,62 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
       - name: Collect only the files the website needs
-        # DEV NOTE: .nojekyll tells GitHub Pages to serve files as-is (no Jekyll processing).
-        run: |
-          mkdir -p _site
-          cp -r index.html manifest.webmanifest sw.js src assets _site/
-          touch _site/.nojekyll
+        # DEV NOTE: both hosts publish this same folder, so the two sites cannot drift.
+        # The script adds .nojekyll (GitHub Pages serves files as-is, no Jekyll).
+        run: npm run build:site
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: _site
       - id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+
+  deploy-firebase:
+    name: Deploy to Firebase Hosting
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    # DEV NOTE: never cancel a deploy halfway; a second push waits for the first to finish.
+    concurrency:
+      group: firebase-hosting
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Collect only the files the website needs
+        run: npm run build:site
+      - name: Publish to Firebase Hosting
+        # DEV NOTE: while the ids or the secret are missing this step says so and
+        # passes, so main stays green until the Firebase project exists (docs/handoff/DEPLOY.md).
+        # SECURITY: the key is written outside the repo, used once, then deleted. It is never
+        # printed, and the service account can only publish Hosting. The deploy always names
+        # the exact site and project, never a bare deploy.
+        env:
+          FIREBASE_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          KEY_FILE: ${{ runner.temp }}/firebase-key.json
+        run: |
+          FIREBASE_PROJECT_ID=$(node -p "JSON.parse(require('fs').readFileSync('.firebaserc','utf8')).projects.default")
+          FIREBASE_SITE_ID=$(node -p "JSON.parse(require('fs').readFileSync('firebase.json','utf8')).hosting.site")
+          case "$FIREBASE_PROJECT_ID$FIREBASE_SITE_ID" in
+            *CHANGE-ME*)
+              echo "Firebase project not created yet (.firebaserc / firebase.json still say CHANGE-ME). Skipping."
+              exit 0
+              ;;
+          esac
+          if [ -z "$FIREBASE_KEY" ]; then
+            echo "No FIREBASE_SERVICE_ACCOUNT secret set yet. Skipping."
+            exit 0
+          fi
+          printf %s "$FIREBASE_KEY" > "$KEY_FILE"
+          trap 'rm -f "$KEY_FILE"' EXIT
+          GOOGLE_APPLICATION_CREDENTIALS="$KEY_FILE" npx --yes firebase-tools@15.34.0 deploy --only "hosting:$FIREBASE_SITE_ID" --project "$FIREBASE_PROJECT_ID" --non-interactive

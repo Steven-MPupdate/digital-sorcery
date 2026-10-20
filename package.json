@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.js",
+    "build:site": "node scripts/build-site.js",
+    "deploy:firebase": "npm run build:site && firebase deploy --only hosting:CHANGE-ME-firebase-site-id --project CHANGE-ME-firebase-project-id",
     "test": "npm run check && npm run test:unit && npm run test:e2e",
     "check": "npm run check:contrast && npm run check:invisible",
     "test:unit": "node --test \"tests/unit/**/*.test.js\"",
