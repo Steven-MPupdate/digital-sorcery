@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "CHANGE-ME-firebase-site-id",
+    "site": "digital-sorcery-butlerbuilds",
     "public": "_site",
     "ignore": ["**/.*"],
     "appAssociation": "NONE",

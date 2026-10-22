@@ -50,7 +50,7 @@ Start here if you are new. Read in this order: `CLAUDE.md` → `docs/handoff/REA
 | `scripts/check-invisible.js` | Fails if any tracked file contains hidden characters. |
 | `scripts/make-icons.js` | Renders PNG icons from the SVG. |
 | `.claude/agents/` | The five Trial by Fire stress-test agents. |
-| `.github/workflows/ci-deploy.yml` | Test on every push; publish main to Firebase Hosting and GitHub Pages. |
+| `.github/workflows/ci-deploy.yml` | Test on every push; publish main to GitHub Pages (and Firebase Hosting, once a key is allowed: D20). |
 | `firebase.json` | Firebase Hosting settings: which folder to publish, cache and security headers. JSON: no comments possible. |
 | `.firebaserc` | Which Firebase project to publish to. JSON: no comments possible. |
 | `.github/dependabot.yml` | Automatic dependency update PRs. |

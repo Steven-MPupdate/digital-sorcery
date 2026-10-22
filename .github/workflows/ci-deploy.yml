@@ -1,8 +1,9 @@
 # ci-deploy.yml — Test every change; publish the site only when main passes.
 #
 # Pull requests and pushes to any branch → run the tests.
-# Pushes to main → run the tests, THEN publish to GitHub Pages AND Firebase Hosting.
-# DEV NOTE(v1.2): both hosts publish the same tested commit while Firebase is proven out.
+# Pushes to main → run the tests, THEN publish to GitHub Pages (and Firebase Hosting if a key is set).
+# DEV NOTE(v1.2): Firebase lives in the shared mp-soul-stats project, so it is published by hand
+# on "deploy" and the Firebase job skips itself: no key is set (docs/DECISIONS.md D20).
 # GitHub Pages goes away once Firebase serves the custom domain (see docs/DECISIONS.md).
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions" (see docs/handoff/DEPLOY.md).
 #

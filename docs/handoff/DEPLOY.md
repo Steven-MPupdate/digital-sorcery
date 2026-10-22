@@ -1,36 +1,29 @@
 # Deploying
 
 The site has two hosts right now: **Firebase Hosting** (where it is moving to) and
-**GitHub Pages** (where it has lived since v1.0). Every passing push to `main` publishes to both,
-from the same folder `_site/`, built by `npm run build:site`. Once Firebase serves the custom
-domain, the Pages job gets deleted (see DECISIONS D18).
+**GitHub Pages** (where it has lived since v1.0). Every passing push to `main` publishes to Pages;
+Firebase is published by hand (see below, and DECISIONS D20). Both publish the same folder `_site/`,
+built by `npm run build:site`. Once Firebase serves the custom domain, the Pages job gets deleted
+(see DECISIONS D18).
 
-## Firebase Hosting — one-time setup (owner, ~10 minutes)
+## Firebase Hosting (set up 2026-10-22)
 
 Cost: free. Hosting on the Spark (no-card) plan covers far more traffic than this site will use.
 
-1. **Create the project:** [console.firebase.google.com](https://console.firebase.google.com/) →
-   Add project → name it `digital-sorcery`. Skip Google Analytics. Write down the **project id**
-   Firebase shows (it may be `digital-sorcery-1a2b3` if the plain name is taken).
-2. **Add a Hosting site:** in the project, Build → Hosting → Get started. The default site id is
-   the project id. That id is the **site id**.
-3. **Put both ids in the repo** (this is what unlocks the publish job):
-   - `.firebaserc` → `projects.default` → your project id
-   - `firebase.json` → `hosting.site` → your site id
-   - `package.json` → the `deploy:firebase` script → the same two ids
+- **Project:** `mp-soul-stats`, the studio's shared project (Soul Stats, butlerbuilds.dev, the client
+  portal, the resume site). This repo only ever touches its own Hosting site, never Firestore,
+  rules or functions: `firebase.json` holds a `hosting` block and nothing else.
+- **Site id:** `digital-sorcery-butlerbuilds` (the plain `digital-sorcery` id belongs to someone
+  else's project). Default address: `https://digital-sorcery-butlerbuilds.web.app`.
+- The ids live in `.firebaserc` (`projects.default`), `firebase.json` (`hosting.site`) and the
+  `deploy:firebase` script in `package.json`.
 
-   Until these stop saying `CHANGE-ME`, the publish job prints "skipping" and the build stays green.
-4. **Make the robot account that publishes from GitHub** (so no human key is ever used):
-   - Google Cloud console → IAM & Admin → Service accounts → Create service account,
-     name `github-deploy`.
-   - Grant it one role: **Firebase Hosting Admin**. Nothing else, and never Owner, so a leaked key
-     could only republish this site.
-   - Keys → Add key → JSON → download it. Treat that file like a password.
-5. **Add the key as a repo secret:** GitHub → repo → Settings → Secrets and variables → Actions →
-   New repository secret → name `FIREBASE_SERVICE_ACCOUNT`, value: the whole contents of the JSON
-   file. Then delete the downloaded file. The key is never committed and never printed in logs.
-6. **Merge to `main`.** Tests run, then the site publishes to
-   `https://<your-site-id>.web.app` (and `.firebaseapp.com`).
+**Do not add the `FIREBASE_SERVICE_ACCOUNT` secret while the site lives in `mp-soul-stats`.**
+SECURITY: a Firebase Hosting Admin key cannot be limited to one site, so a leaked key could republish
+every site in the shared project, client sites included. Without the secret the `deploy-firebase`
+job prints "skipping" and the build stays green. If this site ever moves to a project of its own,
+a key with only the **Firebase Hosting Admin** role (never Owner) can be added as that secret, and
+merging to `main` then publishes to Firebase too.
 
 ### Publishing by hand (only when Steven says "deploy")
 ```powershell

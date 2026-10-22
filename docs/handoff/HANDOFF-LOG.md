@@ -2,6 +2,20 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-22: Firebase site in mp-soul-stats
+**Who:** Steven (owner) with Claude Code (desktop, local checkout).
+
+**Done:** on Steven's request, created Hosting site `digital-sorcery-butlerbuilds` in the shared
+`mp-soul-stats` project (`digital-sorcery` was taken by another project) and filled in the ids in
+`.firebaserc`, `firebase.json` and `package.json`. DEPLOY.md, DECISIONS D20, GLOSSARY, INDEX,
+CHANGELOG and the workflow comments updated.
+
+**State:** nothing published to Firebase yet; `https://digital-sorcery-butlerbuilds.web.app` shows
+Firebase's "Site Not Found" page until the first `npm run deploy:firebase` on Steven's "deploy". No
+`FIREBASE_SERVICE_ACCOUNT` secret on purpose (D20), so the CI job keeps skipping.
+
+**Open questions:** custom domain `sorcery.butlerbuilds.dev` on Firebase; when to retire Pages.
+
 ## 2026-10-22: Dependabot updates and flaky portal tests
 **Who:** Steven (owner) with Claude Code (desktop, local checkout).
 
