@@ -6,19 +6,19 @@ first; the open questions are listed with each phase.
 
 Status: `done`, `in progress`, `next`, `to discuss`.
 
-## Phase 1: polish with what we have (built on branch `steven-ui-round-1`, v1.2.0, not published yet)
+## Phase 1: polish with what we have (v1.2.0, published 2026-10-22)
 | # | Item | Status |
 |---|---|---|
 | 1.1 | Remove every em dash (app, prompt text, docs) | done |
-| 1.2 | Spell name: three example spells to pick from (Local Bites, Night Shift Sleep, Plant Pal) that fill in the name and ingredients I to III | done (PR, not published) |
-| 1.3 | "See Examples" button next to The Ingredients: a small pop-up with the three examples, all seven ingredients each | done (PR, not published) |
-| 1.4 | Mobile: body text heavier and easier to read | done (PR, not published) |
-| 1.5 | Magic Circle numbered in the order the star line travels (I to VII around the trail) | done (PR, not published) |
-| 1.6 | Star lines brighten with how strong the answers on both ends are | done (PR, not published) |
-| 1.7 | Counsel hints become buttons that jump to the ingredient to fix | done (PR, not published) |
-| 1.8 | The Laws: quick-pick chip "Works on iPhone, Android and tablet" | done (PR, not published) |
-| 1.9 | Install: iPhone gets "Share, then Add to Home Screen" instructions; studio footer controls (Download app, Hard refresh) | done (PR, not published) |
-| 1.10 | Build it for me: "Digital Sorcery Spell Forge (DSSF), coming soon" card next to Bolt and Lovable | done (PR, not published) |
+| 1.2 | Spell name: three example spells to pick from (Local Bites, Night Shift Sleep, Plant Pal) that fill in the name and ingredients I to III | done |
+| 1.3 | "See Examples" button next to The Ingredients: a small pop-up with the three examples, all seven ingredients each | done |
+| 1.4 | Mobile: body text heavier and easier to read | done |
+| 1.5 | Magic Circle numbered in the order the star line travels (I to VII around the trail) | done |
+| 1.6 | Star lines brighten with how strong the answers on both ends are | done |
+| 1.7 | Counsel hints become buttons that jump to the ingredient to fix | done |
+| 1.8 | The Laws: quick-pick chip "Works on iPhone, Android and tablet" | done |
+| 1.9 | Install: iPhone gets "Share, then Add to Home Screen" instructions; studio footer controls (Download app, Hard refresh) | done |
+| 1.10 | Build it for me: "Digital Sorcery Spell Forge (DSSF), coming soon" card next to Bolt and Lovable | done |
 
 ## Phase 2: the Spellbook on this device (next, no accounts)
 Save many spells instead of one draft: list, open, rename, delete, export and import. Still
