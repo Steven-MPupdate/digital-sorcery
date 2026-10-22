@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+- **Firebase cache fix:** the home page address `/` is now `no-cache` like `/index.html`. Firebase
+  matches header rules against the address asked for, so `/` had fallen back to a 1-hour browser
+  cache. New unit test `tests/unit/firebase-config.test.js` guards it.
 - **Tests:** the portal tests bring their tab to the front before reading the clipboard. They timed
   out now and then on CI because Chromium only lets the focused tab read it. The app is unchanged.
 - **Tooling:** GitHub Actions updated (checkout 7.0.1, setup-node 7.1.0, configure-pages 6.0.0,
