@@ -1,5 +1,5 @@
 /*
- * main.css — Layout and components. Uses only tokens from brand.css.
+ * main.css: Layout and components. Uses only tokens from brand.css.
  *
  * Sections:  1 Base · 2 Layout · 3 Header/Hero · 4 Magic Circle · 5 Cards & fields
  *            6 Buttons & chips · 7 Counsel/Output/Ritual · 8 Footer · 9 Motion & a11y
@@ -20,7 +20,7 @@ body {
   font-family: var(--font-text);
   font-size: 1.1875rem; /* 19px: Cormorant runs small, so the body size is bumped up */
   line-height: 1.55;
-  /* DEV NOTE: no overflow-x:hidden here on purpose — it hid a layout bug once.
+  /* DEV NOTE: no overflow-x:hidden here on purpose: it hid a layout bug once.
      Tests check the page never scrolls sideways instead. */
 }
 

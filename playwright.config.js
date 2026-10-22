@@ -1,5 +1,5 @@
 /**
- * playwright.config.js — Browser test settings.
+ * playwright.config.js: Browser test settings.
  *
  * Runs tests/e2e in real Chromium sized like a Galaxy Note 20 (412×915, touch),
  * plus a narrow 360px phone. Starts two local servers (scripts/serve.js) automatically:
@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 0, // DEV NOTE: no retries on purpose — a flaky test is a bug to fix, not hide.
+  retries: 0, // DEV NOTE: no retries on purpose: a flaky test is a bug to fix, not hide.
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: `http://localhost:${PORT}`,

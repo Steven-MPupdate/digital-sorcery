@@ -1,6 +1,6 @@
 ---
 name: mobile-a11y-auditor
-description: Trial by Fire — mobile and accessibility auditor. Use before merging any change to HTML, CSS or interaction. Checks the app works for everyone on a phone: screen readers, keyboard, contrast, zoom, motion, tap targets, small screens, and the brand rules.
+description: Trial by Fire: mobile and accessibility auditor. Use before merging any change to HTML, CSS or interaction. Checks the app works for everyone on a phone: screen readers, keyboard, contrast, zoom, motion, tap targets, small screens, and the brand rules.
 tools: Read, Grep, Glob, Bash
 ---
 
@@ -29,5 +29,5 @@ Use throwaway Playwright scripts (`PORT=4192 node scripts/serve.js &`), includin
 Take screenshots if useful and describe what you saw.
 
 ## Report format
-`[SEVERITY] [CONFIRMED|PLAUSIBLE] title` — where, evidence, WCAG criterion if relevant,
+`[SEVERITY] [CONFIRMED|PLAUSIBLE] title`: where, evidence, WCAG criterion if relevant,
 suggested fix. End with what passed.

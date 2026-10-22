@@ -1,5 +1,5 @@
 /**
- * check-contrast.js — Checks that brand text colors are readable (WCAG AA).
+ * check-contrast.js: Checks that brand text colors are readable (WCAG AA).
  *
  * Usage:   npm run check:contrast
  * Reads:   src/styles/brand.css (both themes).

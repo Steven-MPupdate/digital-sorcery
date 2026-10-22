@@ -1,4 +1,4 @@
-# CLAUDE.md — House Rules for Digital Sorcery
+# CLAUDE.md: House Rules for Digital Sorcery
 
 These are the standing rules for anyone (human or AI) working in this repo.
 Read this file first. If a rule here conflicts with a one-off request, ask before breaking it.
@@ -33,20 +33,20 @@ Brand owner: Steven Cruz / Butler Builds.
 
 ## 4. Documentation rules (the "Grimoire")
 Every change must keep these up to date:
-- `docs/INDEX.md` — map of every doc and important file.
-- `docs/GLOSSARY.md` — the compendium. **Any new term, brand phrase or ritual name gets an entry**
+- `docs/INDEX.md`: map of every doc and important file.
+- `docs/GLOSSARY.md`: the compendium. **Any new term, brand phrase or ritual name gets an entry**
   with: the term, plain-English meaning, and where it appears in code.
-- `docs/REFERENCES.md` — links to official docs we relied on (with what we used them for).
-- `docs/handoff/` — how to pick up the project cold: setup, architecture, how to deploy,
+- `docs/REFERENCES.md`: links to official docs we relied on (with what we used them for).
+- `docs/handoff/`: how to pick up the project cold: setup, architecture, how to deploy,
   open questions. Update `docs/handoff/HANDOFF-LOG.md` at the end of every work session.
-- `docs/DECISIONS.md` — one short entry per meaningful decision (what, why, alternatives).
-- `CHANGELOG.md` — what changed, per version.
+- `docs/DECISIONS.md`: one short entry per meaningful decision (what, why, alternatives).
+- `CHANGELOG.md`: what changed, per version.
 
 ## 5. Testing & stress-test rules (the "Trial by Fire")
 Nothing reaches `main` (and therefore production) until it passes:
-1. `npm test` — contrast + hidden-character checks, unit tests (logic) and browser tests
+1. `npm test`: contrast + hidden-character checks, unit tests (logic) and browser tests
    (real Chromium, phone-sized screens, also served under `/digital-sorcery/` like GitHub Pages).
-2. **The Trial by Fire** — the stress-test agents in `.claude/agents/` try to break the build.
+2. **The Trial by Fire**: the stress-test agents in `.claude/agents/` try to break the build.
    Run as many as the change needs (see `docs/handoff/STRESS-TESTING.md` for which ones when).
    Every confirmed finding is fixed, or written into `docs/SECURITY.md` as an accepted risk with a reason.
 3. A regression test is added for every bug a stress agent finds.

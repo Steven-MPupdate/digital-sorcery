@@ -1,5 +1,5 @@
 /**
- * sw.js — Service worker: makes the app work offline after the first visit.
+ * sw.js: Service worker: makes the app work offline after the first visit.
  *
  * What it does:  On install, saves the "app shell" (every file the app needs) into a cache.
  *                Online:  every request goes to the network first (fresh files, always

@@ -22,18 +22,18 @@
 - The Firebase job skips itself while the `FIREBASE_SERVICE_ACCOUNT` secret is missing
   (see `docs/handoff/DEPLOY.md`).
 
-## 1.1.1 — 2026-10-18
+## 1.1.1: 2026-10-18
 - Repository renamed to `digital-sorcery`; the site lives at `/digital-sorcery/` on GitHub Pages.
   Docs and the sub-folder browser test updated to match.
 
-## 1.1.0 — 2026-10-18
+## 1.1.0: 2026-10-18
 - **Portals:** after casting, one tap copies the spell and opens Claude, ChatGPT or Gemini
   ("Talk it through"), or the app builders Bolt and Lovable ("Build it for me").
 - The spell is never put in the link (privacy, reliability); links can't control this page.
 - Copy, Download and the portals always use your latest answers (auto re-cast), and an AI app only
   opens after the copy worked. Result messages appear next to the buttons; keyboard focus is kept.
 
-## 1.0.0 — 2026-10-18
+## 1.0.0: 2026-10-18
 First version.
 - Seven ingredients with teaching notes, guiding questions, weak-vs-strong examples and quick-pick chips.
 - Magic Circle (heptagram) lights up as ingredients are added; Spell Strength meter (0–100).

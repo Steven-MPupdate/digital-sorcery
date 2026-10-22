@@ -46,7 +46,7 @@ front first. `.nojekyll` removed: upload-pages-artifact 4+ leaves dotfiles out a
 repeated CI runs on the PR. The new Pages actions only run on `main`, so the first deploy after the
 merge is their first real test.
 
-## 2026-10-18 — Session 1c: repo renamed, first deploy
+## 2026-10-18: Session 1c: repo renamed, first deploy
 **Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
 
 **Done:** PR #1 (v1.1.0) merged to `main`; repo made public; repo renamed `new-app` → `digital-sorcery`.
@@ -57,7 +57,7 @@ Every reference updated (docs, sub-path test server, sw.js comment). Version 1.1
 
 **Open questions:** license (D15); custom domain; v2 AI path. Dependabot has opened update PRs to review.
 
-## 2026-10-18 — Session 1b: v1.1.0 Portals
+## 2026-10-18: Session 1b: v1.1.0 Portals
 **Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
 
 **Done:** added Portals: after casting, one tap copies the latest spell and opens Claude, ChatGPT,
@@ -81,7 +81,7 @@ roughly $1.50–3 per active user per month on Claude Opus 5.5, about half on So
 **Next ideas:** Familiar (AI helper) via OpenRouter login or a hosted paid tier (Supabase Auth + Edge
 Function + payments + usage limits); waitlist button; Quests (guided lessons); share-a-spell link.
 
-## 2026-10-18 — Session 1: v1.0.0 built and stress-tested
+## 2026-10-18: Session 1: v1.0.0 built and stress-tested
 **Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
 
 **Done**
@@ -104,14 +104,14 @@ Function + payments + usage limits); waitlist button; Quests (guided lessons); s
 
 **Open questions (owner)**
 1. **License** for the public repo (see DECISIONS D15).
-2. ~~**Repo name / URL**~~ — resolved: renamed to `digital-sorcery` (Session 1c).
+2. ~~**Repo name / URL**~~: resolved: renamed to `digital-sorcery` (Session 1c).
 3. **Custom domain:** e.g. `sorcery.butlerbuilds.dev` (steps in DEPLOY.md).
 4. **One-time setup:** make the repo public; Settings → Pages → Source: GitHub Actions.
 5. **Brand kit PDF** is labelled Mirror Path; confirm it is the right kit for Butler Builds products.
 
 **Next ideas:** Familiar (AI helper via Supabase Edge Function), Quests (guided lessons), share-a-spell link.
 
-## 2026-10-21 — Session 3: Firebase Hosting added next to GitHub Pages
+## 2026-10-21: Session 3: Firebase Hosting added next to GitHub Pages
 **Who:** Steven (owner) with Claude Code (desktop app, branch `add-firebase-hosting`).
 
 **Why:** the studio's other sites live on Firebase; GitHub Pages goes away once Firebase is proven

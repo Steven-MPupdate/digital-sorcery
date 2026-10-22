@@ -1,9 +1,9 @@
 /**
- * incantation.js — The brain of the app. Pure functions only (no DOM, no storage).
+ * incantation.js: The brain of the app. Pure functions only (no DOM, no storage).
  *
  * What it does:  1. Cleans and validates a draft (the learner's answers).
  *                2. Scores "Spell Strength" (0–100) and decides if the spell can be cast.
- *                3. Gives "Counsel" — teaching hints about weak answers.
+ *                3. Gives "Counsel": teaching hints about weak answers.
  *                4. Casts the spell: turns the draft into a Markdown starter prompt.
  * Depends on:    src/spellbook.js (ingredient definitions).
  * Used by:       src/app.js (UI) and tests/unit/incantation.test.js.
@@ -77,7 +77,7 @@ export function cleanText(value, max = MAX_FIELD_LENGTH) {
 
 /**
  * Does this text contain anything a person could actually read?
- * (A letter, number, symbol or punctuation mark — not just spaces or invisible marks.)
+ * (A letter, number, symbol or punctuation mark: not just spaces or invisible marks.)
  */
 export function hasContent(text) {
   return /[\p{L}\p{N}\p{S}\p{P}]/u.test(String(text).replace(BLANK_LOOKALIKES, ''));
@@ -102,7 +102,7 @@ export function normalizeDraft(raw) {
   }
 
   const name = Object.hasOwn(source, 'name') ? cleanText(source.name, MAX_NAME_LENGTH) : '';
-  // DEV NOTE: The name is a single line — fold any newlines into spaces.
+  // DEV NOTE: The name is a single line: fold any newlines into spaces.
   return { name: name.replace(/\n+/g, ' '), fields };
 }
 
@@ -238,7 +238,7 @@ const NOT_DECIDED =
 /** The closing instructions included in every spell. Exported so tests can check every rule appears. */
 export const WORKING_AGREEMENT = [
   'Read everything above. List any assumptions you are making.',
-  'Ask me up to 5 clarifying questions — the ones that would change the design most. Wait for my answers.',
+  'Ask me up to 5 clarifying questions: the ones that would change the design most. Wait for my answers.',
   'Propose a small v1 plan: screens, what data is stored and where, file structure, and tools. Wait for my OK.',
   'Build in small steps. After each step, tell me exactly how to test it on my phone.',
   'Write readable code with comments, and keep a short glossary of any names or terms we invent.',

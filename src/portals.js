@@ -1,5 +1,5 @@
 /**
- * portals.js — The "Portals": AI apps a cast spell can be taken to (pure data, no logic).
+ * portals.js: The "Portals": AI apps a cast spell can be taken to (pure data, no logic).
  *
  * What it does:  Lists the AI chat apps and app builders shown after casting. Tapping a
  *                portal copies the spell, then opens that app in a new tab (or its phone app).

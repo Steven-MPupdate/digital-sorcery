@@ -1,5 +1,5 @@
 /**
- * app.js — Connects the page (index.html) to the logic (incantation.js).
+ * app.js: Connects the page (index.html) to the logic (incantation.js).
  *
  * What it does:  Renders ingredient cards and the Magic Circle, reacts to typing,
  *                saves drafts, casts the spell, copies/downloads it, toggles the theme,
@@ -7,7 +7,7 @@
  * Depends on:    spellbook.js + portals.js (data), incantation.js (logic), storage.js (device storage).
  * Used by:       index.html (<script type="module" src="./src/app.js">).
  *
- * SECURITY: All learner text is written with textContent or .value — never innerHTML —
+ * SECURITY: All learner text is written with textContent or .value, never innerHTML,
  * so typed HTML/script is shown as plain text and never runs.
  */
 
@@ -120,7 +120,7 @@ function buildCard(ingredient) {
   for (const question of ingredient.questions) $('.questions', card).append(htmlEl('li', '', question));
 
   const label = $('.field-label', card);
-  label.textContent = `${ingredient.rune} — your answer`;
+  label.textContent = `${ingredient.rune}: your answer`;
   label.htmlFor = fieldId;
 
   const textarea = $('textarea', card);
@@ -273,7 +273,7 @@ function renderPortals() {
 function buildPortalLink(portal) {
   const link = htmlEl('a', 'btn btn-portal', portal.name);
   // Visible name first (voice control: "tap Claude"), extra detail for screen readers only.
-  link.append(htmlEl('span', 'sr-only', ' — copies your spell, opens in a new tab'));
+  link.append(htmlEl('span', 'sr-only', ', copies your spell, opens in a new tab'));
   link.href = portal.url;
   link.target = '_blank';
   link.rel = 'noopener noreferrer';
@@ -341,8 +341,8 @@ function renderStrength(result) {
     .map((id) => INGREDIENTS.find((ingredient) => ingredient.id === id).rune)
     .join(', ');
   setText($('#strength-text'), result.canCast
-    ? `${result.score} / 100 — the circle is ready. Stronger answers make a stronger spell.`
-    : `${result.score} / 100 — still needed: ${missing}.`);
+    ? `${result.score} / 100. The circle is ready. Stronger answers make a stronger spell.`
+    : `${result.score} / 100. Still needed: ${missing}.`);
 }
 
 function renderCircleState(result, filled) {
@@ -387,7 +387,7 @@ function renderCounsel(hints, result) {
  * Make sure the spell about to be copied matches the current answers.
  * Re-casts automatically if answers changed; returns null if the spell can't be cast now
  * (e.g. required answers were removed, or another tab cleared the circle).
- * DEV NOTE: found by the Trial by Fire — copying used to send the OLD spell after edits.
+ * DEV NOTE: found by the Trial by Fire: copying used to send the OLD spell after edits.
  */
 function ensureFreshCast() {
   if (!lastCast) return null;
@@ -464,7 +464,7 @@ function download() {
   document.body.append(link);
   link.click();
   link.remove();
-  // DEV NOTE: revoke later, not immediately — some mobile browsers start the download async.
+  // DEV NOTE: revoke later, not immediately: some mobile browsers start the download async.
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
 }
 

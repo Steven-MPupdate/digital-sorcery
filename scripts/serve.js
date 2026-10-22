@@ -1,5 +1,5 @@
 /**
- * serve.js — A tiny local web server for previewing and testing (no dependencies).
+ * serve.js: A tiny local web server for previewing and testing (no dependencies).
  *
  * Usage:     npm start            → http://localhost:4173
  *            PORT=5000 npm start  → custom port

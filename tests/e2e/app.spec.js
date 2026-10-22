@@ -1,5 +1,5 @@
 /**
- * app.spec.js — End-to-end tests in a real browser.
+ * app.spec.js: End-to-end tests in a real browser.
  *
  * Covers: the main learn → cast → copy flow, saved drafts, hostile input (XSS),
  * corrupted/blocked storage, offline mode, layout on small phones and privacy
@@ -348,7 +348,7 @@ test('GitHub Pages sub-folder: everything loads under /digital-sorcery/', async 
 });
 
 /* ------------------------------------------------------------------ */
-/* v1.1 — Portals                                                      */
+/* v1.1: Portals                                                      */
 /* ------------------------------------------------------------------ */
 
 test('portals: one tap copies the spell and opens the AI app safely', async ({ page, context }) => {
@@ -391,7 +391,7 @@ test('portals: keyboard order after casting is Copy → Download → portals', a
 });
 
 /* ------------------------------------------------------------------ */
-/* v1.1 — Trial by Fire regressions (Portals round)                    */
+/* v1.1: Trial by Fire regressions (Portals round)                    */
 /* ------------------------------------------------------------------ */
 
 /** Cast, then stub outside sites so portal tabs open a stand-in page. */

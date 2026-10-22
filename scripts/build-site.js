@@ -1,4 +1,4 @@
-// build-site.js — Collect only the files the website needs into `_site/`.
+// build-site.js: Collect only the files the website needs into `_site/`.
 //
 // What it does: deletes `_site/`, then copies the shipping files (index.html,
 // manifest.webmanifest, sw.js, src/, assets/) into it.

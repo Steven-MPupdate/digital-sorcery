@@ -1,4 +1,4 @@
-# Index — Map of the Project
+# Index: Map of the Project
 
 Start here if you are new. Read in this order: `CLAUDE.md` → `docs/handoff/README.md` → this map.
 

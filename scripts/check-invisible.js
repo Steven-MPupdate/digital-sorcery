@@ -1,5 +1,5 @@
 /**
- * check-invisible.js — Fails if any source file contains hidden characters.
+ * check-invisible.js: Fails if any source file contains hidden characters.
  *
  * Usage:   npm run check:invisible   (also runs in CI)
  * Why:     Invisible characters (zero-width, bidi overrides, control codes) can make code

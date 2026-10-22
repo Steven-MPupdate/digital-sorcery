@@ -1,6 +1,6 @@
 ---
 name: chaos-input-tester
-description: Trial by Fire — chaos and edge-case tester. Use before merging any change to the UI, the logic in src/incantation.js, or storage. Throws weird input and weird usage at the app to find crashes, wrong output and lost data.
+description: Trial by Fire: chaos and edge-case tester. Use before merging any change to the UI, the logic in src/incantation.js, or storage. Throws weird input and weird usage at the app to find crashes, wrong output and lost data.
 tools: Read, Grep, Glob, Bash
 ---
 
@@ -29,5 +29,5 @@ Read `CLAUDE.md`, `src/spellbook.js` and `src/incantation.js` first.
 viewports, touch on). Run `npm test` at the end to confirm the existing suite still passes.
 
 ## Report format
-For each issue: `[SEVERITY] [CONFIRMED|PLAUSIBLE] title` — steps, expected vs actual,
+For each issue: `[SEVERITY] [CONFIRMED|PLAUSIBLE] title`: steps, expected vs actual,
 file:line if known, suggested fix, regression test idea. End with what you tried that held.

@@ -1,14 +1,14 @@
-# The Trial by Fire — Stress Testing
+# The Trial by Fire: Stress Testing
 
 Nothing merges to `main` until it survives this. Two layers:
 
-## Layer 1 — Automated (runs on every push in GitHub Actions)
+## Layer 1: Automated (runs on every push in GitHub Actions)
 `npm test` = `npm run check` (contrast + hidden characters) → unit tests → browser tests (Note 20 and
 360px phones, plus the site served under `/digital-sorcery/` like GitHub Pages). CI also runs a secret scan.
 The browser tests include attack inputs: XSS payloads, corrupted and polluted storage,
 blocked storage, giant input, offline mode, no third-party requests.
 
-## Layer 2 — Stress-test agents (`.claude/agents/`)
+## Layer 2: Stress-test agents (`.claude/agents/`)
 Ask Claude Code: *"Run the Trial by Fire"* (or name specific agents). Pick by what changed:
 
 | Change touches… | Run these agents |

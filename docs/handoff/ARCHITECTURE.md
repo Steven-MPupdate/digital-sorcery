@@ -5,9 +5,9 @@ index.html ──loads──> src/styles/brand.css (tokens) + main.css (layout)
      │
      └──loads──> src/app.js  (UI: DOM, events, clipboard, download, theme, install)
                     │
-                    ├── src/spellbook.js   (DATA: ingredients, ritual — no logic)
+                    ├── src/spellbook.js   (DATA: ingredients, ritual: no logic)
                     ├── src/portals.js     (DATA: AI apps to open the spell in)
-                    ├── src/incantation.js (LOGIC: clean, score, counsel, cast — pure, no DOM)
+                    ├── src/incantation.js (LOGIC: clean, score, counsel, cast: pure, no DOM)
                     ├── src/storage.js     (DEVICE STORAGE: safe localStorage wrapper)
                     └── registers sw.js    (OFFLINE: network-first, cached copy when offline)
 ```

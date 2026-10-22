@@ -1,5 +1,5 @@
 /**
- * incantation.test.js — Unit tests for the pure logic (runs in Node, no browser).
+ * incantation.test.js: Unit tests for the pure logic (runs in Node, no browser).
  * Run with: npm run test:unit
  * Depends on: src/incantation.js, src/spellbook.js.
  * DEV NOTE: Every bug a stress-test agent finds gets a test here or in tests/e2e.
