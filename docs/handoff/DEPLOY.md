@@ -1,10 +1,10 @@
 # Deploying
 
-The site has two hosts right now: **Firebase Hosting** (where it is moving to) and
-**GitHub Pages** (where it has lived since v1.0). Every passing push to `main` publishes to Pages;
-Firebase is published by hand (see below, and DECISIONS D20). Both publish the same folder `_site/`,
-built by `npm run build:site`. Once Firebase serves the custom domain, the Pages job gets deleted
-(see DECISIONS D18).
+The site lives on **Firebase Hosting** at **https://digitalsorcery.butlerbuilds.dev**, published by
+hand on Steven's "deploy" (see below, and DECISIONS D20). **GitHub Pages is being retired** (Steven,
+2026-10-22: "Don't work on the github page anymore"); he takes that copy down himself. Until the
+`deploy` (Pages) job is removed from `.github/workflows/ci-deploy.yml`, a passing push to `main`
+still republishes it; nobody checks or links that copy any more.
 
 ## Firebase Hosting (set up 2026-10-22)
 
@@ -35,17 +35,14 @@ Never run a bare publish command: the studio rule is to always name `--only host
 `--project <project-id>`, which the npm script does for you.
 
 ### Firebase custom domain (free certificate)
-Recommended: **`sorcery.butlerbuilds.dev`**.
-1. Firebase console → Hosting → Add custom domain → `sorcery.butlerbuilds.dev`.
-2. Add the TXT record it shows at your DNS provider (ownership check), then the two **A records**
-   Firebase gives you for the subdomain. (Firebase uses A records, not a CNAME.)
-3. Wait for "Connected". HTTPS is issued automatically, usually within an hour (up to 24).
-4. Only after that, remove the custom domain from GitHub Pages, so one address is live at a time.
-5. Saved drafts live per website address: anyone who used the old address keeps their drafts there.
-   The service worker is network-first, so nobody gets stuck on the old site. Say so in the
-   release note if people already use the app.
+**`digitalsorcery.butlerbuilds.dev`**, connected by Steven on 2026-10-22 (a CNAME to
+`digital-sorcery-butlerbuilds.web.app`). That day plain http already redirected to https, but the
+free certificate was still being issued (HTTPS can take up to 24 hours). Check
+`https://digitalsorcery.butlerbuilds.dev` loads without a certificate warning.
+Saved drafts live per website address: anyone who used the GitHub Pages address keeps their
+drafts there. The service worker is network-first, so nobody gets stuck on the old site.
 
-## GitHub Pages: the current host (kept until Firebase is proven)
+## GitHub Pages: being retired (do not work on it)
 
 ### One-time setup (owner, ~3 minutes, works from a phone browser)
 1. **Make the repo public:** GitHub → repo → Settings → General → Danger Zone →

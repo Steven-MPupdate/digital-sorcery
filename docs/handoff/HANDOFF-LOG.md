@@ -2,6 +2,16 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-22, v1.2.0 published; new address
+**Done:** on Steven's "deploy", merged PR #13 and published v1.2.0 to Firebase
+(`--only hosting:digital-sorcery-butlerbuilds --project mp-soul-stats`). Live files match the build;
+the other nine sites in `mp-soul-stats` kept their live releases. Steven connected
+**digitalsorcery.butlerbuilds.dev** (certificate still being issued that day) and retired GitHub
+Pages. The app was added to butlerbuilds.dev/work and the resume site (their own repos).
+
+**State:** live at https://digital-sorcery-butlerbuilds.web.app, and at the custom domain once its
+certificate is ready. GitHub Pages: no longer checked or linked (see DEPLOY.md).
+
 ## 2026-10-22, v1.2.0: Steven's first round of changes
 **Who:** Steven (owner) with Claude Code (desktop, local checkout).
 
