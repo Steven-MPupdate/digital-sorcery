@@ -45,7 +45,7 @@ Recommended: **`sorcery.butlerbuilds.dev`**.
    The service worker is network-first, so nobody gets stuck on the old site. Say so in the
    release note if people already use the app.
 
-## GitHub Pages — the current host (kept until Firebase is proven)
+## GitHub Pages: the current host (kept until Firebase is proven)
 
 ### One-time setup (owner, ~3 minutes, works from a phone browser)
 1. **Make the repo public:** GitHub → repo → Settings → General → Danger Zone →

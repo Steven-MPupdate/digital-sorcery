@@ -1,5 +1,5 @@
 /*
- * brand.css — Brand tokens: the ONLY place colors, fonts, spacing and radii are defined.
+ * brand.css: Brand tokens: the ONLY place colors, fonts, spacing and radii are defined.
  *
  * Source:     Mirror Path Brand Kit v1 (2026-09-26), supplied by Steven Cruz / Butler Builds.
  *             Dark Ink (default) and Light Ivory palettes, Cinzel / Cormorant Garamond /
@@ -66,8 +66,10 @@
   --on-gold: #0E0D0B;        /* Text on a solid gold fill (primary button label) */
   --bronze: #8A6A45;         /* Secondary accent: rules, icons, quiet ornament */
   --warn: #D9A26A;           /* Non-blocking warnings */
-  /* DEV NOTE: not in the kit — the gold used for TEXT. In dark mode it is the kit's gold. */
+  /* DEV NOTE: not in the kit: the gold used for TEXT. In dark mode it is the kit's gold. */
   --gold-text: #C9A45C;
+  /* DEV NOTE: not in the kit: the dimmed page behind a pop-up (the Examples dialog). */
+  --backdrop: rgba(14, 13, 11, 0.78);
   color-scheme: dark;
 }
 
@@ -84,9 +86,10 @@
   --on-gold: #0E0D0B;
   --bronze: #5A4632;
   --warn: #8A5A1E;
-  /* DEV NOTE: the kit's light gold (#A17B2F) is ~3.5:1 on ivory — below WCAG AA for small
+  /* DEV NOTE: the kit's light gold (#A17B2F) is ~3.5:1 on ivory: below WCAG AA for small
      text. Small gold text uses this darker shade of the same hue instead (AA ≥ 4.5:1). */
   --gold-text: #7D5E1F;
+  --backdrop: rgba(14, 13, 11, 0.55);
   color-scheme: light;
 }
 

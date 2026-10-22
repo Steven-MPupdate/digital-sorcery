@@ -1,20 +1,24 @@
 /**
- * app.js — Connects the page (index.html) to the logic (incantation.js).
+ * app.js: Connects the page (index.html) to the logic (incantation.js).
  *
  * What it does:  Renders ingredient cards and the Magic Circle, reacts to typing,
  *                saves drafts, casts the spell, copies/downloads it, toggles the theme,
- *                keeps several open tabs in sync, and registers the service worker.
- * Depends on:    spellbook.js + portals.js (data), incantation.js (logic), storage.js (device storage).
+ *                keeps several open tabs in sync, shows the example spells, and starts the
+ *                footer tools (src/app-tools.js: Download app, Hard refresh, offline mode).
+ * Depends on:    spellbook.js, portals.js, examples.js (data), incantation.js (logic),
+ *                storage.js (device storage), app-tools.js (footer buttons, service worker).
  * Used by:       index.html (<script type="module" src="./src/app.js">).
  *
- * SECURITY: All learner text is written with textContent or .value — never innerHTML —
+ * SECURITY: All learner text is written with textContent or .value, never innerHTML,
  * so typed HTML/script is shown as plain text and never runs.
  */
 
 import { INGREDIENTS, ITERATION_RITUAL, MAX_FIELD_LENGTH, MAX_NAME_LENGTH } from './spellbook.js';
-import { normalizeDraft, scoreSpell, getCounsel, castSpell, spellFileName } from './incantation.js';
+import { normalizeDraft, hasContent, scoreSpell, getCounsel, castSpell, spellFileName } from './incantation.js';
 import { DRAFT_KEY, loadDraft, saveDraft, clearDraft, loadTheme, saveTheme } from './storage.js';
-import { PORTALS, PORTAL_GROUPS } from './portals.js';
+import { PORTALS, PORTAL_GROUPS, COMING_SOON } from './portals.js';
+import { EXAMPLE_SPELLS, EXAMPLE_FILL_IDS } from './examples.js';
+import { initAppTools } from './app-tools.js';
 
 /* ------------------------------------------------------------------ */
 /* Small helpers                                                       */
@@ -120,7 +124,7 @@ function buildCard(ingredient) {
   for (const question of ingredient.questions) $('.questions', card).append(htmlEl('li', '', question));
 
   const label = $('.field-label', card);
-  label.textContent = `${ingredient.rune} — your answer`;
+  label.textContent = `${ingredient.rune}: your answer`;
   label.htmlFor = fieldId;
 
   const textarea = $('textarea', card);
@@ -165,12 +169,23 @@ function addChip(textarea, phrase) {
 const CIRCLE_CENTER = 150;
 const NODE_RADIUS = 104;
 
-/** Draw the Magic Circle: turning outer ring, heptagram chords, and one node per ingredient. */
+/**
+ * The place on the circle (0 = top, then clockwise) where ingredient number `index` sits.
+ * DEV NOTE: the star line (a {7/3} heptagram) jumps three places at a time. Putting ingredient k
+ * at place 3k means the line travels I, II, III ... VII and back to I in order, so the numbers
+ * follow the line (Steven, 2026-10-22).
+ */
+function circlePlace(index) {
+  return (index * 3) % INGREDIENTS.length;
+}
+
+/** Draw the Magic Circle: turning outer ring, the star line, and one node per ingredient. */
 function renderCircle() {
   const svg = $('#magic-circle');
   const c = CIRCLE_CENTER;
   const points = INGREDIENTS.map((_, i) => {
-    const angle = -Math.PI / 2 + (i / INGREDIENTS.length) * Math.PI * 2; // start at the top, go clockwise
+    // start at the top, go clockwise
+    const angle = -Math.PI / 2 + (circlePlace(i) / INGREDIENTS.length) * Math.PI * 2;
     return { x: c + Math.cos(angle) * NODE_RADIUS, y: c + Math.sin(angle) * NODE_RADIUS };
   });
 
@@ -197,11 +212,11 @@ function drawOrbit(c) {
   return orbit;
 }
 
-/** Heptagram: connect each node to the one 3 steps ahead (the {7/3} star). */
+/** The star line: connect each ingredient to the next one (VII back to I), see circlePlace. */
 function drawChords(points) {
   const chords = svgEl('g', { class: 'mc-chords' });
   INGREDIENTS.forEach((ingredient, i) => {
-    const j = (i + 3) % INGREDIENTS.length;
+    const j = (i + 1) % INGREDIENTS.length;
     chords.append(svgEl('line', {
       class: 'mc-chord',
       'data-a': ingredient.id, 'data-b': INGREDIENTS[j].id,
@@ -257,8 +272,20 @@ function renderPortals() {
     const list = htmlEl('div', 'portal-list');
     for (const portal of PORTALS.filter((p) => p.kind === kind)) list.append(buildPortalLink(portal));
     wrapper.append(htmlEl('h4', 'portal-group-title', group.title), htmlEl('p', 'hint', group.note), list);
+    if (COMING_SOON.group === kind) wrapper.append(buildComingSoon());
     container.append(wrapper);
   }
+}
+
+/** The "coming soon" card for our own builder. Plain text, not a button: nothing to tap yet. */
+function buildComingSoon() {
+  const card = htmlEl('div', 'portal-soon');
+  card.append(
+    htmlEl('p', 'portal-soon-tag', 'Coming soon'),
+    htmlEl('p', 'portal-soon-name', COMING_SOON.name),
+    htmlEl('p', 'portal-soon-note', COMING_SOON.note),
+  );
+  return card;
 }
 
 /**
@@ -273,7 +300,7 @@ function renderPortals() {
 function buildPortalLink(portal) {
   const link = htmlEl('a', 'btn btn-portal', portal.name);
   // Visible name first (voice control: "tap Claude"), extra detail for screen readers only.
-  link.append(htmlEl('span', 'sr-only', ' — copies your spell, opens in a new tab'));
+  link.append(htmlEl('span', 'sr-only', ', copies your spell, opens in a new tab'));
   link.href = portal.url;
   link.target = '_blank';
   link.rel = 'noopener noreferrer';
@@ -341,8 +368,8 @@ function renderStrength(result) {
     .map((id) => INGREDIENTS.find((ingredient) => ingredient.id === id).rune)
     .join(', ');
   setText($('#strength-text'), result.canCast
-    ? `${result.score} / 100 — the circle is ready. Stronger answers make a stronger spell.`
-    : `${result.score} / 100 — still needed: ${missing}.`);
+    ? `${result.score} / 100. The circle is ready. Stronger answers make a stronger spell.`
+    : `${result.score} / 100. Still needed: ${missing}.`);
 }
 
 function renderCircleState(result, filled) {
@@ -351,6 +378,10 @@ function renderCircleState(result, filled) {
   svg.querySelectorAll('.mc-rune').forEach((node) => node.classList.toggle('mc-lit', filled.has(node.dataset.id)));
   svg.querySelectorAll('.mc-chord').forEach((chord) => {
     chord.classList.toggle('on', filled.has(chord.dataset.a) && filled.has(chord.dataset.b));
+    // A line is as bright as the weaker of its two answers (0 to 1), see .mc-chord in main.css.
+    // DEV NOTE: style.setProperty is allowed by the strict CSP; a style="" attribute would not be.
+    const strength = Math.min(result.credits[chord.dataset.a], result.credits[chord.dataset.b]);
+    chord.style.setProperty('--strength', strength.toFixed(2));
   });
   // Screen-reader description of which runes are lit.
   const lit = INGREDIENTS.filter((ingredient) => filled.has(ingredient.id)).map((ingredient) => ingredient.symbol);
@@ -367,27 +398,124 @@ function renderCardState(filled) {
 }
 
 function renderCounsel(hints, result) {
+  // Each hint names the ingredient to fix (`target`); those become buttons that go there.
   const items = hints.length
-    ? hints.map((hint) => ({ text: hint.message, cls: 'counsel-warn' }))
+    ? hints.map((hint) => ({ text: hint.message, cls: 'counsel-warn', target: hint.id }))
     : [{
         text: result.canCast
           ? 'No warnings. Read your answers once more as if you were the AI: could you build it without guessing?'
           : 'Start with The Intent. One clear sentence beats a page of ideas.',
         cls: 'counsel-ok',
+        target: result.canCast ? null : 'intent',
       }];
 
   // Only rebuild the list when the advice actually changed (keeps screen readers quiet).
-  const key = items.map((item) => item.text).join('\n');
+  const key = items.map((item) => `${item.target}:${item.text}`).join('\n');
   if (key === lastCounselKey) return;
   lastCounselKey = key;
-  $('#counsel-list').replaceChildren(...items.map((item) => htmlEl('li', item.cls, item.text)));
+  $('#counsel-list').replaceChildren(...items.map(buildCounselItem));
+}
+
+function buildCounselItem({ text, cls, target }) {
+  const item = htmlEl('li', cls);
+  if (!target) {
+    item.textContent = text;
+    return item;
+  }
+  const ingredient = INGREDIENTS.find((entry) => entry.id === target);
+  const button = htmlEl('button', 'counsel-link', text);
+  button.type = 'button';
+  // Visible text first (voice control reads it), where it goes for screen readers only.
+  button.append(htmlEl('span', 'sr-only', `. Go to ${ingredient.rune}.`));
+  button.addEventListener('click', () => goToIngredient(target));
+  item.append(button);
+  return item;
+}
+
+/** Scroll to an ingredient card and put the cursor in its answer box. */
+function goToIngredient(id) {
+  const field = fieldEls.get(id);
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  field.closest('.ingredient').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+  field.focus({ preventScroll: true });
+}
+
+/* ------------------------------------------------------------------ */
+/* Example spells: the picker under the name, and the pop-up           */
+/* ------------------------------------------------------------------ */
+
+function renderExamplePicker() {
+  const picker = $('#example-picker');
+  for (const example of EXAMPLE_SPELLS) {
+    const chip = htmlEl('button', 'chip', example.name);
+    chip.type = 'button';
+    chip.dataset.example = example.id;
+    chip.setAttribute('aria-label', `Fill in the ${example.name} example: name and ingredients I to III`);
+    chip.addEventListener('click', () => useExample(example));
+    picker.append(chip);
+  }
+}
+
+/**
+ * Fill in an example's name and ingredients I to III (IV to VII are left as they are).
+ * Asks first if that would replace anything the learner typed. Returns true if it filled.
+ */
+function useExample(example) {
+  const current = readDraft();
+  const wouldReplace = [current.name, ...EXAMPLE_FILL_IDS.map((id) => current.fields[id])]
+    .some((text) => hasContent(text));
+  const message = `Replace your spell name and ingredients I to III with the ${example.name} example?`;
+  if (wouldReplace && !window.confirm(message)) return false;
+
+  $('#spell-name').value = example.name;
+  for (const id of EXAMPLE_FILL_IDS) fieldEls.get(id).value = example.fields[id];
+  update();
+  goToIngredient('intent');
+  return true;
+}
+
+function renderExamplesDialog() {
+  const dialog = $('#examples-dialog');
+  const body = $('#examples-body');
+  for (const example of EXAMPLE_SPELLS) {
+    const section = htmlEl('section', 'example-spell');
+    const title = htmlEl('h3', 'example-name', example.name);
+    title.id = `example-${example.id}`;
+    section.setAttribute('aria-labelledby', title.id);
+
+    const answers = htmlEl('dl', 'example-fields');
+    for (const ingredient of INGREDIENTS) {
+      answers.append(
+        htmlEl('dt', '', `${ingredient.symbol} · ${ingredient.rune}`),
+        htmlEl('dd', '', example.fields[ingredient.id]),
+      );
+    }
+
+    const use = htmlEl('button', 'btn btn-secondary', `Use ${example.name}`);
+    use.type = 'button';
+    use.setAttribute('aria-label', `Use ${example.name}: fills in the name and ingredients I to III`);
+    use.addEventListener('click', () => {
+      dialog.close();
+      useExample(example);
+    });
+
+    section.append(title, htmlEl('p', 'hint', example.pitch), answers, use);
+    body.append(section);
+  }
+
+  $('#examples-btn').addEventListener('click', () => dialog.showModal());
+  $('#examples-close').addEventListener('click', () => dialog.close());
+  // A tap on the dimmed area around the pop-up closes it (the pop-up's own box is .dialog-inner).
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
 }
 
 /**
  * Make sure the spell about to be copied matches the current answers.
  * Re-casts automatically if answers changed; returns null if the spell can't be cast now
  * (e.g. required answers were removed, or another tab cleared the circle).
- * DEV NOTE: found by the Trial by Fire — copying used to send the OLD spell after edits.
+ * DEV NOTE: found by the Trial by Fire: copying used to send the OLD spell after edits.
  */
 function ensureFreshCast() {
   if (!lastCast) return null;
@@ -464,7 +592,7 @@ function download() {
   document.body.append(link);
   link.click();
   link.remove();
-  // DEV NOTE: revoke later, not immediately — some mobile browsers start the download async.
+  // DEV NOTE: revoke later, not immediately: some mobile browsers start the download async.
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
 }
 
@@ -512,7 +640,7 @@ function syncFromStorage(message) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Theme, install & offline                                            */
+/* Theme                                                               */
 /* ------------------------------------------------------------------ */
 
 function applyTheme(theme) {
@@ -525,30 +653,6 @@ function applyTheme(theme) {
   if (surface) $('meta[name="theme-color"]').setAttribute('content', surface);
 }
 
-function setupInstall() {
-  let deferredPrompt = null;
-  const button = $('#install-btn');
-  window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault(); // show our own button instead of the browser's mini-bar
-    deferredPrompt = event;
-    button.hidden = false;
-  });
-  button.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    button.hidden = true;
-  });
-}
-
-function registerServiceWorker() {
-  // DEV NOTE: Service workers only run on https:// or localhost.
-  if (!('serviceWorker' in navigator)) return;
-  navigator.serviceWorker.register('./sw.js').catch(() => {
-    /* Offline mode is a bonus; the app works without it. */
-  });
-}
 
 /* ------------------------------------------------------------------ */
 /* Start                                                               */
@@ -597,11 +701,16 @@ function init() {
   renderIngredients();
   writeDraft(loadDraft());
   renderCircle();
+  renderExamplePicker();
+  renderExamplesDialog();
   renderRitual();
   renderPortals();
   bindEvents();
-  setupInstall();
-  registerServiceWorker();
+  // Download app, Hard refresh and offline mode (src/app-tools.js).
+  initAppTools({
+    setStatus: (text) => setText($('#app-tools-status'), text),
+    beforeRefresh: () => persist.flush(),
+  });
   update({ save: false });
 }
 

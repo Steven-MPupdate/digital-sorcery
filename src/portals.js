@@ -1,5 +1,5 @@
 /**
- * portals.js — The "Portals": AI apps a cast spell can be taken to (pure data, no logic).
+ * portals.js: The "Portals": AI apps a cast spell can be taken to (pure data, no logic).
  *
  * What it does:  Lists the AI chat apps and app builders shown after casting. Tapping a
  *                portal copies the spell, then opens that app in a new tab (or its phone app).
@@ -45,4 +45,14 @@ export const PORTAL_GROUPS = Object.freeze({
     title: 'Build it for me',
     note: 'App builders turn the spell straight into a running app they host. Fastest to see results.',
   },
+});
+
+/**
+ * Our own app builder, shown as a "coming soon" card under "Build it for me". Not a link.
+ * DEV NOTE: see docs/ROADMAP.md Phase 6. When it launches it becomes a normal portal above.
+ */
+export const COMING_SOON = Object.freeze({
+  group: 'builder',
+  name: 'Digital Sorcery Spell Forge (DSSF)',
+  note: 'Build your app right here, from your spell.',
 });

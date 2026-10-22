@@ -1,5 +1,5 @@
 /**
- * storage.js — Saves and loads the learner's draft on THEIR device only (localStorage).
+ * storage.js: Saves and loads the learner's draft on THEIR device only (localStorage).
  *
  * What it does:  Wraps localStorage so the app never crashes when storage is blocked
  *                (private mode, full disk, strict browser settings), and validates
@@ -25,7 +25,7 @@ export function loadDraft() {
   try {
     const raw = window.localStorage.getItem(DRAFT_KEY);
     if (!raw) return emptyDraft();
-    // SECURITY: the stored value is treated as untrusted — it is parsed, then rebuilt
+    // SECURITY: the stored value is treated as untrusted: it is parsed, then rebuilt
     // field by field by normalizeDraft(), which drops unknown keys and unsafe characters.
     return normalizeDraft(JSON.parse(raw));
   } catch {
@@ -48,7 +48,7 @@ export function clearDraft() {
   try {
     window.localStorage.removeItem(DRAFT_KEY);
   } catch {
-    /* storage unavailable — nothing to clear */
+    /* storage unavailable: nothing to clear */
   }
 }
 
@@ -66,6 +66,6 @@ export function saveTheme(theme) {
   try {
     window.localStorage.setItem(THEME_KEY, theme === 'light' ? 'light' : 'dark');
   } catch {
-    /* ignore — theme just won't persist */
+    /* ignore: theme just won't persist */
   }
 }

@@ -1,6 +1,6 @@
 ---
 name: grimoire-keeper
-description: Trial by Fire — code clarity and documentation auditor. Use at the end of every change before merging. Checks the house rules in CLAUDE.md are followed - readable code, header comments, DEV NOTES, glossary entries for new terms, index, references, decisions and the handoff log.
+description: Trial by Fire: code clarity and documentation auditor. Use at the end of every change before merging. Checks the house rules in CLAUDE.md are followed - readable code, header comments, DEV NOTES, glossary entries for new terms, index, references, decisions and the handoff log.
 tools: Read, Grep, Glob, Bash
 ---
 

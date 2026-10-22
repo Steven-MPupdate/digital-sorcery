@@ -1,6 +1,22 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 (2026-10-22)
+Steven's first round of changes (docs/ROADMAP.md Phase 1).
+- **Example spells:** three finished examples (Local Bites, Night Shift Sleep, Plant Pal). The
+  picker under "Name your spell" fills in an example's name and I to III, asking first if that
+  would replace your words. "See Examples" beside The Ingredients opens a pop-up with all seven
+  answers of each, and a "Use" button.
+- **Magic Circle:** the numerals now follow the star line in order (I, II, III ... VII), and each
+  lit line brightens and thickens with the weaker of the two answers it joins.
+- **Counsel:** every hint is a button that jumps to the ingredient it is about.
+- **Phones:** body text uses Cormorant's semibold cut below 720px wide, so it is easier to read.
+- **The Laws:** new quick-pick chip "Works on iPhone, Android and tablet".
+- **Build it for me:** "Digital Sorcery Spell Forge (DSSF)" shown as coming soon (not a link).
+- **Footer tools (studio rule):** "Download app" replaces the header Install button and, on iPhone
+  and iPad, explains Share, then "Add to Home Screen"; "Hard refresh" clears the offline copies and
+  reloads, saving the draft first.
+- **No em dashes** anywhere: page, spell text, docs and tooling.
+- Version 1.2.0, cache `digital-sorcery-v1.2.0`. New docs: `docs/ROADMAP.md` (the phase list).
 - **Firebase cache fix:** the home page address `/` is now `no-cache` like `/index.html`. Firebase
   matches header rules against the address asked for, so `/` had fallen back to a 1-hour browser
   cache. New unit test `tests/unit/firebase-config.test.js` guards it.
@@ -22,18 +38,18 @@
 - The Firebase job skips itself while the `FIREBASE_SERVICE_ACCOUNT` secret is missing
   (see `docs/handoff/DEPLOY.md`).
 
-## 1.1.1 — 2026-10-18
+## 1.1.1: 2026-10-18
 - Repository renamed to `digital-sorcery`; the site lives at `/digital-sorcery/` on GitHub Pages.
   Docs and the sub-folder browser test updated to match.
 
-## 1.1.0 — 2026-10-18
+## 1.1.0: 2026-10-18
 - **Portals:** after casting, one tap copies the spell and opens Claude, ChatGPT or Gemini
   ("Talk it through"), or the app builders Bolt and Lovable ("Build it for me").
 - The spell is never put in the link (privacy, reliability); links can't control this page.
 - Copy, Download and the portals always use your latest answers (auto re-cast), and an AI app only
   opens after the copy worked. Result messages appear next to the buttons; keyboard focus is kept.
 
-## 1.0.0 — 2026-10-18
+## 1.0.0: 2026-10-18
 First version.
 - Seven ingredients with teaching notes, guiding questions, weak-vs-strong examples and quick-pick chips.
 - Magic Circle (heptagram) lights up as ingredients are added; Spell Strength meter (0–100).

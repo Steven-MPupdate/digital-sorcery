@@ -29,7 +29,7 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
 ## Accepted risks (with reasons)
 1. **Clickjacking (framing) not blocked.** `frame-ancestors` only works as an HTTP header and
    GitHub Pages cannot set headers. Impact is low: there are no accounts, payments or
-   sensitive actions to trick someone into. *Revisit if* logins or payments are added — then
+   sensitive actions to trick someone into. *Revisit if* logins or payments are added: then
    host behind Cloudflare (free) or Netlify/Vercel, which can send the header.
 2. **Drafts are readable by anyone with access to the unlocked phone/browser.** They are
    plain localStorage. Acceptable for brainstorming notes; we tell users not to paste secrets.

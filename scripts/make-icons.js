@@ -1,5 +1,5 @@
 /**
- * make-icons.js — Renders assets/icons/icon.svg into the PNG sizes phones need.
+ * make-icons.js: Renders assets/icons/icon.svg into the PNG sizes phones need.
  *
  * Usage:   npm run icons   (re-run after editing icon.svg)
  * Output:  icon-192.png, icon-512.png, icon-maskable-512.png (with safe-zone padding).

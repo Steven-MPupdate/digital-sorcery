@@ -1,4 +1,4 @@
-# ci-deploy.yml — Test every change; publish the site only when main passes.
+# ci-deploy.yml: Test every change; publish the site only when main passes.
 #
 # Pull requests and pushes to any branch → run the tests.
 # Pushes to main → run the tests, THEN publish to GitHub Pages (and Firebase Hosting if a key is set).

@@ -1,5 +1,5 @@
 /**
- * portals.test.js — Checks the Portals list is safe and complete.
+ * portals.test.js: Checks the Portals list is safe and complete.
  * Run with: npm run test:unit
  * Depends on: src/portals.js.
  */

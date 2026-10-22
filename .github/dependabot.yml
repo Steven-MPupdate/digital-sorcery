@@ -1,4 +1,4 @@
-# dependabot.yml — Opens PRs when our few dependencies or GitHub Actions have updates.
+# dependabot.yml: Opens PRs when our few dependencies or GitHub Actions have updates.
 # SECURITY: keeps the test tooling and CI actions patched.
 version: 2
 updates:

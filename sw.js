@@ -1,12 +1,12 @@
 /**
- * sw.js — Service worker: makes the app work offline after the first visit.
+ * sw.js: Service worker: makes the app work offline after the first visit.
  *
  * What it does:  On install, saves the "app shell" (every file the app needs) into a cache.
  *                Online:  every request goes to the network first (fresh files, always
  *                         matching each other), and the cache copy is refreshed.
  *                Offline: the cached copy is served instead.
  * Depends on:    nothing (but APP_SHELL must list every file the page loads).
- * Registered by: src/app.js (registerServiceWorker).
+ * Registered by: src/app-tools.js (initAppTools).
  *
  * IMPORTANT: Bump CACHE_VERSION whenever any file in APP_SHELL changes, so old caches
  * are cleaned up. (Rule in CLAUDE.md §6.)
@@ -19,7 +19,7 @@
  * when online (usually a cheap "not modified" reply).
  */
 
-const CACHE_VERSION = 'digital-sorcery-v1.1.1';
+const CACHE_VERSION = 'digital-sorcery-v1.2.0';
 
 // DEV NOTE: Paths are relative to this file, so they work under /digital-sorcery/ on GitHub Pages
 // and at the root of a custom domain.
@@ -32,6 +32,8 @@ const APP_SHELL = [
   './src/incantation.js',
   './src/storage.js',
   './src/portals.js',
+  './src/examples.js',
+  './src/app-tools.js',
   './src/styles/brand.css',
   './src/styles/main.css',
   './assets/icons/icon.svg',

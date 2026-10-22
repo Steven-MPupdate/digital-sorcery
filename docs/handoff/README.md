@@ -1,4 +1,4 @@
-# Handoff Guide — Picking Up Digital Sorcery Cold
+# Handoff Guide: Picking Up Digital Sorcery Cold
 
 ## In one minute
 - **What:** a free PWA that teaches people to start an app well: answer seven "ingredients",
@@ -19,10 +19,10 @@ From a phone: use the Claude app (Claude Code) connected to this GitHub repo; it
 the above in a cloud sandbox.
 
 ## Where to start reading
-1. `CLAUDE.md` — the rules.
-2. `docs/handoff/ARCHITECTURE.md` — how it fits together.
-3. `src/spellbook.js` — the content (easiest place to make changes).
-4. `docs/handoff/HANDOFF-LOG.md` — the latest state and open questions.
+1. `CLAUDE.md`: the rules.
+2. `docs/handoff/ARCHITECTURE.md`: how it fits together.
+3. `src/spellbook.js`: the content (easiest place to make changes).
+4. `docs/handoff/HANDOFF-LOG.md`: the latest state and open questions.
 
 ## Common tasks
 | Task | Where |

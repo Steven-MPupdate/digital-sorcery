@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  index.html — The single page of Digital Sorcery.
+  index.html: The single page of Digital Sorcery.
 
   What it does:  Static page structure. All interactive parts are filled in by src/app.js.
   Depends on:    src/styles/*.css, src/app.js, manifest.webmanifest, sw.js (via app.js).
@@ -38,7 +38,6 @@
     <div class="wrap header-row">
       <p class="brand-mark">Butler Builds · Digital Sorcery</p>
       <div class="header-actions">
-        <button type="button" id="install-btn" class="btn btn-quiet" hidden>Install</button>
         <button type="button" id="theme-btn" class="btn btn-quiet">Ivory</button>
       </div>
     </div>
@@ -67,14 +66,17 @@
         <div class="strength">
           <label for="strength-meter" class="ui-label">Spell strength</label>
           <meter id="strength-meter" min="0" max="100" low="40" high="75" optimum="100" value="0">0%</meter>
-          <p id="strength-text" class="strength-text" aria-live="polite">0 / 100 — add the first three ingredients to cast.</p>
+          <p id="strength-text" class="strength-text" aria-live="polite">0 / 100. Add the first three ingredients to cast.</p>
         </div>
       </div>
     </section>
 
     <!-- INGREDIENTS -->
     <section id="ingredients" class="wrap" aria-labelledby="ingredients-title">
-      <h2 id="ingredients-title" class="section-label">The Ingredients</h2>
+      <div class="section-head">
+        <h2 id="ingredients-title" class="section-label">The Ingredients</h2>
+        <button type="button" id="examples-btn" class="btn btn-quiet" aria-haspopup="dialog">See Examples</button>
+      </div>
       <p class="hint">Numerals I–III are required. The rest make the spell stronger. Your words are saved on this device only. Never put passwords or secret keys in a spell.</p>
       <p id="save-status" class="save-status" role="status"></p>
 
@@ -84,6 +86,11 @@
              app.js re-applies both from there, and incantation.js enforces them again. -->
         <input id="spell-name" type="text" maxlength="80" autocomplete="off" spellcheck="true"
                placeholder="e.g. Night Shift Sleep">
+        <!-- Example picker: buttons filled by app.js (renderExamplePicker) from src/examples.js. -->
+        <div class="example-picker">
+          <p class="ui-label example-picker-label" id="example-picker-label">Or start from an example (fills in I to III):</p>
+          <div id="example-picker" class="chips" role="group" aria-labelledby="example-picker-label"></div>
+        </div>
       </div>
 
       <!-- Ingredient cards are inserted here by app.js using the template below. -->
@@ -174,12 +181,32 @@
     </section>
   </main>
 
+  <!-- EXAMPLES POP-UP: content filled by app.js (renderExamplesDialog) from src/examples.js.
+       DEV NOTE: a native <dialog> opened with showModal() keeps keyboard focus inside it and
+       closes on Escape, with no extra code. -->
+  <dialog id="examples-dialog" class="examples-dialog" aria-labelledby="examples-title">
+    <div class="dialog-inner">
+    <div class="dialog-head">
+      <h2 id="examples-title" class="section-label">Example Spells</h2>
+      <button type="button" id="examples-close" class="btn btn-quiet">Close</button>
+    </div>
+    <p class="hint">Three finished spells, all seven ingredients each. Use one to fill in I to III, then make it your own.</p>
+    <div id="examples-body"></div>
+    </div>
+  </dialog>
+
   <footer class="site-footer">
     <div class="wrap footer-row">
       <p class="muted">Your words never leave this device. No accounts, no tracking.</p>
       <button type="button" id="reset-btn" class="btn btn-quiet">Clear the circle</button>
     </div>
-    <p class="wrap muted small">A Butler Builds creation · v1.1.1</p>
+    <!-- Studio rule for every PWA: "Download app" and "Hard refresh" (src/app-tools.js). -->
+    <div class="wrap footer-row footer-tools">
+      <button type="button" id="install-btn" class="btn btn-quiet" hidden>Download app</button>
+      <button type="button" id="hard-refresh-btn" class="btn btn-quiet">Hard refresh</button>
+    </div>
+    <p id="app-tools-status" class="wrap action-status" role="status"></p>
+    <p class="wrap muted small">A Butler Builds creation · v1.2.0</p>
   </footer>
 </body>
 </html>

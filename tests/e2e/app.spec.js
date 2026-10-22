@@ -1,5 +1,5 @@
 /**
- * app.spec.js — End-to-end tests in a real browser.
+ * app.spec.js: End-to-end tests in a real browser.
  *
  * Covers: the main learn → cast → copy flow, saved drafts, hostile input (XSS),
  * corrupted/blocked storage, offline mode, layout on small phones and privacy
@@ -249,11 +249,12 @@ test('layout: cards fit the screen at 200% text size', async ({ page }) => {
   await page.goto('/');
   // DEV NOTE: set through the DOM; addStyleTag is (correctly) blocked by our CSP.
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
-  await page.locator('#install-btn').evaluate((el) => { el.hidden = false; }); // worst case header
+  await page.locator('#install-btn').evaluate((el) => { el.hidden = false; }); // worst case footer
   const overflow = await page.evaluate(() => {
     const width = document.documentElement.clientWidth;
     const pageScroll = document.documentElement.scrollWidth - width;
-    const sticking = [...document.querySelectorAll('.ingredient, .ingredient *, .site-header *')]
+    const parts = '.ingredient, .ingredient *, .site-header *, .section-head *, .example-picker *, .site-footer *';
+    const sticking = [...document.querySelectorAll(parts)]
       .filter((el) => el.getBoundingClientRect().right > width + 1).length;
     return { pageScroll, sticking };
   });
@@ -348,7 +349,7 @@ test('GitHub Pages sub-folder: everything loads under /digital-sorcery/', async 
 });
 
 /* ------------------------------------------------------------------ */
-/* v1.1 — Portals                                                      */
+/* v1.1: Portals                                                      */
 /* ------------------------------------------------------------------ */
 
 test('portals: one tap copies the spell and opens the AI app safely', async ({ page, context }) => {
@@ -391,7 +392,7 @@ test('portals: keyboard order after casting is Copy → Download → portals', a
 });
 
 /* ------------------------------------------------------------------ */
-/* v1.1 — Trial by Fire regressions (Portals round)                    */
+/* v1.1: Trial by Fire regressions (Portals round)                    */
 /* ------------------------------------------------------------------ */
 
 /** Cast, then stub outside sites so portal tabs open a stand-in page. */

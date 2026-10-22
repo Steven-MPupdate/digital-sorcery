@@ -1,5 +1,5 @@
 /**
- * spellbook.js — The ingredient definitions (pure data, no logic).
+ * spellbook.js: The ingredient definitions (pure data, no logic).
  *
  * What it does:  Lists every "ingredient" that goes into the Magic Circle, plus the
  *                teaching content for each one (why it matters, guiding questions,
@@ -10,7 +10,7 @@
  *
  * DEV NOTE: To add a new ingredient, add an object to INGREDIENTS below, then add the
  * term to docs/GLOSSARY.md. The UI and the prompt pick it up automatically.
- * Keep `id` values stable — they are the keys used for saved drafts in localStorage.
+ * Keep `id` values stable: they are the keys used for saved drafts in localStorage.
  */
 
 /** Hard cap on characters per ingredient. SECURITY: limits memory/abuse from huge pastes. */
@@ -25,7 +25,7 @@ export const MAX_NAME_LENGTH = 80;
  * @property {string}   rune      The mystical name shown in the UI.
  * @property {string}   plain     The plain-English name (always shown beside the rune).
  * @property {string}   symbol    Roman numeral drawn on the Magic Circle.
- *                                DEV NOTE: brand kit forbids emoji as markers — keep numerals.
+ *                                DEV NOTE: brand kit forbids emoji as markers: keep numerals.
  * @property {boolean}  required  If true, the spell cannot be cast without it.
  * @property {number}   weight    How much it adds to Spell Strength (all weights sum to 100).
  * @property {number}   fullAt    Characters needed for full strength credit.
@@ -48,7 +48,7 @@ export const INGREDIENTS = [
     required: true,
     weight: 20,
     fullAt: 60,
-    heading: 'Intent — what this app is and why it should exist',
+    heading: 'Intent: what this app is and why it should exist',
     why: 'An AI builds exactly what you describe, not what you meant. One clear sentence of purpose stops it from guessing.',
     questions: [
       'In one sentence, what does this app do?',
@@ -67,7 +67,7 @@ export const INGREDIENTS = [
     required: true,
     weight: 15,
     fullAt: 40,
-    heading: 'Users — who this is for',
+    heading: 'Users: who this is for',
     why: 'Who uses it decides the language, the screen size, the difficulty and the tone.',
     questions: [
       'Who is the main person using it?',
@@ -154,7 +154,7 @@ export const INGREDIENTS = [
     weak: '(left blank)',
     strong: 'Readable code with comments. No secrets in code. Test every feature. Works on a 360px-wide phone.',
     placeholder: 'Always … Never …',
-    chips: ['Readable code with comments', 'No secrets in the code', 'Write tests for each feature', 'Mobile-first and accessible'],
+    chips: ['Readable code with comments', 'No secrets in the code', 'Write tests for each feature', 'Mobile-first and accessible', 'Works on iPhone, Android and tablet'],
   },
   {
     id: 'proof',
@@ -177,7 +177,7 @@ export const INGREDIENTS = [
 ];
 
 /**
- * The Iteration Ritual — follow-up prompts to use AFTER the first answer comes back.
+ * The Iteration Ritual: follow-up prompts to use AFTER the first answer comes back.
  * Always shown on the page (below Cast); also listed in docs/GLOSSARY.md.
  */
 export const ITERATION_RITUAL = [
