@@ -36,9 +36,8 @@ Never run a bare publish command: the studio rule is to always name `--only host
 
 ### Firebase custom domain (free certificate)
 **`digitalsorcery.butlerbuilds.dev`**, connected by Steven on 2026-10-22 (a CNAME to
-`digital-sorcery-butlerbuilds.web.app`). That day plain http already redirected to https, but the
-free certificate was still being issued (HTTPS can take up to 24 hours). Check
-`https://digitalsorcery.butlerbuilds.dev` loads without a certificate warning.
+`digital-sorcery-butlerbuilds.web.app`). Firebase's free certificate was issued by 2026-10-23:
+HTTPS works, and plain http redirects to https.
 Saved drafts live per website address: anyone who used the GitHub Pages address keeps their
 drafts there. The service worker is network-first, so nobody gets stuck on the old site.
 
