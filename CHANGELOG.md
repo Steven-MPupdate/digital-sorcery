@@ -1,6 +1,12 @@
 # Changelog
 
 ## Unreleased
+- **Tests:** the portal tests bring their tab to the front before reading the clipboard. They timed
+  out now and then on CI because Chromium only lets the focused tab read it. The app is unchanged.
+- **Tooling:** GitHub Actions updated (checkout 7.0.1, setup-node 7.1.0, configure-pages 6.0.0,
+  upload-pages-artifact 5.0.0, deploy-pages 5.0.1) and Playwright 1.64.1, from Dependabot PRs #2 to #7.
+  upload-pages-artifact 4+ leaves out dotfiles, so `.nojekyll` no longer ships to Pages; Pages
+  deploys through Actions never run Jekyll, so it is not needed there.
 - **Hosting:** the site now also publishes to Firebase Hosting on every passing push to `main`,
   next to GitHub Pages. Nothing in the app itself changed.
 - `npm run build:site` (`scripts/build-site.js`) builds `_site/` with only the files the website
