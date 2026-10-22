@@ -129,16 +129,19 @@ export function ingredientCredit(text, fullAt) {
 /**
  * Score a draft.
  * @param {unknown} rawDraft  Any draft (normalized here).
- * @returns {{ score: number, filled: string[], missingRequired: string[], canCast: boolean }}
+ * @returns {{ score: number, filled: string[], missingRequired: string[], canCast: boolean,
+ *             credits: Record<string, number> }}  credits: 0 to 1 per ingredient id (lights the Magic Circle)
  */
 export function scoreSpell(rawDraft) {
   const { fields } = normalizeDraft(rawDraft);
   let total = 0;
   const filled = [];
   const missingRequired = [];
+  const credits = {};
 
   for (const ingredient of INGREDIENTS) {
     const credit = ingredientCredit(fields[ingredient.id], ingredient.fullAt);
+    credits[ingredient.id] = credit;
     total += credit * ingredient.weight;
     if (credit > 0) filled.push(ingredient.id);
     else if (ingredient.required) missingRequired.push(ingredient.id);
@@ -149,6 +152,7 @@ export function scoreSpell(rawDraft) {
     filled,
     missingRequired,
     canCast: missingRequired.length === 0,
+    credits,
   };
 }
 

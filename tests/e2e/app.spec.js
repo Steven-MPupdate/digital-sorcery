@@ -249,11 +249,12 @@ test('layout: cards fit the screen at 200% text size', async ({ page }) => {
   await page.goto('/');
   // DEV NOTE: set through the DOM; addStyleTag is (correctly) blocked by our CSP.
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
-  await page.locator('#install-btn').evaluate((el) => { el.hidden = false; }); // worst case header
+  await page.locator('#install-btn').evaluate((el) => { el.hidden = false; }); // worst case footer
   const overflow = await page.evaluate(() => {
     const width = document.documentElement.clientWidth;
     const pageScroll = document.documentElement.scrollWidth - width;
-    const sticking = [...document.querySelectorAll('.ingredient, .ingredient *, .site-header *')]
+    const parts = '.ingredient, .ingredient *, .site-header *, .section-head *, .example-picker *, .site-footer *';
+    const sticking = [...document.querySelectorAll(parts)]
       .filter((el) => el.getBoundingClientRect().right > width + 1).length;
     return { pageScroll, sticking };
   });

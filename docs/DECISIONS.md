@@ -125,3 +125,13 @@ D18 planned would reach every site in the shared project; Firebase is published 
 stays skipped (no secret).
 **Alternatives:** a project of its own (allows safe automatic publishing, but one more project to
 run); a key on the shared project (one leak away from every client site).
+
+### D21: Circle order follows the star line; heavier text on phones; studio footer tools (2026-10-22)
+**Why:** Steven asked for the numerals to follow the line, so the star now reads I to VII as it
+is drawn: ingredient k sits at place 3k on the circle, and each line joins one ingredient to the
+next. Cormorant at regular weight is too thin on a phone, so phones get the semibold cut (wide
+screens keep regular). The header Install button became the studio's footer pair, "Download app"
+and "Hard refresh", which also covers iPhone, where there is no install prompt.
+**Alternatives:** relabel the old places without moving ingredients (the prompt and cards would
+then disagree with the circle); a bigger font size instead of weight (the page was already 19px);
+keeping Install in the header (two install controls once the footer rule applies).

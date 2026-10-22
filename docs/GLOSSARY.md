@@ -19,10 +19,14 @@ Format: **Term**: plain-English meaning. *Where:* file(s) where it lives.
 - **The Tools (V)**: Platform, stack and hosting. *Where:* id `tools`.
 - **The Laws (VI)**: Rules the AI builder must follow (code style, security, testing). *Where:* id `laws`.
 - **The Proof (VII)**: Definition of done: how we know v1 works. *Where:* id `proof`.
-- **Magic Circle**: The SVG diagram of seven runes joined in a seven-point star. A rune lights up when its ingredient has content; the circle turns gold when the spell can be cast. *Where:* `renderCircle()` in `src/app.js`, `.mc-*` classes in `src/styles/main.css`.
-- **Heptagram**: The seven-pointed star (pattern {7/3}) drawn inside the Magic Circle and the app icon. *Where:* `drawChords()` in `src/app.js`, `assets/icons/icon.svg`.
+- **Magic Circle**: The SVG diagram of seven runes joined in a seven-point star. A rune lights up when its ingredient has content; the rings turn gold when the spell can be cast. *Where:* `renderCircle()` in `src/app.js`, `.mc-*` classes in `src/styles/main.css`.
+- **Heptagram**: The seven-pointed star (pattern {7/3}) drawn inside the Magic Circle and the app icon. The numerals are placed so the line runs I, II, III ... VII in order (DECISIONS D21). *Where:* `circlePlace()` and `drawChords()` in `src/app.js`, `assets/icons/icon.svg`.
+- **Line strength**: How bright and thick a lit star line is: the weaker of the two answers it joins (0 to 1). *Where:* `credits` from `scoreSpell()` in `src/incantation.js`, `--strength` on `.mc-chord` in `src/styles/main.css`.
 - **Spell Strength**: A 0–100 score: each ingredient's weight × how complete its answer is. A nudge, not a grade. *Where:* `scoreSpell()` in `src/incantation.js`.
-- **Counsel**: Teaching hints about vague words, too many features, or missing Wards. *Where:* `getCounsel()` in `src/incantation.js`.
+- **Counsel**: Teaching hints about vague words, too many features, or missing Wards. Each hint is a button that jumps to the ingredient it is about. *Where:* `getCounsel()` in `src/incantation.js`, `buildCounselItem()` and `goToIngredient()` in `src/app.js`.
+- **Example spells**: Three finished spells (Local Bites, Night Shift Sleep, Plant Pal). The picker under "Name your spell" fills in an example's name and I to III. *Where:* `src/examples.js`, `renderExamplePicker()` and `useExample()` in `src/app.js`.
+- **See Examples**: The button beside "The Ingredients" that opens a pop-up with all seven answers of each example spell. *Where:* `#examples-dialog` in `index.html`, `renderExamplesDialog()` in `src/app.js`.
+- **Spell Forge (DSSF)**: "Digital Sorcery Spell Forge", our own planned app builder; shown as "coming soon" under Build it for me. *Where:* `COMING_SOON` in `src/portals.js`, `docs/ROADMAP.md` Phase 6.
 - **Portals**: The buttons shown after casting that copy the spell and open an AI app. *Where:* `src/portals.js`, `renderPortals()` in `src/app.js`.
 - **Talk it through / Build it for me**: The two kinds of portal: chat AIs (Claude, ChatGPT, Gemini) that plan and code with you, and app builders (Bolt, Lovable) that build and host the app. *Where:* `PORTAL_GROUPS` in `src/portals.js`.
 - **The portal apps**: *Where:* `PORTALS` in `src/portals.js`.
@@ -60,6 +64,8 @@ Format: **Term**: plain-English meaning. *Where:* file(s) where it lives.
 ## Technical terms
 
 - **PWA (Progressive Web App)**: A website that can be installed on a phone's home screen and work offline.
+- **Download app**: The footer button that installs the app. Shown only where the browser can install it; on iPhone and iPad it explains Share, then "Add to Home Screen". *Where:* `src/app-tools.js`.
+- **Hard refresh**: The footer button that deletes the offline copies, checks for a new service worker and reloads. The learner's draft is saved first and never deleted. *Where:* `src/app-tools.js`.
 - **Service worker**: A background script that caches the app's files so it works offline. *Where:* `sw.js`.
 - **App shell**: The list of files the service worker saves for offline use. *Where:* `APP_SHELL` in `sw.js`.
 - **Cache version**: The `CACHE_VERSION` label in `sw.js`; changing it clears old offline copies on phones.

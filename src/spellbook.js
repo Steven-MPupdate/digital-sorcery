@@ -154,7 +154,7 @@ export const INGREDIENTS = [
     weak: '(left blank)',
     strong: 'Readable code with comments. No secrets in code. Test every feature. Works on a 360px-wide phone.',
     placeholder: 'Always … Never …',
-    chips: ['Readable code with comments', 'No secrets in the code', 'Write tests for each feature', 'Mobile-first and accessible'],
+    chips: ['Readable code with comments', 'No secrets in the code', 'Write tests for each feature', 'Mobile-first and accessible', 'Works on iPhone, Android and tablet'],
   },
   {
     id: 'proof',

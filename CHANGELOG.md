@@ -1,6 +1,22 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 (2026-10-22)
+Steven's first round of changes (docs/ROADMAP.md Phase 1).
+- **Example spells:** three finished examples (Local Bites, Night Shift Sleep, Plant Pal). The
+  picker under "Name your spell" fills in an example's name and I to III, asking first if that
+  would replace your words. "See Examples" beside The Ingredients opens a pop-up with all seven
+  answers of each, and a "Use" button.
+- **Magic Circle:** the numerals now follow the star line in order (I, II, III ... VII), and each
+  lit line brightens and thickens with the weaker of the two answers it joins.
+- **Counsel:** every hint is a button that jumps to the ingredient it is about.
+- **Phones:** body text uses Cormorant's semibold cut below 720px wide, so it is easier to read.
+- **The Laws:** new quick-pick chip "Works on iPhone, Android and tablet".
+- **Build it for me:** "Digital Sorcery Spell Forge (DSSF)" shown as coming soon (not a link).
+- **Footer tools (studio rule):** "Download app" replaces the header Install button and, on iPhone
+  and iPad, explains Share, then "Add to Home Screen"; "Hard refresh" clears the offline copies and
+  reloads, saving the draft first.
+- **No em dashes** anywhere: page, spell text, docs and tooling.
+- Version 1.2.0, cache `digital-sorcery-v1.2.0`. New docs: `docs/ROADMAP.md` (the phase list).
 - **Firebase cache fix:** the home page address `/` is now `no-cache` like `/index.html`. Firebase
   matches header rules against the address asked for, so `/` had fallen back to a 1-hour browser
   cache. New unit test `tests/unit/firebase-config.test.js` guards it.

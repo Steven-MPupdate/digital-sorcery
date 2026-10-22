@@ -46,3 +46,13 @@ export const PORTAL_GROUPS = Object.freeze({
     note: 'App builders turn the spell straight into a running app they host. Fastest to see results.',
   },
 });
+
+/**
+ * Our own app builder, shown as a "coming soon" card under "Build it for me". Not a link.
+ * DEV NOTE: see docs/ROADMAP.md Phase 6. When it launches it becomes a normal portal above.
+ */
+export const COMING_SOON = Object.freeze({
+  group: 'builder',
+  name: 'Digital Sorcery Spell Forge (DSSF)',
+  note: 'Build your app right here, from your spell.',
+});

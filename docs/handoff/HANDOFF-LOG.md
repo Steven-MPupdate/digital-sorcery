@@ -2,6 +2,24 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-22, v1.2.0: Steven's first round of changes
+**Who:** Steven (owner) with Claude Code (desktop, local checkout).
+
+**Done:** wrote the phase list (`docs/ROADMAP.md`) and built Phase 1 on branch
+`steven-ui-round-1`: em dashes removed everywhere; three example spells (picker under the name,
+"See Examples" pop-up); circle numerals follow the star line and lines brighten with answer
+strength; Counsel hints are buttons; semibold body text on phones; Laws chip for iPhone, Android
+and tablet; Spell Forge (DSSF) "coming soon" card; footer "Download app" (iPhone instructions)
+and "Hard refresh" (studio rule). New tests: `tests/unit/examples.test.js`,
+`tests/e2e/v1-2.spec.js`. Clicked through on a 375px phone view.
+
+**State:** PR open, **not merged and not published** (merging to `main` publishes GitHub Pages;
+Firebase waits for Steven's "deploy"). No Trial by Fire this round (Steven: the first deployment
+already happened). The flaky portal test from earlier today is still open (needs a second opinion).
+
+**Open questions:** Phases 2 to 6 in `docs/ROADMAP.md` (Spellbook naming, modules, accounts and
+which Firebase project, $5 a month, in-app AI, Spell Forge).
+
 ## 2026-10-22: first Firebase publish, home page cache fix
 **Who:** Steven (owner) with Claude Code (desktop, local checkout).
 

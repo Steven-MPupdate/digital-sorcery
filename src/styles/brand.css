@@ -68,6 +68,8 @@
   --warn: #D9A26A;           /* Non-blocking warnings */
   /* DEV NOTE: not in the kit: the gold used for TEXT. In dark mode it is the kit's gold. */
   --gold-text: #C9A45C;
+  /* DEV NOTE: not in the kit: the dimmed page behind a pop-up (the Examples dialog). */
+  --backdrop: rgba(14, 13, 11, 0.78);
   color-scheme: dark;
 }
 
@@ -87,6 +89,7 @@
   /* DEV NOTE: the kit's light gold (#A17B2F) is ~3.5:1 on ivory: below WCAG AA for small
      text. Small gold text uses this darker shade of the same hue instead (AA ≥ 4.5:1). */
   --gold-text: #7D5E1F;
+  --backdrop: rgba(14, 13, 11, 0.55);
   color-scheme: light;
 }
 
