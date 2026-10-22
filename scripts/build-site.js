@@ -1,7 +1,7 @@
 // build-site.js — Collect only the files the website needs into `_site/`.
 //
 // What it does: deletes `_site/`, then copies the shipping files (index.html,
-// manifest.webmanifest, sw.js, src/, assets/) into it and adds `.nojekyll`.
+// manifest.webmanifest, sw.js, src/, assets/) into it.
 // Depends on: Node's built-in `fs` and `path` only. No build step, no dependencies.
 // Called by: `npm run build:site`, the GitHub Pages job and the Firebase Hosting job
 // in `.github/workflows/ci-deploy.yml`, and anyone deploying by hand.
@@ -10,7 +10,7 @@
 // SECURITY: an allow-list, not an ignore-list. Docs, tests, .claude/ and node_modules
 // can never reach the public site by accident, even if someone adds new folders.
 
-import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 
@@ -32,12 +32,8 @@ async function buildSite() {
     await cp(path.join(ROOT, folder), path.join(OUT, folder), { recursive: true });
   }
 
-  // DEV NOTE: .nojekyll tells GitHub Pages to serve files as-is (no Jekyll processing).
-  // Firebase ignores it; one extra empty file is cheaper than two different builds.
-  await writeFile(path.join(OUT, '.nojekyll'), '');
-
   const shipped = [...SHIPPING_FILES, ...SHIPPING_FOLDERS].join(', ');
-  console.log(`Built _site/ with: ${shipped}, .nojekyll`);
+  console.log(`Built _site/ with: ${shipped}`);
 }
 
 buildSite().catch((error) => {

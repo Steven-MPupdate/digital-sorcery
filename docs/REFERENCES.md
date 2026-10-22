@@ -32,7 +32,7 @@ Official sources this project relies on, and what we used each for.
 | [GitHub Actions used](https://github.com/actions) | `checkout`, `setup-node`, `upload-artifact`, `configure-pages`, `upload-pages-artifact`, `deploy-pages`. |
 | [Dependabot configuration](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference) | `.github/dependabot.yml`. |
 | [GitHub secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning) | Backup to our CI secret scan. |
-| [GitHub Pages and Jekyll](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll) | Why `_site/.nojekyll` is added. |
+| [actions/upload-pages-artifact v4.0.0](https://github.com/actions/upload-pages-artifact/releases/tag/v4.0.0) | Dotfiles are left out of the Pages upload, so `_site/` ships none (`.nojekyll` was removed in 2026-10). |
 | [Supabase Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) and [Edge Function secrets](https://supabase.com/docs/guides/functions/secrets) | The v2 guidance in `docs/SECURITY.md`. |
 | Portal destinations: [claude.ai](https://claude.ai/new), [chatgpt.com](https://chatgpt.com/), [gemini.google.com](https://gemini.google.com/app), [bolt.new](https://bolt.new/), [lovable.dev](https://lovable.dev/) | The five AI apps in `src/portals.js` (allowlisted in `tests/unit/portals.test.js`). |
 | [MDN: rel=noopener](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/noopener) and [rel=noreferrer](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/noreferrer) | Outbound link safety in `buildPortalLink()`. |

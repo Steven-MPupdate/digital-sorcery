@@ -2,6 +2,20 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-22: Dependabot updates and flaky portal tests
+**Who:** Steven (owner) with Claude Code (desktop, local checkout).
+
+**Done:** reviewed Dependabot PRs #2 to #7 (each pinned commit checked against its official tag,
+release notes read; nothing breaks this repo) and merged them on one branch. Two of them had a
+failed CI run that passed on the same commit: the portal tests read the clipboard after a portal
+tab opened, and Chromium only lets the focused tab read it. The tests now bring their tab to the
+front first. `.nojekyll` removed: upload-pages-artifact 4+ leaves dotfiles out anyway.
+
+**State:** `npm test` passes on Windows with Playwright 1.64.1 (contrast, hidden chars, 28 unit,
+68 browser). The flake never showed locally (80 repeat runs, before and after), so the proof is
+repeated CI runs on the PR. The new Pages actions only run on `main`, so the first deploy after the
+merge is their first real test.
+
 ## 2026-10-18 — Session 1c: repo renamed, first deploy
 **Who:** Steven (owner) with Claude Code (cloud session, from a Galaxy Note 20).
 
