@@ -7,14 +7,17 @@
   upload-pages-artifact 5.0.0, deploy-pages 5.0.1) and Playwright 1.64.1, from Dependabot PRs #2 to #7.
   upload-pages-artifact 4+ leaves out dotfiles, so `.nojekyll` is no longer built (Pages
   deploys through Actions never run Jekyll, and Firebase ignored it).
-- **Hosting:** the site now also publishes to Firebase Hosting on every passing push to `main`,
-  next to GitHub Pages. Nothing in the app itself changed.
+- **Hosting:** the site can now also be published to Firebase Hosting, next to GitHub Pages.
+  Nothing in the app itself changed.
+- Firebase site `digital-sorcery-butlerbuilds` created in the studio's `mp-soul-stats` project and
+  its ids filled in. Firebase is published by hand on "deploy"; no publish key is added, because a
+  key on the shared project could reach every site in it (DECISIONS D20).
 - `npm run build:site` (`scripts/build-site.js`) builds `_site/` with only the files the website
   needs; both hosts publish that same folder, so they cannot drift.
 - `firebase.json` adds cache headers (service worker, page and `src/` never cached; fonts cached for
   a year) and `nosniff` / `no-referrer` / same-origin-opener headers.
-- The Firebase job skips itself until the project ids are filled in and the
-  `FIREBASE_SERVICE_ACCOUNT` secret is added (see `docs/handoff/DEPLOY.md`).
+- The Firebase job skips itself while the `FIREBASE_SERVICE_ACCOUNT` secret is missing
+  (see `docs/handoff/DEPLOY.md`).
 
 ## 1.1.1 — 2026-10-18
 - Repository renamed to `digital-sorcery`; the site lives at `/digital-sorcery/` on GitHub Pages.

@@ -115,3 +115,13 @@ the first release there goes wrong).
 file has to be named in it, and both publish jobs run `npm run build:site`.
 **Alternatives:** `firebase.json` `ignore` globs (easy to miss a new folder); publishing the repo root
 (ships the docs and tests).
+
+### D20: Firebase site lives in the shared mp-soul-stats project, published by hand (2026-10-22)
+**Why:** Steven asked for the site inside the existing `mp-soul-stats` project, next to the studio's
+other sites. Site id `digital-sorcery-butlerbuilds`, because `digital-sorcery` is taken by another
+project. A Firebase Hosting Admin key cannot be limited to one site, so the GitHub publish key that
+D18 planned would reach every site in the shared project; Firebase is published by hand on Steven's
+"deploy" (`npm run deploy:firebase`), like the studio's other sites, and the `deploy-firebase` job
+stays skipped (no secret).
+**Alternatives:** a project of its own (allows safe automatic publishing, but one more project to
+run); a key on the shared project (one leak away from every client site).
