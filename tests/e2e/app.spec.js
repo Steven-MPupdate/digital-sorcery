@@ -376,7 +376,7 @@ test('portals: one tap copies the spell and opens the AI app safely', async ({ p
   // SECURITY: the new tab cannot reach back into this page.
   expect(await popup.evaluate(() => window.opener)).toBeNull();
   await expect(page.locator('#portal-status')).toHaveText('Spell copied. Paste it into Claude.');
-  const clip = await page.evaluate(() => navigator.clipboard.readText());
+  const clip = await readClipboardAfterPortal(page);
   expect(clip).toContain('# Spell: Portal Test');
 });
 
@@ -403,12 +403,23 @@ async function castWithStubs(page, context) {
   await page.click('#cast-btn');
 }
 
+/**
+ * Read the clipboard from this tab, after a portal has opened another tab.
+ * DEV NOTE: Chromium only lets the focused tab read the clipboard, and readText() waits for focus.
+ * After a portal tab opens (or closes) this tab may not have focus back, which made these tests
+ * time out now and then on CI. The app copies before it opens the tab, so this is a test-only fix.
+ */
+async function readClipboardAfterPortal(page) {
+  await page.bringToFront();
+  return page.evaluate(() => navigator.clipboard.readText());
+}
+
 test('portals and Copy always use the latest answers, never the old spell', async ({ page, context }) => {
   await castWithStubs(page, context);
   await page.fill('#field-intent', 'CHANGED INTENT after casting');
   const [popup] = await Promise.all([context.waitForEvent('page'), page.getByRole('link', { name: /^ChatGPT/ }).click()]);
   await popup.close();
-  let clip = await page.evaluate(() => navigator.clipboard.readText());
+  let clip = await readClipboardAfterPortal(page);
   expect(clip).toContain('CHANGED INTENT after casting');
   expect(clip).not.toContain(REQUIRED.intent);
   await expect(page.locator('#spell-text')).toContainText('CHANGED INTENT after casting');
@@ -458,7 +469,7 @@ test('middle-click on a portal still copies the spell first', async ({ page, con
   await page.evaluate(() => navigator.clipboard.writeText('SENTINEL'));
   const [popup] = await Promise.all([context.waitForEvent('page'), page.getByRole('link', { name: /^Lovable/ }).click({ button: 'middle' })]);
   await popup.close();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('# Spell:');
+  expect(await readClipboardAfterPortal(page)).toContain('# Spell:');
 });
 
 test('clearing in another tab removes the old spell from this tab', async ({ context }) => {
