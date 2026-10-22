@@ -2,6 +2,22 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-22: first Firebase publish, home page cache fix
+**Who:** Steven (owner) with Claude Code (desktop, local checkout).
+
+**Done:** on Steven's "deploy", published `main` (1fc065f) with `npm run deploy:firebase` to
+`https://digital-sorcery-butlerbuilds.web.app`. Live files match the build; the other nine sites in
+`mp-soul-stats` kept the same live release. Then fixed `/` being served with Firebase's default
+1-hour cache (header rules match the address asked for; only `/index.html` was listed) and added
+`tests/unit/firebase-config.test.js`.
+
+**State:** the cache fix is on a PR, tested but **not published**: it waits for Steven's "deploy".
+Checked with Firebase's own header matcher (from firebase-tools), which reproduces today's live
+headers for the old config. The local Hosting emulator is no use for this on Windows: its path
+helper turns `/` into `\`, so it sends no custom headers at all.
+
+**Open questions:** custom domain `sorcery.butlerbuilds.dev`; when to retire GitHub Pages.
+
 ## 2026-10-22: Firebase site in mp-soul-stats
 **Who:** Steven (owner) with Claude Code (desktop, local checkout).
 
