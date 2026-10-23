@@ -3,12 +3,13 @@
 ## Unreleased
 Tests only. Nothing that ships to the website changed, so there is no new version or cache.
 - **The flaky portal test is fixed.** `middle-click on a portal still copies the spell first`
-  failed twice on CI (2026-10-22 and 2026-10-23) with a 30 second timeout inside
-  `page.bringToFront()`. The tests that open a portal tab no longer depend on which tab the
-  system considers focused: they record what the page copies (wrapping `writeText`, so the real
-  copy still happens) instead of reading the clipboard back, which Chromium only allows from the
-  focused tab. The real clipboard is still read by the Copy tests, which open no second tab
-  (DECISIONS D24).
+  failed three times on CI (2026-10-22, 2026-10-23, 2026-10-23) with a 30 second hang, first in
+  `page.bringToFront()` and then, once that was replaced, in the `page.evaluate()` that took its
+  place. The clipboard was never the cause: asking the opener tab anything after a portal tab has
+  opened and closed can hang. The page now pushes each copy out to the test through
+  `exposeFunction`, so the assertion reads an array on the test's own side and makes no
+  round-trip, and the middle-click test leaves the portal tab for the context to close. The real
+  clipboard is still read by the Copy tests, which open no second tab (DECISIONS D24).
 
 ## 1.2.1 (2026-10-23)
 Share card: a shared link now shows a picture instead of a blank preview.
