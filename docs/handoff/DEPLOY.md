@@ -41,7 +41,14 @@ HTTPS works, and plain http redirects to https.
 Saved drafts live per website address: anyone who used the GitHub Pages address keeps their
 drafts there. The service worker is network-first, so nobody gets stuck on the old site.
 
-## GitHub Pages: being retired (do not work on it)
+## GitHub Pages: gone (do not bring it back)
+
+The site was published to GitHub Pages until 2026-10-23, when the `deploy` job was deleted from
+`ci-deploy.yml` (DECISIONS D23) and Steven removed the site from Pages. Firebase serves the one
+address, `digitalsorcery.butlerbuilds.dev`. A second live copy was a second thing to keep in step,
+and it never carried the security headers in `firebase.json`.
+
+The rest of this section is kept only as a record of how it used to work. Do not follow it.
 
 ### One-time setup (owner, ~3 minutes, works from a phone browser)
 1. **Make the repo public:** GitHub → repo → Settings → General → Danger Zone →
@@ -67,5 +74,13 @@ Recommended: a subdomain such as **`sorcery.butlerbuilds.dev`**, so your main si
 - Bump `CACHE_VERSION` in `sw.js` and the version in `package.json` + footer in `index.html`.
 - Add a `CHANGELOG.md` entry.
 - Run the Trial by Fire (see STRESS-TESTING.md).
-- After the publish: open both addresses (`.web.app` and the Pages URL), hard-refresh, and check
-  the footer version. If they differ, something published from a different commit.
+- After the publish: open both Firebase addresses (`.web.app` and the custom domain), hard-refresh,
+  and check the footer version. If they differ, something published from a different commit.
+- If the share card changed (`assets/social/og-image.png` or the `og:` tags in `index.html`), ask
+  the networks to re-read the page, or they keep showing their cached copy for days:
+  [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) and the
+  [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) both re-scrape on
+  demand. iMessage, Slack and Discord refresh on their own within a day or so.
+- A redesigned card is safest under a new file name (`og-image-2.png`), because networks keep an
+  old preview far longer than the one-day cache header, and links already shared point at the
+  name in the tags.

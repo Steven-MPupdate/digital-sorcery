@@ -17,6 +17,11 @@ Official sources this project relies on, and what we used each for.
 | [Trojan Source (bidi attacks)](https://trojansource.codes/) | Stripping bidirectional override characters. |
 | [WCAG 2.2 contrast (minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) | 4.5:1 text contrast, checked by `scripts/check-contrast.js`. |
 | [web.dev: Maskable icons](https://web.dev/articles/maskable-icon) | Safe-zone padding for `icon-maskable-512.png`. |
+| [The Open Graph protocol](https://ogp.me/) | The `og:` tags in `index.html`: which are required and what they mean. |
+| [X: Cards markup reference](https://developer.x.com/en/docs/x-for-websites/cards/overview/markup) | `twitter:card="summary_large_image"` and which `og:` tags X falls back to. |
+| [Facebook: sharing best practices](https://developers.facebook.com/docs/sharing/best-practices/) | Absolute image URLs and the 1200x630 preview size. |
+| [MDN: the `rel` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel) | `rel="canonical"`: the one true address of the page. |
+| [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) and [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) | Asking the networks to re-read the share card after a deploy (DEPLOY.md). |
 | [Playwright docs](https://playwright.dev/docs/intro) | Browser tests. |
 | [Fontsource](https://fontsource.org/) | Source of the self-hosted Cinzel, Cormorant Garamond and Montserrat files (SIL OFL 1.1). |
 | [Termux on F-Droid](https://f-droid.org/packages/com.termux/) | Optional: running code on an Android phone. |

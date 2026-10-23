@@ -80,6 +80,10 @@ Format: **Term**: plain-English meaning. *Where:* file(s) where it lives.
 - **GitHub Actions**: GitHub's automation. Runs our tests and deploys. *Where:* `.github/workflows/ci-deploy.yml`.
 - **Playwright**: The tool that drives a real browser in our tests. *Where:* `tests/e2e/`, `playwright.config.js`.
 - **Debounce**: Waiting until typing pauses before saving, to avoid saving on every key press. *Where:* `debounce()` in `src/app.js`.
+- **Share card**: The picture and words a link preview shows when someone shares the site in a text, in Discord, on LinkedIn or on X. *Where:* the `og:` meta tags in `index.html`, the artwork in `scripts/og-card.html`, the picture in `assets/social/og-image.png`.
+- **Open Graph (`og:`)**: The tag format nearly every app reads to build a link preview (title, description, picture, address). Started at Facebook, now read by iMessage, WhatsApp, Slack, Discord, LinkedIn and X. *Where:* `index.html` head.
+- **`twitter:card` / summary_large_image**: The one extra tag X needs to show the big picture instead of a small thumbnail. *Where:* `index.html` head.
+- **Canonical link**: The one true address of the page, so shares and search results do not split between two addresses. *Where:* `<link rel="canonical">` in `index.html`.
 - **Maskable icon**: An app icon with padding so phones can crop it into circles or squircles. *Where:* `icon-maskable-512.png`, `scripts/make-icons.js`.
 - **Clickjacking**: Tricking someone into clicking a hidden framed page. An accepted risk for v1. *Where:* `docs/SECURITY.md`.
 - **Hidden characters / Trojan Source**: Invisible characters that make code or text look different from what it is. *Where:* `cleanText()`, `scripts/check-invisible.js`.

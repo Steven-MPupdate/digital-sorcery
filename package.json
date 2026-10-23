@@ -1,6 +1,6 @@
 {
   "name": "digital-sorcery",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "Digital Sorcery: a PWA that teaches people to build a strong starter prompt for an AI app builder.",
   "type": "module",
@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "check:contrast": "node scripts/check-contrast.js",
     "check:invisible": "node scripts/check-invisible.js",
-    "icons": "node scripts/make-icons.js"
+    "icons": "node scripts/make-icons.js",
+    "og": "node scripts/make-og-image.js"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1"

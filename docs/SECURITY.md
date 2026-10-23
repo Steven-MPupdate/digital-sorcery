@@ -21,16 +21,20 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
 | Lost or overwritten drafts | Saves flush when the page hides; save failures are shown on screen; open tabs sync via the `storage` event. | `src/app.js` |
 | Outbound links (Portals) | Fixed https URLs on an allowlist of five hosts (unit-tested: no query or fragment, never built from input, lists frozen); `rel="noopener noreferrer"` plus opener cleared on the new window; the spell travels by clipboard, never in the URL; the app opens only after the copy succeeded, and only the latest spell is copied. | `src/portals.js`, `buildPortalLink()` / `ensureFreshCast()` in `src/app.js`, `tests/unit/portals.test.js` |
 | Third-party tracking / data leaks | No third-party requests at all (fonts self-hosted). `referrer` policy `no-referrer`. Tested. | `index.html`, `tests/e2e` |
+| Share card (link previews) | The `og:` tags are text the page never fetches, so they add no request and leave the CSP untouched. The picture holds no user data. When someone shares the link, the recipient's app (or the platform's scraper) fetches the page and the picture from our host, so their IP reaches Firebase: that is their own visit, not anything sent from a learner's device. | `index.html`, `assets/social/og-image.png` |
+| Share-card artwork (not shipped) | `scripts/og-card.html` is rendered on a developer's machine over `file://` by `npm run og`, and `scripts/` is outside the publish allow-list, so it never reaches the website. A unit test keeps it free of remote URLs and scripts, so nothing from another site can be baked into the committed picture. | `scripts/og-card.html`, `tests/unit/share-card.test.js`, `scripts/build-site.js` |
 | Leaked secrets | Rule: no secrets in repo. CI runs a simple secret scan; GitHub secret scanning also applies to public repos. | `CLAUDE.md`, `ci-deploy.yml` |
 | Supply chain | One dev-only dependency (Playwright), version pinned; lockfile committed; Dependabot updates; CI actions pinned to exact commit SHAs. | `package.json`, `.github/` |
 | CI token abuse | Workflow defaults to `contents: read`; only the deploy job gets `pages: write` + `id-token: write`, and only on `main`; checkout doesn't keep credentials; deploys are never cancelled halfway. | `ci-deploy.yml` |
 | Local server path traversal | Dev server blocks `..`, dot-files, `node_modules`, null bytes. | `scripts/serve.js` |
 
 ## Accepted risks (with reasons)
-1. **Clickjacking (framing) not blocked.** `frame-ancestors` only works as an HTTP header and
-   GitHub Pages cannot set headers. Impact is low: there are no accounts, payments or
-   sensitive actions to trick someone into. *Revisit if* logins or payments are added: then
-   host behind Cloudflare (free) or Netlify/Vercel, which can send the header.
+1. **Clickjacking (framing) not blocked.** `frame-ancestors` only works as an HTTP header, and
+   the original host (GitHub Pages) could not send headers. That reason expired on 2026-10-23:
+   Firebase Hosting serves the only copy now (DECISIONS D23) and `firebase.json` already sends
+   headers, so `X-Frame-Options: DENY` can be added to its `**` block. Still accepted for now
+   because impact is low (no accounts, payments or sensitive actions to trick someone into) and
+   changing live headers deserves its own change. *Next step:* add the header and a test for it.
 2. **Drafts are readable by anyone with access to the unlocked phone/browser.** They are
    plain localStorage. Acceptable for brainstorming notes; we tell users not to paste secrets.
 3. **Several tabs: newest save wins.** If two tabs are edited at the same moment, the last save

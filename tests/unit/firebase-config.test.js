@@ -25,6 +25,14 @@ test('the page, service worker and manifest are never served from the browser ca
   }
 });
 
+test('the share card and the icons are cached for a day', () => {
+  // The share picture is read by social networks, not by the app, so a day of caching is fine.
+  // It is also why a changed card needs the networks re-scraped (docs/handoff/DEPLOY.md).
+  for (const source of ['/assets/social/**', '/assets/icons/**']) {
+    assert.equal(cacheControlFor(source), 'public, max-age=86400', `${source} must be cached for a day`);
+  }
+});
+
 test('firebase.json only holds Hosting settings for this one site', () => {
   // SECURITY: the site lives in the shared mp-soul-stats project (DECISIONS D20), so this repo
   // must never carry Firestore rules, functions or storage settings that a publish could push.

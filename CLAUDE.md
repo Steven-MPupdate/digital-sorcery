@@ -16,6 +16,8 @@ Brand owner: Steven Cruz / Butler Builds.
 - **No user data leaves the device in v1.** Drafts live in the browser's localStorage only.
 - **All paths are relative** (`./src/app.js`, not `/src/app.js`) because GitHub Pages serves
   the site from a sub-folder (`/digital-sorcery/`) unless a custom domain is used.
+  Exception: the canonical link and the `og:` share-card URLs in `index.html` are absolute,
+  because social scrapers do not resolve relative paths (DECISIONS D22).
 - **Brand values live in one place:** `src/styles/brand.css`. Never hard-code colors or fonts elsewhere.
   Exceptions (they cannot read CSS): the `theme-color` meta tag in `index.html`, `manifest.webmanifest`,
   `assets/icons/icon.svg` and `scripts/make-icons.js`. Each has a note saying which token it must match.

@@ -3,7 +3,8 @@
   index.html: The single page of Digital Sorcery.
 
   What it does:  Static page structure. All interactive parts are filled in by src/app.js.
-  Depends on:    src/styles/*.css, src/app.js, manifest.webmanifest, sw.js (via app.js).
+  Depends on:    src/styles/*.css, src/app.js, manifest.webmanifest, sw.js (via app.js),
+                 assets/social/og-image.png (named by the share-card tags, not loaded by the page).
   Used by:       the browser (entry page); sw.js caches it for offline use.
 
   SECURITY: The Content-Security-Policy below only allows files from this same site.
@@ -24,6 +25,27 @@
   <title>Digital Sorcery</title>
   <meta name="description" content="Learn to start an app the right way: gather the ingredients, cast the spell, get a strong starter prompt for your AI builder.">
   <meta name="theme-color" content="#0E0D0B">
+
+  <!-- SHARE CARD (Open Graph + X/Twitter): what a shared link looks like in a text message,
+       Discord, LinkedIn, Facebook, WhatsApp or Slack.
+       DEV NOTE: these URLs must be absolute (social scrapers do not resolve relative paths),
+       so they name the live address. If the site ever moves, change the three URLs here, the
+       address line in scripts/og-card.html and SITE in tests/unit/share-card.test.js.
+       The picture is assets/social/og-image.png, made by `npm run og` from scripts/og-card.html.
+       DEV NOTE: adding these tags makes NO new requests from the page itself, so the strict
+       Content-Security-Policy above still stands and nothing is loaded from another site. -->
+  <link rel="canonical" href="https://digitalsorcery.butlerbuilds.dev/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Butler Builds">
+  <meta property="og:url" content="https://digitalsorcery.butlerbuilds.dev/">
+  <meta property="og:title" content="Digital Sorcery">
+  <meta property="og:description" content="Learn to start an app the right way: gather the ingredients, cast the spell, get a strong starter prompt for your AI builder.">
+  <meta property="og:image" content="https://digitalsorcery.butlerbuilds.dev/assets/social/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Digital Sorcery, by Butler Builds: gather the ingredients, cast one clear prompt, build the app right.">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
@@ -206,7 +228,7 @@
       <button type="button" id="hard-refresh-btn" class="btn btn-quiet">Hard refresh</button>
     </div>
     <p id="app-tools-status" class="wrap action-status" role="status"></p>
-    <p class="wrap muted small">A Butler Builds creation · v1.2.0</p>
+    <p class="wrap muted small">A Butler Builds creation · v1.2.1</p>
   </footer>
 </body>
 </html>

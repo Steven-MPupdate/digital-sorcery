@@ -135,3 +135,29 @@ and "Hard refresh", which also covers iPhone, where there is no install prompt.
 **Alternatives:** relabel the old places without moving ingredients (the prompt and cards would
 then disagree with the circle); a bigger font size instead of weight (the page was already 19px);
 keeping Install in the header (two install controls once the footer rule applies).
+
+### D22: The share card is a committed PNG, drawn from brand.css (2026-10-23)
+**Why:** a shared link used to show a blank preview. The `og:` tags in `index.html` must point at an
+absolute address with a real 1200x630 picture, because social scrapers do not run JavaScript and do
+not resolve relative paths. The picture is drawn by `scripts/og-card.html`, which links
+`src/styles/brand.css`, so its colors and fonts are the brand tokens themselves. The PNG is a
+snapshot of that artwork, so `npm run og` has to be re-run (and the new PNG committed) whenever
+the brand or the card changes; nothing compares the two automatically.
+`npm run og` screenshots it with the Playwright Chromium already installed for the tests, and the
+PNG is committed, so no deploy step and no image library are needed. The tags load nothing from
+another site, so the strict CSP is untouched.
+**Alternatives:** generating the picture at deploy time (one more thing that can fail on a host that
+only copies files); an SVG share card (iMessage, Slack and X ignore SVG previews); reusing
+`icon-512.png` (square, so most apps would show a small thumbnail instead of a wide card);
+a hosted card service (an outside request, against the no-third-parties rule).
+
+### D23: One live copy: the GitHub Pages job is deleted (2026-10-23)
+**Why:** the docs had treated Pages as retired since the custom domain went live, but the `deploy`
+job still published a full copy of the app on every push to `main`. The red-team stress agent
+showed that copy answering with none of the `firebase.json` security headers, while the new
+share-card tags name a single canonical home. Two live copies of a one-page app is one too many
+to keep in step, so the job is gone and Steven removed the site from Pages. The workflow now asks
+for no `pages: write` or `id-token: write` at all.
+**Alternatives:** keep the job and document that only Firebase carries headers (the drift stays,
+and a stale copy can outlive a bad release); leave the job but turn Pages off in repo settings
+(the job would fail on every push to main, so nobody would trust a red tick again).
