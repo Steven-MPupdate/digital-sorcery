@@ -69,3 +69,11 @@ Recommended: a subdomain such as **`sorcery.butlerbuilds.dev`**, so your main si
 - Run the Trial by Fire (see STRESS-TESTING.md).
 - After the publish: open both addresses (`.web.app` and the Pages URL), hard-refresh, and check
   the footer version. If they differ, something published from a different commit.
+- If the share card changed (`assets/social/og-image.png` or the `og:` tags in `index.html`), ask
+  the networks to re-read the page, or they keep showing their cached copy for days:
+  [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) and the
+  [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) both re-scrape on
+  demand. iMessage, Slack and Discord refresh on their own within a day or so.
+- A redesigned card is safest under a new file name (`og-image-2.png`), because networks keep an
+  old preview far longer than the one-day cache header, and links already shared point at the
+  name in the tags.

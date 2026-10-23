@@ -19,7 +19,7 @@
  * when online (usually a cheap "not modified" reply).
  */
 
-const CACHE_VERSION = 'digital-sorcery-v1.2.0';
+const CACHE_VERSION = 'digital-sorcery-v1.2.1';
 
 // DEV NOTE: Paths are relative to this file, so they work under /digital-sorcery/ on GitHub Pages
 // and at the root of a custom domain.

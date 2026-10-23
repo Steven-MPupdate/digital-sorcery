@@ -31,7 +31,7 @@ the above in a cloud sandbox.
 | Add an ingredient | `src/spellbook.js` (weights must still sum to 100), then `docs/GLOSSARY.md` |
 | Add or remove an AI app button (Portal) | `src/portals.js` + its host in `ALLOWED_PORTAL_HOSTS` (`tests/unit/portals.test.js`), then `docs/GLOSSARY.md` and `docs/REFERENCES.md`. Browser tests count from `PORTALS` automatically. |
 | Change the generated prompt | `castSpell()` / `WORKING_AGREEMENT` in `src/incantation.js` |
-| Change colors/fonts | `src/styles/brand.css` only, then `npm run check:contrast` |
-| Ship a change | Branch → PR → tests green → merge. Bump `CACHE_VERSION` in `sw.js` if app files changed. |
+| Change colors/fonts | `src/styles/brand.css` only, then `npm run check:contrast` and `npm run og` (the share card is a committed picture) |
+| Ship a change | Branch → PR → tests green → merge. Bump `CACHE_VERSION` in `sw.js` if app files changed; re-run `npm run og` if the brand or the share card changed. |
 | Stress test | `docs/handoff/STRESS-TESTING.md` |
 | Deploy / custom domain | `docs/handoff/DEPLOY.md` |

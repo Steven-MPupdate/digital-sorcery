@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.1 (2026-10-23)
+Share card: a shared link now shows a picture instead of a blank preview.
+- **Open Graph and X tags** in `index.html` (`og:type`, `og:site_name`, `og:url`, `og:title`,
+  `og:description`, `og:image` with its size and alt text, `twitter:card`) plus a canonical link.
+  All addresses are absolute, because social scrapers do not resolve relative paths.
+- **The picture:** `assets/social/og-image.png`, 1200x630, drawn by `scripts/og-card.html` and
+  written by `npm run og` (`scripts/make-og-image.js`). The artwork links `src/styles/brand.css`,
+  so its colors and fonts are the brand tokens themselves. The PNG is a snapshot: re-run
+  `npm run og` after changing `brand.css` or the card (DECISIONS D22).
+- **Nothing is loaded from another site:** the tags are read by apps that fetch the page, so the
+  strict Content-Security-Policy is unchanged.
+- `firebase.json` caches `/assets/social/**` for a day, like the icons.
+- New test `tests/unit/share-card.test.js`: the tags exist, every URL is absolute, and the PNG is
+  really 1200x630.
+- Version 1.2.1, cache `digital-sorcery-v1.2.1`.
+
 ## 1.2.0 (2026-10-22)
 Steven's first round of changes (docs/ROADMAP.md Phase 1).
 - **Example spells:** three finished examples (Local Bites, Night Shift Sleep, Plant Pal). The

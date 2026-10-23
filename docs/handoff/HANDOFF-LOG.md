@@ -2,6 +2,24 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-23, v1.2.1: social share card
+**Who:** Steven (owner) with Claude Code (desktop, local checkout). Branch `og-share-card`.
+
+**Done:** shared links showed a blank preview, so `index.html` now carries Open Graph and X card
+tags with a canonical link, and `assets/social/og-image.png` (1200x630) is committed next to the
+icons. The artwork lives in `scripts/og-card.html` and links `brand.css`, so the card is drawn from
+the real brand tokens; `npm run og` re-renders it with the Playwright Chromium. `firebase.json`
+caches `/assets/social/**` for a day. New test `tests/unit/share-card.test.js`. Version and cache
+bumped to 1.2.1 (DECISIONS D22).
+
+**State:** on the branch, tests run locally, not deployed. The live site keeps showing the old blank
+preview until Steven says "deploy" (`npm run deploy:firebase`).
+
+**Open questions:** after the deploy, the preview should be re-scraped in LinkedIn's Post Inspector
+and X's Card Validator so the networks drop their cached blank copy. The wording on the card
+("Gather the ingredients. Cast one clear prompt. Build the app right.") is a draft; Steven may
+want his own line.
+
 ## 2026-10-22, v1.2.0 published; new address
 **Done:** on Steven's "deploy", merged PR #13 and published v1.2.0 to Firebase
 (`--only hosting:digital-sorcery-butlerbuilds --project mp-soul-stats`). Live files match the build;
