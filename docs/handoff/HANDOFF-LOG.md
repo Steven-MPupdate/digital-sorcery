@@ -12,8 +12,11 @@ the real brand tokens; `npm run og` re-renders it with the Playwright Chromium. 
 caches `/assets/social/**` for a day. New test `tests/unit/share-card.test.js`. Version and cache
 bumped to 1.2.1 (DECISIONS D22).
 
-**State:** on the branch, tests run locally, not deployed. The live site keeps showing the old blank
-preview until Steven says "deploy" (`npm run deploy:firebase`).
+**State:** published. On Steven's "deploy" (2026-10-23) the branch was published to Firebase with
+`npm run deploy:firebase` after CI passed on PR #17. Checked live: the page serves the new tags,
+the picture returns 200 as `image/png` with the one-day cache header, and the footer reads v1.2.1.
+The PR is open and NOT merged: merging would fire the GitHub Pages job in `ci-deploy.yml`, and
+Steven is taking Digital Sorcery off Pages first (2026-10-23).
 
 **Open questions:** after the deploy, the preview should be re-scraped in LinkedIn's Post Inspector
 and X's Card Validator so the networks drop their cached blank copy. The wording on the card
