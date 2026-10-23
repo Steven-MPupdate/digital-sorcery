@@ -45,11 +45,12 @@ Every change must keep these up to date:
 - `CHANGELOG.md`: what changed, per version.
 
 ## 5. Testing & stress-test rules (the "Trial by Fire")
-Nothing reaches `main` (and therefore production) until it passes:
+Nothing reaches `main` (and therefore production) until it passes step 1; step 2 only when Steven asks:
 1. `npm test`: contrast + hidden-character checks, unit tests (logic) and browser tests
    (real Chromium, phone-sized screens, also served under `/digital-sorcery/` like GitHub Pages).
-2. **The Trial by Fire**: the stress-test agents in `.claude/agents/` try to break the build.
-   Run as many as the change needs (see `docs/handoff/STRESS-TESTING.md` for which ones when).
+2. **The Trial by Fire (on request)**: the stress-test agents in `.claude/agents/` try to break the build.
+   They run ONLY when Steven approves them, never automatically or as a routine before merge or
+   deploy (they cost his usage). Most changes need only step 1. See `docs/handoff/STRESS-TESTING.md`.
    Every confirmed finding is fixed, or written into `docs/SECURITY.md` as an accepted risk with a reason.
 3. A regression test is added for every bug a stress agent finds.
 

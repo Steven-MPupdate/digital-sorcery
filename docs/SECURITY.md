@@ -51,7 +51,7 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
 - Turn on Row Level Security for every Supabase table; only use the public "anon/publishable" key in the browser.
 - Add rate limiting to any function that costs money per call.
 - Update the CSP `connect-src` to the exact API origin, and record it here.
-- Run the full Trial by Fire with the Red Team focused on auth and data access.
+- Ask Steven to approve a Trial by Fire with the Red Team focused on auth and data access (agents run only on his yes).
 
 ## Reporting a security issue
 Please open a GitHub issue titled "Security" **without** exploit details, or contact the

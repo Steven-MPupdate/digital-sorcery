@@ -73,7 +73,8 @@ Recommended: a subdomain such as **`sorcery.butlerbuilds.dev`**, so your main si
 ## Every release
 - Bump `CACHE_VERSION` in `sw.js` and the version in `package.json` + footer in `index.html`.
 - Add a `CHANGELOG.md` entry.
-- Run the Trial by Fire (see STRESS-TESTING.md).
+- Run `npm test`. Do NOT run the stress-test agents as a release step; they run only when Steven
+  approves them (see STRESS-TESTING.md).
 - After the publish: open both Firebase addresses (`.web.app` and the custom domain), hard-refresh,
   and check the footer version. If they differ, something published from a different commit.
 - If the share card changed (`assets/social/og-image.png` or the `og:` tags in `index.html`), ask

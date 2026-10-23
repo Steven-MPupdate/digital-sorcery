@@ -1,6 +1,6 @@
 ---
 name: pwa-offline-auditor
-description: Trial by Fire: PWA, offline and deployment auditor. Use before merging changes to sw.js, manifest.webmanifest, icons, file paths, or the GitHub Actions workflows. Verifies installability, offline behaviour, cache updates and that the site works under the GitHub Pages sub-path.
+description: Trial by Fire: PWA, offline and deployment auditor. Run ONLY when Steven approves it (see docs/handoff/STRESS-TESTING.md), never automatically. Fits changes to sw.js, manifest.webmanifest, app icons, file paths, or the GitHub Actions workflows. Verifies installability, offline behaviour, cache updates and the GitHub Pages sub-path.
 tools: Read, Grep, Glob, Bash
 ---
 

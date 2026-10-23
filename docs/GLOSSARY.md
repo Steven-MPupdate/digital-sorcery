@@ -51,7 +51,7 @@ Format: **Term**: plain-English meaning. *Where:* file(s) where it lives.
 - **Mirror Path Brand Kit v1**: The design system the app uses: colors, fonts, spacing, radius and "doesn't do" rules. *Where:* `src/styles/brand.css` header, `docs/DECISIONS.md` D4. The PDF is kept privately by the owner (ask Steven).
 - **Familiar** *(planned)*: An optional AI helper that reviews a spell and asks follow-up questions. *Where:* `docs/handoff/ARCHITECTURE.md`.
 - **Quests** *(planned)*: Guided lessons that teach one ingredient at a time. *Where:* `docs/handoff/ARCHITECTURE.md`.
-- **Trial by Fire**: The stress-testing stage before deploy: automated tests plus the stress-test agents. *Where:* `.claude/agents/`, `docs/handoff/STRESS-TESTING.md`.
+- **Trial by Fire**: The testing before deploy: automated tests (`npm test`) every time, plus stress-test agents only when Steven approves them. *Where:* `.claude/agents/`, `docs/handoff/STRESS-TESTING.md`.
 
 ## Stress-test agents (the Trial by Fire team)
 
