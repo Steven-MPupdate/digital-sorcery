@@ -369,6 +369,7 @@ test('portals: one tap copies the spell and opens the AI app safely', async ({ p
     expect(await link.getAttribute('href')).toMatch(/^https:\/\/[^?]+$/);
   }
 
+  const lastCopy = await recordCopies(page);
   const [popup] = await Promise.all([
     context.waitForEvent('page'),
     page.getByRole('link', { name: /^Claude/ }).click(),
@@ -377,8 +378,7 @@ test('portals: one tap copies the spell and opens the AI app safely', async ({ p
   // SECURITY: the new tab cannot reach back into this page.
   expect(await popup.evaluate(() => window.opener)).toBeNull();
   await expect(page.locator('#portal-status')).toHaveText('Spell copied. Paste it into Claude.');
-  const clip = await readClipboardAfterPortal(page);
-  expect(clip).toContain('# Spell: Portal Test');
+  expect(await lastCopy()).toContain('# Spell: Portal Test');
 });
 
 test('portals: keyboard order after casting is Copy → Download → portals', async ({ page }) => {
@@ -405,29 +405,50 @@ async function castWithStubs(page, context) {
 }
 
 /**
- * Read the clipboard from this tab, after a portal has opened another tab.
- * DEV NOTE: Chromium only lets the focused tab read the clipboard, and readText() waits for focus.
- * After a portal tab opens (or closes) this tab may not have focus back, which made these tests
- * time out now and then on CI. The app copies before it opens the tab, so this is a test-only fix.
+ * Start recording what this tab copies, and return a reader for the last copied text.
+ *
+ * DEV NOTE: reading the clipboard back does not work reliably around a portal tab. Chromium
+ * only lets the focused tab read it, and `readText()` waits for focus, so these tests used to
+ * call `page.bringToFront()` first. That call itself hung on CI (a 30s timeout in the
+ * middle-click test on 2026-10-22 and again on 2026-10-23): with a popup opening and closing,
+ * the browser sometimes never reported the tab as activated, and no amount of retrying fixes a
+ * promise that never settles.
+ *
+ * So these tests no longer depend on which tab the operating system considers focused. This
+ * WRAPS `navigator.clipboard.writeText` instead of replacing it: the real copy still happens,
+ * the clipboard really is set, and the test reads its own record of what went in. The copy
+ * itself is still checked against the real clipboard by the tests that use the Copy button,
+ * which never open another tab.
  */
-async function readClipboardAfterPortal(page) {
-  await page.bringToFront();
-  return page.evaluate(() => navigator.clipboard.readText());
+async function recordCopies(page) {
+  await page.evaluate(() => {
+    window.__copied = [];
+    const realWriteText = navigator.clipboard.writeText.bind(navigator.clipboard);
+    navigator.clipboard.writeText = (text) => {
+      window.__copied.push(String(text));
+      return realWriteText(text);
+    };
+  });
+  return () => page.evaluate(() => window.__copied.at(-1) ?? '');
 }
 
 test('portals and Copy always use the latest answers, never the old spell', async ({ page, context }) => {
   await castWithStubs(page, context);
   await page.fill('#field-intent', 'CHANGED INTENT after casting');
+  const lastCopy = await recordCopies(page);
   const [popup] = await Promise.all([context.waitForEvent('page'), page.getByRole('link', { name: /^ChatGPT/ }).click()]);
   await popup.close();
-  let clip = await readClipboardAfterPortal(page);
+  let clip = await lastCopy();
   expect(clip).toContain('CHANGED INTENT after casting');
   expect(clip).not.toContain(REQUIRED.intent);
   await expect(page.locator('#spell-text')).toContainText('CHANGED INTENT after casting');
 
   await page.fill('#field-intent', 'Second change');
   await page.click('#copy-btn');
-  clip = await page.evaluate(() => navigator.clipboard.readText());
+  // DEV NOTE: recorded, not read back: a portal tab was opened and closed above, so this tab
+  // may not hold the focus Chromium requires for readText(). The plain Copy test near the top
+  // of this file reads the real clipboard, in a test that never opens another tab.
+  clip = await lastCopy();
   expect(clip).toContain('Second change');
 });
 
@@ -468,9 +489,11 @@ test('copy fallback keeps keyboard focus where it was', async ({ page, context }
 test('middle-click on a portal still copies the spell first', async ({ page, context }) => {
   await castWithStubs(page, context);
   await page.evaluate(() => navigator.clipboard.writeText('SENTINEL'));
+  const lastCopy = await recordCopies(page);
   const [popup] = await Promise.all([context.waitForEvent('page'), page.getByRole('link', { name: /^Lovable/ }).click({ button: 'middle' })]);
   await popup.close();
-  expect(await readClipboardAfterPortal(page)).toContain('# Spell:');
+  // The middle click must have copied the spell over the sentinel before opening the tab.
+  expect(await lastCopy()).toContain('# Spell:');
 });
 
 test('clearing in another tab removes the old spell from this tab', async ({ context }) => {

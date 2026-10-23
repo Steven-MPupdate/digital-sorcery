@@ -161,3 +161,15 @@ for no `pages: write` or `id-token: write` at all.
 **Alternatives:** keep the job and document that only Firebase carries headers (the drift stays,
 and a stale copy can outlive a bad release); leave the job but turn Pages off in repo settings
 (the job would fail on every push to main, so nobody would trust a red tick again).
+
+### D24: Portal tests record what is copied instead of reading the clipboard back (2026-10-23)
+**Why:** Chromium only lets the focused tab read the clipboard, and `readText()` waits for focus,
+so a test that opens and closes a portal tab could hang. The earlier fix (`page.bringToFront()`
+before reading) moved the hang into `bringToFront()` itself, which timed out on CI twice. A
+promise that never settles cannot be waited out, so the dependency on focus is gone instead: the
+tests wrap `navigator.clipboard.writeText`, so the real copy still happens and the test reads its
+own record. The clipboard itself is still read end to end by the Copy tests, which never open a
+second tab.
+**Alternatives:** retry or lengthen the timeout (it is a hang, not a slow step); read the
+clipboard over CDP (ties the tests to one browser's private API); drop the middle-click test
+(it guards a real promise: the spell is copied before the AI app opens).

@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+Tests only. Nothing that ships to the website changed, so there is no new version or cache.
+- **The flaky portal test is fixed.** `middle-click on a portal still copies the spell first`
+  failed twice on CI (2026-10-22 and 2026-10-23) with a 30 second timeout inside
+  `page.bringToFront()`. The tests that open a portal tab no longer depend on which tab the
+  system considers focused: they record what the page copies (wrapping `writeText`, so the real
+  copy still happens) instead of reading the clipboard back, which Chromium only allows from the
+  focused tab. The real clipboard is still read by the Copy tests, which open no second tab
+  (DECISIONS D24).
+
 ## 1.2.1 (2026-10-23)
 Share card: a shared link now shows a picture instead of a blank preview.
 - **Open Graph and X tags** in `index.html` (`og:type`, `og:site_name`, `og:url`, `og:title`,
