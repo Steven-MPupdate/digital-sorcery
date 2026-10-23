@@ -2,6 +2,26 @@
 
 Newest session at the top. Each entry: what was done, the state it was left in, and open questions.
 
+## 2026-10-24, the flaky portal test
+**Who:** Steven (owner) with Claude Code (desktop, local checkout). Branch `fix-flaky-portal-test`,
+merged as PR #19.
+
+**Done:** `middle-click on a portal still copies the spell first` had hung on CI three times.
+The first two readings blamed the clipboard and moved the hang from `page.bringToFront()` into
+the `page.evaluate()` that replaced it. The cause is the round-trip itself: asking the opener tab
+anything, after a portal tab has opened and closed, can hang for the full 30 seconds. The portal
+tests now have the page push each copy out through `exposeFunction` and assert on an array on the
+test's side, and the middle-click test leaves the portal tab for the context to close
+(DECISIONS D24). Ran the portal and copy tests five times over on both device profiles: 110
+passed. CLAUDE.md section 6 no longer promises a GitHub Pages deploy on a green `main`.
+
+**State:** merged, `main` green. Nothing shipped changed, so no version or cache bump and no
+deploy: the live site is still v1.2.1.
+
+**Open questions:** `X-Frame-Options: DENY` in `firebase.json` would close accepted risk 1, now
+that Firebase sends the headers. The share-card preview still wants re-scraping in
+LinkedIn's Post Inspector and Facebook's Sharing Debugger.
+
 ## 2026-10-23, v1.2.1: social share card
 **Who:** Steven (owner) with Claude Code (desktop, local checkout). Branch `og-share-card`.
 
