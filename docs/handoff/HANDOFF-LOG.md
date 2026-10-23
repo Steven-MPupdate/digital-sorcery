@@ -15,8 +15,10 @@ bumped to 1.2.1 (DECISIONS D22).
 **State:** published. On Steven's "deploy" (2026-10-23) the branch was published to Firebase with
 `npm run deploy:firebase` after CI passed on PR #17. Checked live: the page serves the new tags,
 the picture returns 200 as `image/png` with the one-day cache header, and the footer reads v1.2.1.
-The PR is open and NOT merged: merging would fire the GitHub Pages job in `ci-deploy.yml`, and
-Steven is taking Digital Sorcery off Pages first (2026-10-23).
+Steven then asked for the Pages job itself to go, so PR #17 also deletes it from
+`ci-deploy.yml` (DECISIONS D23) with `tests/unit/workflow.test.js` to keep it from coming back,
+and the stale clickjacking reason in SECURITY.md is corrected. PR #17 merged to `main` after CI
+passed. Pushing to `main` no longer publishes anything: Firebase is published by hand.
 
 **Open questions:** after the deploy, the preview should be re-scraped in LinkedIn's Post Inspector
 and X's Card Validator so the networks drop their cached blank copy. The wording on the card
