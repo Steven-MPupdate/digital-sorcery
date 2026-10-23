@@ -161,3 +161,18 @@ for no `pages: write` or `id-token: write` at all.
 **Alternatives:** keep the job and document that only Firebase carries headers (the drift stays,
 and a stale copy can outlive a bad release); leave the job but turn Pages off in repo settings
 (the job would fail on every push to main, so nobody would trust a red tick again).
+
+### D24: The portal tests ask the opener tab nothing after a portal tab opens (2026-10-24)
+**Why:** `middle-click on a portal still copies the spell first` hung on CI three times. The first
+reading blamed the clipboard, because Chromium only lets the focused tab read it: the fix called
+`page.bringToFront()` first, and the hang moved into `bringToFront()`. Replacing that with a
+`page.evaluate()` moved the same 30 second hang into the evaluate. Two different calls hanging in
+one place means the call is not the problem: asking the opener tab anything, after a portal tab
+has opened and closed, can hang. So the tests make no such request. The page pushes each copy out
+through `exposeFunction` while it happens, the assertion reads a plain array on the test side,
+and the middle-click test leaves the portal tab for the context to close. The real copy still
+happens (the wrapper calls the real `writeText`) and the clipboard itself is still read end to
+end by the Copy tests, which never open a second tab.
+**Alternatives:** retry or lengthen the timeout (it is a hang, not a slow step: it never settles);
+read the clipboard over CDP (ties the tests to one browser's private API); drop the middle-click
+test (it guards a real promise: the spell is copied before the AI app opens).

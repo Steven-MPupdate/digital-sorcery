@@ -55,7 +55,9 @@ Nothing reaches `main` (and therefore production) until it passes:
 
 ## 6. Git & deploy rules
 - Work on a feature branch; merge to `main` through a pull request.
-- `main` auto-deploys to GitHub Pages via `.github/workflows/ci-deploy.yml` **only if tests pass**.
+- Pushing to `main` publishes nothing. The GitHub Pages job was deleted (DECISIONS D23);
+  `.github/workflows/ci-deploy.yml` runs the tests, and Firebase Hosting is published by hand on
+  Steven's "deploy" (`npm run deploy:firebase`), which names the exact site and project.
 - Bump the cache version in `sw.js` whenever app-shell files change, or users get stale files.
 - Commit messages: short imperative summary line, then why.
 
