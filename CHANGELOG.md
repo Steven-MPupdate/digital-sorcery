@@ -14,6 +14,10 @@ Share card: a shared link now shows a picture instead of a blank preview.
 - `firebase.json` caches `/assets/social/**` for a day, like the icons.
 - New test `tests/unit/share-card.test.js`: the tags exist, every URL is absolute, and the PNG is
   really 1200x630.
+- **GitHub Pages job deleted** from `.github/workflows/ci-deploy.yml`: Firebase serves the one
+  address, and the second live copy never carried the `firebase.json` security headers. The
+  workflow now needs no `pages: write` or `id-token: write`. New test
+  `tests/unit/workflow.test.js` keeps it from coming back (DECISIONS D23).
 - Version 1.2.1, cache `digital-sorcery-v1.2.1`.
 
 ## 1.2.0 (2026-10-22)

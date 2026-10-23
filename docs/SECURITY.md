@@ -29,10 +29,12 @@ stale or poisoned offline caches, leaked secrets in the public repo, and supply-
 | Local server path traversal | Dev server blocks `..`, dot-files, `node_modules`, null bytes. | `scripts/serve.js` |
 
 ## Accepted risks (with reasons)
-1. **Clickjacking (framing) not blocked.** `frame-ancestors` only works as an HTTP header and
-   GitHub Pages cannot set headers. Impact is low: there are no accounts, payments or
-   sensitive actions to trick someone into. *Revisit if* logins or payments are added: then
-   host behind Cloudflare (free) or Netlify/Vercel, which can send the header.
+1. **Clickjacking (framing) not blocked.** `frame-ancestors` only works as an HTTP header, and
+   the original host (GitHub Pages) could not send headers. That reason expired on 2026-10-23:
+   Firebase Hosting serves the only copy now (DECISIONS D23) and `firebase.json` already sends
+   headers, so `X-Frame-Options: DENY` can be added to its `**` block. Still accepted for now
+   because impact is low (no accounts, payments or sensitive actions to trick someone into) and
+   changing live headers deserves its own change. *Next step:* add the header and a test for it.
 2. **Drafts are readable by anyone with access to the unlocked phone/browser.** They are
    plain localStorage. Acceptable for brainstorming notes; we tell users not to paste secrets.
 3. **Several tabs: newest save wins.** If two tabs are edited at the same moment, the last save

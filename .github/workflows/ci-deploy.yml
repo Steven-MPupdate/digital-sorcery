@@ -1,11 +1,12 @@
 # ci-deploy.yml: Test every change; publish the site only when main passes.
 #
 # Pull requests and pushes to any branch → run the tests.
-# Pushes to main → run the tests, THEN publish to GitHub Pages (and Firebase Hosting if a key is set).
+# Pushes to main → run the tests, THEN publish to Firebase Hosting if a key is set.
 # DEV NOTE(v1.2): Firebase lives in the shared mp-soul-stats project, so it is published by hand
 # on "deploy" and the Firebase job skips itself: no key is set (docs/DECISIONS.md D20).
-# GitHub Pages goes away once Firebase serves the custom domain (see docs/DECISIONS.md).
-# One-time setup: repo Settings → Pages → Source: "GitHub Actions" (see docs/handoff/DEPLOY.md).
+# DEV NOTE(v1.2.1): the GitHub Pages job was deleted (docs/DECISIONS.md D23). Firebase serves the
+# custom domain, and a second live copy without the firebase.json security headers helped nobody.
+# Do not add a Pages job back: there is one home, digitalsorcery.butlerbuilds.dev.
 #
 # SECURITY: every action is pinned to an exact commit (the version is in the comment), so a
 # moved tag can't change what runs. Dependabot opens PRs to update these pins.
@@ -17,7 +18,8 @@ on:
   pull_request:
   workflow_dispatch:
 
-# SECURITY: least privilege by default; the deploy job asks for more below.
+# SECURITY: least privilege, and now for every job: with Pages gone, nothing asks for
+# `pages: write` or `id-token: write` any more.
 permissions:
   contents: read
 
@@ -61,39 +63,6 @@ jobs:
           name: playwright-traces
           path: test-results/
           retention-days: 7
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    # DEV NOTE: never cancel a deploy halfway; a second push waits for the first to finish.
-    concurrency:
-      group: pages
-      cancel-in-progress: false
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 22
-      - name: Collect only the files the website needs
-        # DEV NOTE: both hosts publish this same folder, so the two sites cannot drift.
-        run: npm run build:site
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: _site
-      - id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
   deploy-firebase:
     name: Deploy to Firebase Hosting

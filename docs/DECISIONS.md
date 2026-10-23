@@ -150,3 +150,14 @@ another site, so the strict CSP is untouched.
 only copies files); an SVG share card (iMessage, Slack and X ignore SVG previews); reusing
 `icon-512.png` (square, so most apps would show a small thumbnail instead of a wide card);
 a hosted card service (an outside request, against the no-third-parties rule).
+
+### D23: One live copy: the GitHub Pages job is deleted (2026-10-23)
+**Why:** the docs had treated Pages as retired since the custom domain went live, but the `deploy`
+job still published a full copy of the app on every push to `main`. The red-team stress agent
+showed that copy answering with none of the `firebase.json` security headers, while the new
+share-card tags name a single canonical home. Two live copies of a one-page app is one too many
+to keep in step, so the job is gone and Steven removed the site from Pages. The workflow now asks
+for no `pages: write` or `id-token: write` at all.
+**Alternatives:** keep the job and document that only Firebase carries headers (the drift stays,
+and a stale copy can outlive a bad release); leave the job but turn Pages off in repo settings
+(the job would fail on every push to main, so nobody would trust a red tick again).

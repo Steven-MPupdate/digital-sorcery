@@ -56,7 +56,7 @@ Start here if you are new. Read in this order: `CLAUDE.md` → `docs/handoff/REA
 | `scripts/og-card.html` | The artwork of the share card. Uses `brand.css`, so a re-render always matches the brand. |
 | `scripts/make-og-image.js` | Screenshots that card into `assets/social/og-image.png` (`npm run og`). |
 | `.claude/agents/` | The five Trial by Fire stress-test agents. |
-| `.github/workflows/ci-deploy.yml` | Test on every push; publish main to GitHub Pages (and Firebase Hosting, once a key is allowed: D20). |
+| `.github/workflows/ci-deploy.yml` | Test on every push; publish main to Firebase Hosting, once a key is allowed (D20). The GitHub Pages job was deleted (D23). |
 | `firebase.json` | Firebase Hosting settings: which folder to publish, cache and security headers. JSON: no comments possible. |
 | `.firebaserc` | Which Firebase project to publish to. JSON: no comments possible. |
 | `.github/dependabot.yml` | Automatic dependency update PRs. |
