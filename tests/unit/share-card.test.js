@@ -74,6 +74,18 @@ test('the picture exists and is the size the tags promise', () => {
   assert.deepEqual({ width, height }, { width: 1200, height: 630 });
 });
 
+test('the artwork loads nothing from another site', () => {
+  // SECURITY: the card is rendered on a developer's machine and the result is committed, so a
+  // remote font or image added here would be fetched silently and baked into a public picture.
+  // The shipped page is guarded by its CSP and by tests/e2e; this file is not, so it is checked here.
+  const card = readFileSync(new URL('scripts/og-card.html', ROOT), 'utf8');
+  const body = card.split('-->').slice(1).join('-->'); // skip the header comment, which names URLs
+  for (const remote of ['http://', 'https://', 'src="//', 'url(//']) {
+    assert.ok(!body.includes(remote), `scripts/og-card.html must not load ${remote}`);
+  }
+  assert.ok(!body.includes('<script'), 'scripts/og-card.html must not run scripts');
+});
+
 test('the share wording follows the studio rules', () => {
   // Studio rule: no em dashes in anything client-facing, and the card is as client-facing as it gets.
   for (const key of ['og:title', 'og:description', 'og:image:alt']) {
