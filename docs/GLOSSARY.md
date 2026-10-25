@@ -76,7 +76,7 @@ Format: **Term**: plain-English meaning. *Where:* file(s) where it lives.
 - **XSS (Cross-site scripting)**: An attack where typed text sneaks in as code. Prevented by never using `innerHTML` with user text.
 - **Prototype pollution**: An attack using keys like `__proto__` to tamper with every object in the app. Prevented in `normalizeDraft()`.
 - **Bidi override characters**: Invisible characters that reverse how text displays; used to hide instructions. Stripped in `cleanText()`.
-- **GitHub Pages**: GitHub's free static website hosting. Our live site.
+- **GitHub**: Where the code is backed up, so any earlier version can be restored. Nothing is hosted or published from it (D26).
 - **GitHub Actions**: GitHub's automation. Runs our tests and deploys. *Where:* `.github/workflows/ci-deploy.yml`.
 - **Playwright**: The tool that drives a real browser in our tests. *Where:* `tests/e2e/`, `playwright.config.js`.
 - **Debounce**: Waiting until typing pauses before saving, to avoid saving on every key press. *Where:* `debounce()` in `src/app.js`.
@@ -88,7 +88,7 @@ Format: **Term**: plain-English meaning. *Where:* file(s) where it lives.
 - **Clickjacking**: Tricking someone into clicking a hidden framed page. An accepted risk for v1. *Where:* `docs/SECURITY.md`.
 - **Hidden characters / Trojan Source**: Invisible characters that make code or text look different from what it is. *Where:* `cleanText()`, `scripts/check-invisible.js`.
 - **Dependabot**: GitHub's bot that opens PRs to update dependencies and pinned actions. *Where:* `.github/dependabot.yml`.
-- **PR (pull request)**: A request to merge a branch's changes into `main`, where they are reviewed and tested first.
+- **PR (pull request)**: GitHub's way to merge a branch. Not needed here: branches merge into `main` on the laptop after `npm test` (D26).
 - **Supabase**: A hosted database + login + server-function service (planned for v2). **Row Level Security** = per-row access rules in its database. **Edge Function** = a small server function that can hold secret keys. *Where:* `docs/SECURITY.md`, a Tools chip in `src/spellbook.js`.
 - **OpenRouter** *(idea)*: A service where people log in and pay for their own AI use across many models; a possible v2 way to put AI inside the app. *Where:* DECISIONS D16, HANDOFF-LOG.
 - **noopener / noreferrer**: Link settings that stop an opened site from controlling this page or seeing where the visitor came from. *Where:* `buildPortalLink()` in `src/app.js`.
@@ -97,7 +97,7 @@ Format: **Term**: plain-English meaning. *Where:* file(s) where it lives.
 ## Hosting terms
 
 - **Firebase Hosting**: Google's static web host. From v1.2 it serves the site; a Firebase *project* holds one or more *sites*, each with its own id. *Where:* `firebase.json`, `.firebaserc`, the `deploy-firebase` job in `.github/workflows/ci-deploy.yml`.
-- **GitHub Pages**: The host used since v1.0, free with a public repo. Kept running next to Firebase until Firebase is proven, then switched off. *Where:* the `deploy` job in `.github/workflows/ci-deploy.yml`.
+- **GitHub Pages**: The host used since v1.0, free with a public repo. Switched off on 2026-10-23 (D23); Firebase is the only host.
 - **`_site/`**: The built folder that gets published: only `index.html`, `manifest.webmanifest`, `sw.js`, `src/` and `assets/`. Never committed (it is in `.gitignore`). *Where:* `scripts/build-site.js`, `npm run build:site`.
 - **Site id / project id**: The two names Firebase needs. Both live in the repo (`firebase.json` → `hosting.site`, `.firebaserc` → `projects.default`): `digital-sorcery-butlerbuilds` in project `mp-soul-stats` (DECISIONS D20). *Where:* read by the `deploy-firebase` job and `npm run deploy:firebase`.
-- **Service account**: A robot Google account whose key lets GitHub Actions publish Hosting, and nothing else. The key would be a repo secret named `FIREBASE_SERVICE_ACCOUNT`, never in the repo. Not used while the site lives in the shared `mp-soul-stats` project (DECISIONS D20). *Where:* `docs/handoff/DEPLOY.md`.
+- **Service account**: A robot Google account whose key can publish Hosting. Never added to GitHub: GitHub is only the backup, and the job that would have used it was deleted (D26). *Where:* `docs/handoff/DEPLOY.md`.

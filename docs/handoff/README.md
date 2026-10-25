@@ -4,7 +4,8 @@
 - **What:** a free PWA that teaches people to start an app well: answer seven "ingredients",
   cast them into a starter prompt, then iterate with an AI. Brand: Butler Builds / Mirror Path kit.
 - **Stack:** plain HTML, CSS, JavaScript modules. No framework, no build step, no server.
-- **Hosting:** GitHub Pages, deployed automatically from `main` after tests pass.
+- **Hosting:** Firebase Hosting at https://digitalsorcery.butlerbuilds.dev, published by hand on
+  Steven's "deploy" (`docs/handoff/DEPLOY.md`). GitHub is only the code backup.
 - **Data:** stays in the user's browser. No accounts, no tracking.
 
 ## Setup (laptop or cloud session)

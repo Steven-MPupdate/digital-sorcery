@@ -1,10 +1,8 @@
 # Deploying
 
 The site lives on **Firebase Hosting** at **https://digitalsorcery.butlerbuilds.dev**, published by
-hand on Steven's "deploy" (see below, and DECISIONS D20). **GitHub Pages is being retired** (Steven,
-2026-10-22: "Don't work on the github page anymore"); he takes that copy down himself. Until the
-`deploy` (Pages) job is removed from `.github/workflows/ci-deploy.yml`, a passing push to `main`
-still republishes it; nobody checks or links that copy any more.
+hand on Steven's "deploy" (see below, and DECISIONS D20). **GitHub is only the code backup**
+(Steven, 2026-10-25): nothing is published from it, and pushing to `main` changes nothing live.
 
 ## Firebase Hosting (set up 2026-10-22)
 
@@ -18,12 +16,10 @@ Cost: free. Hosting on the Spark (no-card) plan covers far more traffic than thi
 - The ids live in `.firebaserc` (`projects.default`), `firebase.json` (`hosting.site`) and the
   `deploy:firebase` script in `package.json`.
 
-**Do not add the `FIREBASE_SERVICE_ACCOUNT` secret while the site lives in `mp-soul-stats`.**
+**Never add a Firebase key to GitHub** (no `FIREBASE_SERVICE_ACCOUNT` secret). GitHub is the backup,
+not a publisher, and the GitHub job that used that key was deleted (DECISIONS D26).
 SECURITY: a Firebase Hosting Admin key cannot be limited to one site, so a leaked key could republish
-every site in the shared project, client sites included. Without the secret the `deploy-firebase`
-job prints "skipping" and the build stays green. If this site ever moves to a project of its own,
-a key with only the **Firebase Hosting Admin** role (never Owner) can be added as that secret, and
-merging to `main` then publishes to Firebase too.
+every site in the shared project, client sites included.
 
 ### Publishing by hand (only when Steven says "deploy")
 ```powershell
@@ -46,29 +42,15 @@ drafts there. The service worker is network-first, so nobody gets stuck on the o
 The site was published to GitHub Pages until 2026-10-23, when the `deploy` job was deleted from
 `ci-deploy.yml` (DECISIONS D23) and Steven removed the site from Pages. Firebase serves the one
 address, `digitalsorcery.butlerbuilds.dev`. A second live copy was a second thing to keep in step,
-and it never carried the security headers in `firebase.json`.
+and it never carried the security headers in `firebase.json`. The old Pages setup steps were
+deleted on 2026-10-25 (D26); git history keeps them if they are ever needed as a record.
 
-The rest of this section is kept only as a record of how it used to work. Do not follow it.
+## GitHub: backup only
 
-### One-time setup (owner, ~3 minutes, works from a phone browser)
-1. **Make the repo public:** GitHub → repo → Settings → General → Danger Zone →
-   Change visibility → Public. (Free Pages hosting needs a public repo on the free plan.)
-2. **Turn on Pages via Actions:** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
-3. **Merge to `main`.** The `Test & Deploy` workflow runs tests, then publishes.
-4. Site URL: **https://steven-mpupdate.github.io/digital-sorcery/**
-   (If you rename the repo, e.g. to `digital-sorcery`, the URL changes to match. Everything uses relative paths, so nothing breaks.)
-
-### Custom domain on GitHub Pages (only if Firebase is not used)
-Recommended: a subdomain such as **`sorcery.butlerbuilds.dev`**, so your main site stays where it is.
-1. **Verify the domain first** (prevents someone else claiming it): GitHub → your profile
-   Settings → Pages → Add a domain → `butlerbuilds.dev` → add the TXT record it shows at your DNS provider.
-2. At your DNS provider, add: `CNAME  sorcery  →  steven-mpupdate.github.io`
-3. Repo Settings → Pages → Custom domain → `sorcery.butlerbuilds.dev` → Save.
-4. When the DNS check passes, tick **Enforce HTTPS**. (`.dev` domains require HTTPS; GitHub
-   provides the certificate for free. It can take up to an hour.)
-5. Existing visitors follow GitHub's redirect to the new address automatically (the service worker
-   is network-first, so it doesn't trap them on the old one). Their saved drafts stay on the old
-   address, though: browsers keep storage per website. Mention this if people already use the app.
+The repo on GitHub is the backup of this code, so any earlier version can be restored from its
+history. After every deploy (or on Steven's "push it"), push `main` to GitHub. Merges happen on the
+laptop after `npm test` passes; no pull request is needed. The GitHub `Tests` workflow only runs the
+tests on each push, to flag a broken backup early. It publishes nothing.
 
 ## Every release
 - Bump `CACHE_VERSION` in `sw.js` and the version in `package.json` + footer in `index.html`.
