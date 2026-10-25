@@ -16,7 +16,7 @@ Start here if you are new. Read in this order: `CLAUDE.md` → `docs/handoff/REA
 | `docs/ROADMAP.md` | The phase list: what is being built now and what waits for a decision. |
 | `docs/handoff/README.md` | How to pick up the project cold. |
 | `docs/handoff/ARCHITECTURE.md` | How the pieces fit together. |
-| `docs/handoff/DEPLOY.md` | Publishing to Firebase Hosting and GitHub Pages, and adding a custom domain. |
+| `docs/handoff/DEPLOY.md` | Publishing to Firebase Hosting by hand, the custom domain, and GitHub as the backup. |
 | `docs/handoff/STRESS-TESTING.md` | The Trial by Fire: which agents to run and when. |
 | `docs/handoff/HANDOFF-LOG.md` | Session-by-session log of work and open questions. |
 
@@ -56,7 +56,7 @@ Start here if you are new. Read in this order: `CLAUDE.md` → `docs/handoff/REA
 | `scripts/og-card.html` | The artwork of the share card. Uses `brand.css`, so a re-render always matches the brand. |
 | `scripts/make-og-image.js` | Screenshots that card into `assets/social/og-image.png` (`npm run og`). |
 | `.claude/agents/` | The five Trial by Fire stress-test agents. |
-| `.github/workflows/ci-deploy.yml` | Test on every push; publish main to Firebase Hosting, once a key is allowed (D20). The GitHub Pages job was deleted (D23). |
+| `.github/workflows/ci-deploy.yml` | Runs the tests on every push. Publishes nothing: GitHub is only the backup (D26). |
 | `firebase.json` | Firebase Hosting settings: which folder to publish, cache and security headers. JSON: no comments possible. |
 | `.firebaserc` | Which Firebase project to publish to. JSON: no comments possible. |
 | `.github/dependabot.yml` | Automatic dependency update PRs. |

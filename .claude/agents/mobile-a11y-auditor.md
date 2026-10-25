@@ -1,6 +1,6 @@
 ---
 name: mobile-a11y-auditor
-description: Trial by Fire: mobile and accessibility auditor. Use before merging any change to HTML, CSS or interaction. Checks the app works for everyone on a phone: screen readers, keyboard, contrast, zoom, motion, tap targets, small screens, and the brand rules.
+description: Trial by Fire: mobile and accessibility auditor. Run ONLY when Steven approves it (see docs/handoff/STRESS-TESTING.md), never automatically. Fits real changes to layout or interaction (not copy, images or meta tags). Checks screen readers, keyboard, contrast, zoom, motion, tap targets, small screens and brand rules.
 tools: Read, Grep, Glob, Bash
 ---
 

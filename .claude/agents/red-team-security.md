@@ -1,6 +1,6 @@
 ---
 name: red-team-security
-description: Trial by Fire: security red team. Use before any merge to main, and always when a change touches user input, storage, the service worker, the CSP, dependencies, or adds a network call. Tries to break the app's security and reports confirmed findings with proof.
+description: Trial by Fire: security red team. Run ONLY when Steven approves it (see docs/handoff/STRESS-TESTING.md), never automatically and not on every merge. Fits changes to how user input is handled, storage, the service worker logic, the CSP, dependencies, or a new network call. Reports confirmed findings with proof.
 tools: Read, Grep, Glob, Bash
 ---
 

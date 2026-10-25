@@ -176,3 +176,20 @@ end by the Copy tests, which never open a second tab.
 **Alternatives:** retry or lengthen the timeout (it is a hang, not a slow step: it never settles);
 read the clipboard over CDP (ties the tests to one browser's private API); drop the middle-click
 test (it guards a real promise: the spell is copied before the AI app opens).
+
+### D25: Stress-test agents run only when Steven approves them (2026-10-23)
+**Why:** the agents ran on a share-card change (tags and a picture) and used half of Steven's session.
+`npm test` in CI already catches regressions on every push. The first live release had all five agents;
+from now on an agent is proposed in one line, with the reason, and runs only on Steven's yes.
+A two-week check-up (red-team-security + pwa-offline-auditor) is offered, not started. Replaces the
+"every change" and "all five per release" rows of D8.
+**Alternatives:** agents by changed area on every change (the old rule: too costly for small changes)
+or no agents at all (loses the new-ways-to-break-it check on risky changes).
+
+### D26: GitHub is only the code backup (2026-10-25)
+**Why:** Steven: GitHub is "ONLY for a backup repo", so any update that breaks the code can be rolled
+back from its history. The dormant `deploy-firebase` job (it published from GitHub if a key was ever
+added) and the old GitHub Pages setup steps were deleted, and merges happen on the laptop instead of
+through pull requests. The test job stays: it publishes nothing and flags a broken backup early.
+**Alternatives:** keep the dormant job "just in case" (one leaked key could republish every site in
+the shared Firebase project) or drop the tests too (a broken backup would go unnoticed).
