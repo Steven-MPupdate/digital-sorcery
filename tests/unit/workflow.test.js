@@ -1,5 +1,5 @@
 /**
- * workflow.test.js: Checks .github/workflows/ci-deploy.yml, the test-and-publish workflow.
+ * workflow.test.js: Checks .github/workflows/ci-deploy.yml, which only runs the tests.
  * Run with: npm run test:unit
  * Depends on: the workflow file, read as plain text (no YAML library in this project).
  *
@@ -7,6 +7,8 @@
  * with none of the security headers in firebase.json. It was deleted on 2026-10-23 (DECISIONS
  * D23) and the site has one home: digitalsorcery.butlerbuilds.dev. This test is the guard, so
  * a copied workflow or a hopeful edit cannot quietly put a second public copy back.
+ * Since 2026-10-25 GitHub is only the code backup (D26): the dormant Firebase job is gone too,
+ * so the workflow must publish nothing at all.
  */
 
 import { test } from 'node:test';
@@ -37,8 +39,12 @@ function jobNames() {
     .map((match) => match[1]);
 }
 
-test('the workflow publishes to one host only', () => {
-  assert.deepEqual(jobNames(), ['test', 'deploy-firebase']);
+test('the workflow only runs the tests: GitHub is the backup, not a publisher (D26)', () => {
+  assert.deepEqual(jobNames(), ['test']);
+  // SECURITY: no Firebase key and no publish command may come back into GitHub.
+  for (const marker of ['FIREBASE_SERVICE_ACCOUNT', 'firebase-tools', 'secrets.']) {
+    assert.ok(!settings.includes(marker), `${marker} must not come back (DECISIONS D26)`);
+  }
 });
 
 test('nothing in the workflow publishes to GitHub Pages', () => {
@@ -55,10 +61,4 @@ test('the workflow asks for no more rights than reading the code', () => {
     assert.ok(!settings.includes(permission), `${permission} is no longer needed`);
   }
   assert.ok(settings.includes('permissions:\n  contents: read'), 'the default must stay contents: read');
-});
-
-test('the publish job still waits for the tests and only runs on main', () => {
-  assert.ok(settings.includes('needs: test'), 'the publish job must wait for the tests');
-  assert.ok(settings.includes("if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'"),
-    'the publish job must run only on main, never on a pull request');
 });
